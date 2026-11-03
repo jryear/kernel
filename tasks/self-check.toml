@@ -1,0 +1,21 @@
+spec_version = 2
+id = "self-check"
+project = "kernel"
+goal = "Refuse before judging when release bytes or externally held digest are absent or altered"
+bypass_policy = "fail"
+[scope]
+include = ["verify.py", "MANIFEST.sha256", "README.md", "FRONTIER.md"]
+protected = ["tests/*", "selftest.py"]
+[[checks]]
+name = "release integrity refusal"
+kind = "acceptance"
+timeout = 120
+argv = ["python3", "tests/self_check.py"]
+entry = "tests/self_check.py"
+chain = ["tests/self_check.py", "selftest.py"]
+evidence = ["tests/self_check.py", "selftest.py"]
+assertions = ["ALTERED_VERIFIER", "ALTERED_MANIFEST", "ALTERED_RUNTIME", "ALTERED_REPORT", "MISSING_DIGEST"]
+baseline_failures = ["ALTERED_VERIFIER", "ALTERED_MANIFEST", "ALTERED_RUNTIME", "ALTERED_REPORT", "MISSING_DIGEST"]
+[notes]
+assumptions = "Trusted external judge, reviewed frozen harness, Python and Git. The expected manifest digest is supplied by the caller outside candidate authority."
+out_of_scope = "Malicious replacement of the entire verifier can remove its own guard. Caller must authenticate the entrypoint externally; this is startup release integrity, not execution sandboxing."
