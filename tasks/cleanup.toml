@@ -1,0 +1,20 @@
+spec_version = 2
+id = "cleanup"
+project = "kernel"
+goal = "Bound each schema2 check to a process group, report escaped survivors, and refuse certification on incomplete cleanup evidence"
+[scope]
+include = ["kernel_report.py", "kernel_runtime.py", "kernel_process.py", "verify.py", "MANIFEST.sha256", "README.md", "FRONTIER.md"]
+protected = ["tests/*", "selftest.py"]
+[[checks]]
+name = "process cleanup evidence"
+kind = "acceptance"
+timeout = 120
+argv = ["python3", "tests/cleanup.py"]
+entry = "tests/cleanup.py"
+chain = ["tests/cleanup.py"]
+evidence = ["tests/cleanup.py"]
+assertions = ["GROUP_KILLED", "ESCAPE_UNVERIFIABLE", "TIMEOUT_UNVERIFIABLE", "KILL_FAILURE_UNVERIFIABLE", "MISSING_UNVERIFIABLE"]
+baseline_failures = ["GROUP_KILLED", "ESCAPE_UNVERIFIABLE", "TIMEOUT_UNVERIFIABLE", "KILL_FAILURE_UNVERIFIABLE"]
+[notes]
+assumptions = "POSIX process groups and ps observation; trusted Python/Git/ps, reviewed harness. Injected PermissionError represents an OS kill failure."
+out_of_scope = "Sandbox containment, exhaustive hostile descendant attribution, legacy schema1 services; this proves named observed cleanup cases only."
