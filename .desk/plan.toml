@@ -2,7 +2,7 @@
 name = "kernel"
 outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
 main = "main"
-instruction_version = 2
+instruction_version = 3
 # Release rule: the installed release judges the next one.
 # - 3.2.0 is built in a separate worktree. ~/code/_kernel stays on the installed 3.1.0, read-only.
 # - Each item's tests are frozen first and must FAIL against 3.1.0 and PASS on the candidate.
@@ -12,6 +12,10 @@ instruction_version = 2
 # - contradicted: a deterministic violation the contract or kernel policy forbids (protected paths changed).
 # - unverifiable: environment failures (missing dependency, undeclared network) and any ambiguous or missing evidence.
 # - Missing evidence is never promoted to contradicted or supported.
+# - Hashes of protected paths establish integrity (a lasting change), nothing more. They cannot show
+#   that no write was attempted, that a write was undone, or that a read was blocked. If evidence cannot
+#   tell tampering from another sandbox failure, the verdict is unverifiable.
+# - Judge invocations use `python3 -B` (the 2026-11-03 run wrote bytecode caches into the judge's directory).
 
 [[item]]
 id = "self-check"
@@ -36,10 +40,17 @@ acceptance = [["python3", "spike/sandbox_probe.py"]]
 # bursts beyond 100 denials, events arriving after exit. Output: which path, and what evidence it can and cannot give.
 
 [[item]]
+id = "integrate-1"
+title = "Integration: self-check + cleanup combined; both frozen contracts supported by 3.1.0 on the combined tree; manifest regenerated from final contents"
+mandate = "Zack, 2026-11-03 review: neither branch's verdict proves the combination. Expected digest comes from a trusted release receipt outside the checked files."
+depends = ["self-check", "cleanup"]
+acceptance = [["python3", "tests/self_check.py"], ["python3", "tests/cleanup.py"], ["python3", "-B", "selftest.py"]]
+
+[[item]]
 id = "sandbox"
 title = "--sandbox (opt-in): checks run confined, verifier outside; protected paths hashed before and after each check"
 mandate = "Zack, 2026-11-03: make 'agents can't edit the rules' true while code runs, not only in the diff."
-depends = ["self-check", "cleanup", "sandbox-spike"]
+depends = ["integrate-1", "sandbox-spike"]
 acceptance = [["python3", "tests/tamper_suite.py"]]
 # Bad candidates: rewrite the log, edit the verifier, edit the contract, write .git, read ~/.ssh, call the network,
 # write a cache. Each must get its specified verdict; tamper verdicts must hold with violation logging disabled.
@@ -71,8 +82,15 @@ depends = ["sandbox", "flake"]
 acceptance = [["python3", "tests/real_contracts_sandboxed.py"]]
 
 [[item]]
+id = "bidzizi-gate"
+title = "BidZizi's real invocation updated and exercised with the pinned 3.2.0 digest before anything switches to 3.2.0"
+mandate = "Zack, 2026-11-03 review: the required digest breaks every current invocation; this is a release gate, not a docs note."
+depends = ["default-on"]
+acceptance = [["python3", "tests/bidzizi_invocation.py"]]
+
+[[item]]
 id = "release"
 title = "Release 3.2.0: install receipt, manifest, release digest published as a tag, limits list rewritten, SWE-bench comparison written"
 mandate = "Zack, 2026-11-03: production suite."
-depends = ["default-on", "red-team"]
+depends = ["bidzizi-gate", "red-team"]
 acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "selftest.py"]]
