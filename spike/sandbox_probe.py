@@ -127,11 +127,23 @@ def main():
                 result['embedded']['protectedUnchanged']={str(p):digest(p)==before[str(p)] for p in [outside,ssh,protected/'.env']}
             finally:
                 server.shutdown()
-    result['completed']=True
+    # Completion concerns the probe protocol, never whether confinement passed.
+    cli_rows=result['cli']['cases']
+    embedded_rows=result['embedded'].get('cases',[])
+    def payload_recorded(row):
+        try:
+            payload=json.loads(row.get('stdout',''))
+            return payload.get('mode') == row['case']
+        except (ValueError, AttributeError):
+            return False
+    result['completed']=(len(cli_rows)==len(CASES) and len(embedded_rows)==len(CASES)
+                         and all(payload_recorded(row) for row in cli_rows+embedded_rows))
+    result['probeSourceBindings']={str(p.relative_to(HERE.parent)):digest(p) for p in
+        [HERE/'sandbox_probe.py', HERE/'payload.py', HERE/'library_probe.mjs', HERE/'package-lock.json']}
     result['completedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat()
     (output/'results.json').write_text(json.dumps(result,indent=2))
-    print('COMPLETED research probes; observations recorded at '+str(output/'results.json'))
-    return 0
+    print(('COMPLETED' if result['completed'] else 'INCOMPLETE')+' research probes; observations recorded at '+str(output/'results.json'))
+    return 0 if result['completed'] else 1
 
 
 if __name__=='__main__': sys.exit(main())

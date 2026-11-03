@@ -23,26 +23,26 @@ kernel verdict. Setup exceptions do not become successful security evidence.
 | Case | CLI | Embedded library |
 | --- | --- | --- |
 | Collector before check | Separate `/usr/bin/log stream` started before CLI, alive after 700 ms | Store subscription before initialize, initialize with monitor enabled, then 700 ms delay |
-| Known-denied canary | EPERM and one matching external log line in committed run | EPERM and one matching subscribed denial |
-| 150 denied writes | 150 EPERM; 150 matching external log lines | 150 EPERM; 145 matching subscribed denial events |
+| Known-denied canary | EPERM; no matching external canary log in committed run | EPERM and one matching subscribed denial |
+| 150 denied writes | 150 EPERM; 150 matching external log lines | 150 EPERM; 148 matching subscribed denial events |
 | Write confinement | Allowed directory write succeeded; explicitly protected and unlisted temp paths returned EPERM | Same; protected fixture hashes unchanged before/after each case |
 | Read denial | Synthetic SSH fixture, `.env`, and actual SSH directory open returned EPERM | Same |
 | Loopback policy | Direct 127.0.0.1 worked; proxy request to non-allowlisted 127.0.0.2 returned HTTP 403 | Same |
-| Events after exit | Collector bytes increased after exit in burst/late case; delayed child denial was observed | Burst 150 events at exit, 153 after drain; late case 13 at exit, 20 after drain |
+| Events after exit | Collector bytes increased after exit in burst/late case; delayed child denial was observed | Burst 157 events at exit and after drain; late case 11 at exit, 17 after drain |
 
 Counts above refer to the committed observation, not future desk reruns. The
 embedded counts include startup/system denials; matching the canary path isolates
 the actual burst denial count. An attempted denial does not establish intent.
 Two seconds is an observation window, not proof that no later events exist.
 
-The actual embedded session received 217 subscription events but retained only
+The actual embedded session received 221 subscription events but retained only
 100 at the end. A separate **synthetic store-only** exercise inserted 150 events:
 `getTotalCount()` was 150, retained tail was 100, preattached subscription saw 150.
 This confirms truncation independently of OS log delivery. A subscription can
 avoid the store's truncation; it cannot recover events the upstream monitor
-never emitted. The burst's 145 matching events for 150 EPERM outcomes is an
-observed completeness gap, not proof of its root cause or misattribution. Earlier
-exploratory runs also had a missing first CLI canary log despite EPERM. No claim
+never emitted. The burst's 148 matching events for 150 EPERM outcomes is an
+observed completeness gap, not proof of its root cause or misattribution. The committed CLI run also had a missing first canary log despite EPERM;
+its collector process was alive, but readiness was unacknowledged. No claim
 of universally dropped or misattributed macOS events follows from these samples.
 
 ## Source facts in the pinned local package
