@@ -1,0 +1,1876 @@
+{
+  "schema": 1,
+  "purpose": "research observations, no certification verdict",
+  "package": "0.0.81",
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "python": "3.15.0 (main, Oct  9 2026, 11:16:41) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "started": "2026-11-03T22:51:34.212829+00:00",
+  "sourceBindings": {
+    "package.json": "1e88127d62f06db6810703f66716ba6e5373ccc77cc3b99f1af73939814337a1",
+    "dist/cli.js": "2a3cc1c7c6ee703860ea548594d55de1bdf760a642786cac74506dd96ac7fcb1",
+    "dist/sandbox/sandbox-manager.js": "03bd1f22e0b7a5fa401ef8f164390b8bfe8972885856ea8dce0657fa57a31114",
+    "dist/sandbox/sandbox-violation-store.js": "051638f3a309ff80acc0c864788b204fcb883c94c757c02ed7b6dc420cac34f7",
+    "dist/sandbox/macos-sandbox-utils.js": "7f297d6acb08a44adc9198876a38ce49ffa59e3a7aa09692933b3e008b446a32"
+  },
+  "policy": {
+    "filesystem": {
+      "allowWrite": [
+        "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/allowed"
+      ],
+      "denyWrite": [
+        "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected"
+      ],
+      "denyRead": [
+        "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env",
+        "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh",
+        "/Users/jryear/.ssh"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "localhost",
+        "127.0.0.1"
+      ],
+      "deniedDomains": [],
+      "allowLocalBinding": true,
+      "strictAllowlist": true
+    }
+  },
+  "networkBoundary": "only loopback exercised; no external dial or DNS attempted",
+  "cli": {
+    "cases": [
+      {
+        "case": "canary",
+        "startedAt": 1793746294.921973,
+        "code": 0,
+        "stdout": "{\"mode\": \"canary\", \"write\": {\"outcome\": \"error\", \"errno\": 1}}\n",
+        "stderr": "",
+        "exitedAt": 1793746295.091501,
+        "collectorBytesAtExit": 550,
+        "collectorBytesAfterDrain": 550,
+        "canaryDenialLogLines": 1,
+        "protectedUnchanged": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+        },
+        "canaryFilesCreated": 0
+      },
+      {
+        "case": "burst",
+        "startedAt": 1793746297.10079,
+        "code": 0,
+        "stdout": "{\"mode\": \"burst\", \"attempts\": 150, \"errors\": 150, \"errno_counts\": {\"1\": 150}}\n",
+        "stderr": "",
+        "exitedAt": 1793746297.2822368,
+        "collectorBytesAtExit": 55640,
+        "collectorBytesAfterDrain": 55640,
+        "canaryDenialLogLines": 150,
+        "protectedUnchanged": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+        },
+        "canaryFilesCreated": 0
+      },
+      {
+        "case": "confinement",
+        "startedAt": 1793746299.289432,
+        "code": 0,
+        "stdout": "{\"mode\": \"confinement\", \"inside\": {\"outcome\": \"written\"}, \"outside\": {\"outcome\": \"error\", \"errno\": 1}, \"unlisted_temp_path\": {\"outcome\": \"error\", \"errno\": 1}}\n",
+        "stderr": "",
+        "exitedAt": 1793746299.465356,
+        "collectorBytesAtExit": 56369,
+        "collectorBytesAfterDrain": 56369,
+        "canaryDenialLogLines": 0,
+        "protectedUnchanged": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+        },
+        "canaryFilesCreated": 0
+      },
+      {
+        "case": "reads",
+        "startedAt": 1793746301.469922,
+        "code": 0,
+        "stdout": "{\"mode\": \"reads\", \"synthetic_ssh\": {\"outcome\": \"error\", \"errno\": 1}, \"actual_ssh_directory\": {\"outcome\": \"error\", \"errno\": 1}, \"dotenv\": {\"outcome\": \"error\", \"errno\": 1}}\n",
+        "stderr": "",
+        "exitedAt": 1793746301.599207,
+        "collectorBytesAtExit": 57092,
+        "collectorBytesAfterDrain": 57092,
+        "canaryDenialLogLines": 0,
+        "protectedUnchanged": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+        },
+        "canaryFilesCreated": 0
+      },
+      {
+        "case": "network",
+        "startedAt": 1793746303.6060338,
+        "code": 0,
+        "stdout": "{\"mode\": \"network\", \"localhost\": \"loopback-ok\", \"disallowed_loopback_proxy_status\": \"HTTP/1.1 403 Forbidden\", \"external\": \"not dialed: task forbids outbound network beyond package installation\"}\n",
+        "stderr": "",
+        "exitedAt": 1793746303.7859998,
+        "collectorBytesAtExit": 57092,
+        "collectorBytesAfterDrain": 57092,
+        "canaryDenialLogLines": 0,
+        "protectedUnchanged": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+        },
+        "canaryFilesCreated": 0
+      },
+      {
+        "case": "late",
+        "startedAt": 1793746305.7934778,
+        "code": 0,
+        "stdout": "{\"mode\": \"late\", \"child_pid\": 43680}\n",
+        "stderr": "",
+        "exitedAt": 1793746305.973276,
+        "collectorBytesAtExit": 57092,
+        "collectorBytesAfterDrain": 57462,
+        "canaryDenialLogLines": 1,
+        "protectedUnchanged": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+        },
+        "canaryFilesCreated": 0
+      }
+    ],
+    "collector": {
+      "requestedBeforeCheck": true,
+      "startedAt": 1793746294.216566,
+      "aliveBeforeCheck": true,
+      "readyAcknowledgement": false,
+      "exit": -15
+    }
+  },
+  "libraryDriver": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "embedded": {
+    "path": "embedded",
+    "collectorSubscribedAt": 1793746308110,
+    "cases": [
+      {
+        "case": "canary",
+        "commandId": "9a397f5e-93a1-462c-925e-d249855861ed",
+        "startedAt": 1793746308817,
+        "protectedBefore": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "code": 0,
+        "signal": null,
+        "stdout": "{\"mode\": \"canary\", \"write\": {\"outcome\": \"error\", \"errno\": 1}}\n",
+        "stderr": "",
+        "exitedAt": 1793746308904,
+        "eventsAtExit": 4,
+        "eventsAfterDrain": 4,
+        "events": [
+          {
+            "line": "bash(43732) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json canary",
+            "encodedCommand": "OWEzOTdmNWUtOTNhMS00NjJjLTkyNWUtZDI0OTg1NTg2MWVk",
+            "timestamp": "2026-11-03T22:51:48.865Z",
+            "receivedAt": 1793746308865
+          },
+          {
+            "line": "Python(43732) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json canary",
+            "encodedCommand": "OWEzOTdmNWUtOTNhMS00NjJjLTkyNWUtZDI0OTg1NTg2MWVk",
+            "timestamp": "2026-11-03T22:51:48.888Z",
+            "receivedAt": 1793746308888
+          },
+          {
+            "line": "Python(43732) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json canary",
+            "encodedCommand": "OWEzOTdmNWUtOTNhMS00NjJjLTkyNWUtZDI0OTg1NTg2MWVk",
+            "timestamp": "2026-11-03T22:51:48.897Z",
+            "receivedAt": 1793746308897
+          },
+          {
+            "line": "Python(43732) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json canary",
+            "encodedCommand": "OWEzOTdmNWUtOTNhMS00NjJjLTkyNWUtZDI0OTg1NTg2MWVk",
+            "timestamp": "2026-11-03T22:51:48.900Z",
+            "receivedAt": 1793746308900
+          }
+        ],
+        "canaryDenialEvents": 1,
+        "protectedAfter": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "protectedUnchanged": true,
+        "retained": 4,
+        "total": 4
+      },
+      {
+        "case": "burst",
+        "commandId": "ddbc9c93-14bd-46cd-8850-ebf0ee1d613d",
+        "startedAt": 1793746310907,
+        "protectedBefore": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "code": 0,
+        "signal": null,
+        "stdout": "{\"mode\": \"burst\", \"attempts\": 150, \"errors\": 150, \"errno_counts\": {\"1\": 150}}\n",
+        "stderr": "",
+        "exitedAt": 1793746311000,
+        "eventsAtExit": 150,
+        "eventsAfterDrain": 153,
+        "events": [
+          {
+            "line": "bash(43767) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.955Z",
+            "receivedAt": 1793746310955
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.971Z",
+            "receivedAt": 1793746310972
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.972Z",
+            "receivedAt": 1793746310972
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.975Z",
+            "receivedAt": 1793746310975
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.980Z",
+            "receivedAt": 1793746310980
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.981Z",
+            "receivedAt": 1793746310981
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.987Z",
+            "receivedAt": 1793746310987
+          },
+          {
+            "line": "Python(43767) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.991Z",
+            "receivedAt": 1793746310991
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied0",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied1",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied2",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied3",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied4",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied5",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied6",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied7",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.992Z",
+            "receivedAt": 1793746310992
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied8",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied9",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied10",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied11",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied12",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied13",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied14",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied15",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied16",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied17",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied18",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied19",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied20",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied21",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied22",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied23",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied24",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied25",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied26",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.993Z",
+            "receivedAt": 1793746310993
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied27",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied28",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied29",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied30",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied31",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied32",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied33",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied34",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied35",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied36",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied37",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied38",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied39",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied40",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied41",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied42",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied43",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.994Z",
+            "receivedAt": 1793746310994
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied44",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied45",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied46",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied47",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied48",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied49",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied50",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied51",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied52",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied53",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied54",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied55",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied56",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied57",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied58",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied59",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied60",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied61",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.995Z",
+            "receivedAt": 1793746310995
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied62",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied63",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied64",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied65",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied66",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied67",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied68",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied69",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied70",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied71",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied72",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied73",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied74",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied75",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied76",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied77",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied78",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied79",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.996Z",
+            "receivedAt": 1793746310996
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied80",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied81",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied82",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied83",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied84",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied85",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied86",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied87",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied88",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied89",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied90",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied91",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied92",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied93",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied94",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied95",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied96",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied97",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied98",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.997Z",
+            "receivedAt": 1793746310997
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied99",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied100",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied101",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied102",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied103",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied104",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied105",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied106",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied107",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied108",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied109",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied110",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied111",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied112",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied113",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied114",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied115",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.998Z",
+            "receivedAt": 1793746310998
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied116",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied117",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied118",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied119",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied120",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied121",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied122",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied123",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied124",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied125",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied126",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied127",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied128",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied129",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied130",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied131",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied132",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied133",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied134",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied135",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied136",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:50.999Z",
+            "receivedAt": 1793746310999
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied137",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied138",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied141",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied142",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied143",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied146",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied148",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          },
+          {
+            "line": "Python(43767) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied149",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json burst",
+            "encodedCommand": "ZGRiYzljOTMtMTRiZC00NmNkLTg4NTAtZWJmMGVlMWQ2MTNk",
+            "timestamp": "2026-11-03T22:51:51.000Z",
+            "receivedAt": 1793746311000
+          }
+        ],
+        "canaryDenialEvents": 145,
+        "protectedAfter": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "protectedUnchanged": true,
+        "retained": 100,
+        "total": 157
+      },
+      {
+        "case": "confinement",
+        "commandId": "8ab7b905-f937-4292-b5bf-26596290d63b",
+        "startedAt": 1793746313002,
+        "protectedBefore": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "code": 0,
+        "signal": null,
+        "stdout": "{\"mode\": \"confinement\", \"inside\": {\"outcome\": \"written\"}, \"outside\": {\"outcome\": \"error\", \"errno\": 1}, \"unlisted_temp_path\": {\"outcome\": \"error\", \"errno\": 1}}\n",
+        "stderr": "",
+        "exitedAt": 1793746313094,
+        "eventsAtExit": 11,
+        "eventsAfterDrain": 11,
+        "events": [
+          {
+            "line": "bash(43833) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.054Z",
+            "receivedAt": 1793746313054
+          },
+          {
+            "line": "python3.15(43833) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.060Z",
+            "receivedAt": 1793746313060
+          },
+          {
+            "line": "Python(43833) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.066Z",
+            "receivedAt": 1793746313066
+          },
+          {
+            "line": "Python(43833) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.071Z",
+            "receivedAt": 1793746313071
+          },
+          {
+            "line": "Python(43833) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.072Z",
+            "receivedAt": 1793746313072
+          },
+          {
+            "line": "Python(43833) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.080Z",
+            "receivedAt": 1793746313080
+          },
+          {
+            "line": "Python(43833) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.080Z",
+            "receivedAt": 1793746313080
+          },
+          {
+            "line": "Python(43833) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.084Z",
+            "receivedAt": 1793746313084
+          },
+          {
+            "line": "Python(43833) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.090Z",
+            "receivedAt": 1793746313090
+          },
+          {
+            "line": "Python(43833) deny(1) file-write-data /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.091Z",
+            "receivedAt": 1793746313091
+          },
+          {
+            "line": "Python(43833) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/unlisted.txt",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json confinement",
+            "encodedCommand": "OGFiN2I5MDUtZjkzNy00MjkyLWI1YmYtMjY1OTYyOTBkNjNi",
+            "timestamp": "2026-11-03T22:51:53.091Z",
+            "receivedAt": 1793746313091
+          }
+        ],
+        "canaryDenialEvents": 0,
+        "protectedAfter": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "protectedUnchanged": true,
+        "retained": 100,
+        "total": 168
+      },
+      {
+        "case": "reads",
+        "commandId": "7a32cf06-cbc9-4902-b9ac-8d8e28f53b9b",
+        "startedAt": 1793746315096,
+        "protectedBefore": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "code": 0,
+        "signal": null,
+        "stdout": "{\"mode\": \"reads\", \"synthetic_ssh\": {\"outcome\": \"error\", \"errno\": 1}, \"actual_ssh_directory\": {\"outcome\": \"error\", \"errno\": 1}, \"dotenv\": {\"outcome\": \"error\", \"errno\": 1}}\n",
+        "stderr": "",
+        "exitedAt": 1793746315184,
+        "eventsAtExit": 14,
+        "eventsAfterDrain": 14,
+        "events": [
+          {
+            "line": "bash(43867) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.145Z",
+            "receivedAt": 1793746315145
+          },
+          {
+            "line": "python3.15(43867) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.151Z",
+            "receivedAt": 1793746315151
+          },
+          {
+            "line": "Python(43867) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.157Z",
+            "receivedAt": 1793746315157
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.162Z",
+            "receivedAt": 1793746315162
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.163Z",
+            "receivedAt": 1793746315163
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.165Z",
+            "receivedAt": 1793746315165
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.167Z",
+            "receivedAt": 1793746315167
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.169Z",
+            "receivedAt": 1793746315169
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.171Z",
+            "receivedAt": 1793746315171
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.174Z",
+            "receivedAt": 1793746315174
+          },
+          {
+            "line": "Python(43867) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.180Z",
+            "receivedAt": 1793746315180
+          },
+          {
+            "line": "Python(43867) deny(1) file-read-data /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.180Z",
+            "receivedAt": 1793746315180
+          },
+          {
+            "line": "Python(43867) deny(1) file-read-data /Users/jryear/.ssh",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.180Z",
+            "receivedAt": 1793746315180
+          },
+          {
+            "line": "Python(43867) deny(1) file-read-data /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json reads",
+            "encodedCommand": "N2EzMmNmMDYtY2JjOS00OTAyLWI5YWMtOGQ4ZTI4ZjUzYjli",
+            "timestamp": "2026-11-03T22:51:55.180Z",
+            "receivedAt": 1793746315180
+          }
+        ],
+        "canaryDenialEvents": 0,
+        "protectedAfter": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "protectedUnchanged": true,
+        "retained": 100,
+        "total": 182
+      },
+      {
+        "case": "network",
+        "commandId": "135901c4-e23b-4257-820c-c952ac89cd65",
+        "startedAt": 1793746317185,
+        "protectedBefore": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "code": 0,
+        "signal": null,
+        "stdout": "{\"mode\": \"network\", \"localhost\": \"loopback-ok\", \"disallowed_loopback_proxy_status\": \"HTTP/1.1 403 Forbidden\", \"external\": \"not dialed: task forbids outbound network beyond package installation\"}\n",
+        "stderr": "",
+        "exitedAt": 1793746317266,
+        "eventsAtExit": 15,
+        "eventsAfterDrain": 15,
+        "events": [
+          {
+            "line": "bash(43895) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.223Z",
+            "receivedAt": 1793746317224
+          },
+          {
+            "line": "python3.15(43895) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.229Z",
+            "receivedAt": 1793746317229
+          },
+          {
+            "line": "Python(43895) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.234Z",
+            "receivedAt": 1793746317234
+          },
+          {
+            "line": "Python(43895) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.238Z",
+            "receivedAt": 1793746317238
+          },
+          {
+            "line": "Python(43895) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.239Z",
+            "receivedAt": 1793746317239
+          },
+          {
+            "line": "Python(43895) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.247Z",
+            "receivedAt": 1793746317247
+          },
+          {
+            "line": "Python(43895) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.248Z",
+            "receivedAt": 1793746317248
+          },
+          {
+            "line": "Python(43895) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.255Z",
+            "receivedAt": 1793746317255
+          },
+          {
+            "line": "Python(43895) deny(1) system-info net.link.addr",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.258Z",
+            "receivedAt": 1793746317258
+          },
+          {
+            "line": "Python(43895) deny(1) system-info net.link.addr",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.258Z",
+            "receivedAt": 1793746317258
+          },
+          {
+            "line": "Python(43895) deny(1) network-outbound",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.258Z",
+            "receivedAt": 1793746317258
+          },
+          {
+            "line": "Python(43895) deny(1) network-outbound",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.259Z",
+            "receivedAt": 1793746317259
+          },
+          {
+            "line": "Python(43895) deny(1) system-info net.link.addr",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.259Z",
+            "receivedAt": 1793746317259
+          },
+          {
+            "line": "deny network-outbound 127.0.0.2:52580 (host is not on the allow list)",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "timestamp": "2026-11-03T22:51:57.261Z",
+            "receivedAt": 1793746317261
+          },
+          {
+            "line": "Python(43895) deny(1) system-info net.link.addr",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json network",
+            "encodedCommand": "MTM1OTAxYzQtZTIzYi00MjU3LTgyMGMtYzk1MmFjODljZDY1",
+            "timestamp": "2026-11-03T22:51:57.263Z",
+            "receivedAt": 1793746317263
+          }
+        ],
+        "canaryDenialEvents": 0,
+        "protectedAfter": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "protectedUnchanged": true,
+        "retained": 100,
+        "total": 197
+      },
+      {
+        "case": "late",
+        "commandId": "3e33c9b6-ef06-489d-ab2c-62284d51e9bc",
+        "startedAt": 1793746319268,
+        "protectedBefore": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "code": 0,
+        "signal": null,
+        "stdout": "{\"mode\": \"late\", \"child_pid\": 43932}\n",
+        "stderr": "",
+        "exitedAt": 1793746319356,
+        "eventsAtExit": 13,
+        "eventsAfterDrain": 20,
+        "events": [
+          {
+            "line": "bash(43931) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.313Z",
+            "receivedAt": 1793746319313
+          },
+          {
+            "line": "python3.15(43931) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.318Z",
+            "receivedAt": 1793746319318
+          },
+          {
+            "line": "Python(43931) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.325Z",
+            "receivedAt": 1793746319325
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.330Z",
+            "receivedAt": 1793746319330
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.330Z",
+            "receivedAt": 1793746319330
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.334Z",
+            "receivedAt": 1793746319334
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.334Z",
+            "receivedAt": 1793746319334
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.338Z",
+            "receivedAt": 1793746319338
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.339Z",
+            "receivedAt": 1793746319339
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.347Z",
+            "receivedAt": 1793746319347
+          },
+          {
+            "line": "Python(43931) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.348Z",
+            "receivedAt": 1793746319348
+          },
+          {
+            "line": "Python(43932) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.351Z",
+            "receivedAt": 1793746319351
+          },
+          {
+            "line": "python3.15(43932) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.355Z",
+            "receivedAt": 1793746319355
+          },
+          {
+            "line": "Python(43932) deny(1) sysctl-read kern.iossupportversion",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.359Z",
+            "receivedAt": 1793746319359
+          },
+          {
+            "line": "Python(43932) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.363Z",
+            "receivedAt": 1793746319363
+          },
+          {
+            "line": "Python(43932) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.363Z",
+            "receivedAt": 1793746319363
+          },
+          {
+            "line": "Python(43932) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.365Z",
+            "receivedAt": 1793746319365
+          },
+          {
+            "line": "Python(43932) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.372Z",
+            "receivedAt": 1793746319372
+          },
+          {
+            "line": "Python(43932) deny(1) system-info vfs.disk-space",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.377Z",
+            "receivedAt": 1793746319377
+          },
+          {
+            "line": "Python(43932) deny(1) file-write-create /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/denied-late",
+            "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 /Users/jryear/orca/workspaces/_kernel/kernel-3-2-tranche-1/spike/payload.py /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/payload.json late",
+            "encodedCommand": "M2UzM2M5YjYtZWYwNi00ODlkLWFiMmMtNjIyODRkNTFlOWJj",
+            "timestamp": "2026-11-03T22:51:59.884Z",
+            "receivedAt": 1793746319884
+          }
+        ],
+        "canaryDenialEvents": 1,
+        "protectedAfter": {
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": "0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab",
+          "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": "cdd28959864edfef9d96e3cd03fea865d5c2e85e9a508fc53524c9fbe53fa6ab"
+        },
+        "protectedUnchanged": true,
+        "retained": 100,
+        "total": 217
+      }
+    ],
+    "syntheticStore": {
+      "injected": 150,
+      "retained": 100,
+      "total": 150,
+      "subscribed": 150
+    },
+    "initializeStartedAt": 1793746308110,
+    "initializeReturnedAt": 1793746308115,
+    "finalRetained": 100,
+    "finalTotal": 217,
+    "subscribedEvents": 217,
+    "completedAt": 1793746321367,
+    "protectedUnchanged": {
+      "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/outside.txt": true,
+      "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/ssh/key": true,
+      "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/kernel-srt-probe-suq7fpvl/protected/.env": true
+    }
+  },
+  "completed": true,
+  "completedAt": "2026-11-03T22:52:01.768661+00:00",
+  "probeSourceBindings": {
+    "spike/sandbox_probe.py": "f8175c3e2930273fa7773a23bf0f54914375d06608210aaf36f559343326eba1",
+    "spike/payload.py": "7ab776db36116198f2820bb774f4f8593e0221fb02ccd12fde60f513e396a0f7",
+    "spike/library_probe.mjs": "e6a55dc135715c64d434aae482e5cdbaa44880e703e235b73d8dc21e3fb902db",
+    "spike/package-lock.json": "53908b1e23845bd0d452463f81a3df0f9b92bce76aa8c69c8f75c51a22600ec9"
+  }
+}
