@@ -28,7 +28,7 @@ kernel verdict. Setup exceptions do not become successful security evidence.
 | Write confinement | Allowed directory write succeeded; explicitly protected and unlisted temp paths returned EPERM | Same; protected fixture hashes unchanged before/after each case |
 | Read denial | Synthetic SSH fixture, `.env`, and actual SSH directory open returned EPERM | Same |
 | Loopback policy | Direct 127.0.0.1 worked; proxy request to non-allowlisted 127.0.0.2 returned HTTP 403 | Same |
-| Events after exit | Collector bytes increased after exit in burst/late case; delayed child denial was observed | Burst 157 events at exit and after drain; late case 11 at exit, 17 after drain |
+| Events after exit | Collector bytes increased after exit in late case; delayed child denial was observed | Burst 157 events at exit and after drain; late case 11 at exit, 17 after drain |
 
 Counts above refer to the committed observation, not future desk reruns. The
 embedded counts include startup/system denials; matching the canary path isolates
