@@ -247,7 +247,8 @@ def run_tree(root, phase, checks, binding, rows, objects):
 
 def verify(args, repo, base, spec, raw_spec, spec_rel, api):
     from kernel_report import __file__ as report_file
-    component_paths = {'verify.py': Path(api['__file__']), 'kernel_runtime.py': Path(__file__), 'kernel_report.py': Path(report_file)}
+    from kernel_process import __file__ as process_file
+    component_paths = {'verify.py': Path(api['__file__']), 'kernel_runtime.py': Path(__file__), 'kernel_report.py': Path(report_file), 'kernel_process.py': Path(process_file)}
     component_digests = {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in component_paths.items()}
     package_binding = {'components': component_digests, 'manifest_sha256': hashlib.sha256(json.dumps(component_digests, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest(), 'boundary': 'schema2-start-loaded-components'}
     checks, policy = validate_spec(spec, api['validate_spec_legacy'])
@@ -357,9 +358,9 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
         verdict = 'baseline_ready' if ready else 'baseline_not_ready'
         code = 0 if ready else 2
     else:
-        # Protected/scope violations remain contradictions even if changed harness
-        # also breaks receipts. Source mutation is unavailable execution evidence.
-        verdict = 'contradicted' if contradicted else 'unverifiable' if unavailable else 'supported'
+        # Incomplete evidence (including cleanup) cannot certify or contradict.
+        # Deterministic source/scope violations remain recorded in reasons.
+        verdict = 'unverifiable' if unavailable else 'contradicted' if contradicted else 'supported'
         code = {'supported': 0, 'contradicted': 1, 'unverifiable': 2}[verdict]
     raw_claim = args.raw_claim_file.read_text(encoding='utf-8') if args.raw_claim_file else None
     record = {'schema': 2, 'at': api['now_utc'](), 'verifier_version': api['VERIFIER_VERSION'],

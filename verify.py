@@ -349,28 +349,23 @@ class Service:
 
 def run_check(root: Path, check: dict, env: dict) -> dict:
     start = time.monotonic()
+    from kernel_process import execute
+    cleanup = None
     try:
-        result = subprocess.run(
-            check["cmd"],
-            shell=True,
-            cwd=root,
-            env=env,
-            text=True,
-            capture_output=True,
-            timeout=check["timeout"],
-        )
-        code, output = result.returncode, result.stdout + result.stderr
-    except subprocess.TimeoutExpired as error:
-        code, output = HARNESS_EXIT, f"TIMEOUT after {error.timeout}s"
+        code, output, cleanup = execute(['/bin/sh', '-c', check['cmd']], root, env, check['timeout'])
+    except OSError as error:
+        code, output = HARNESS_EXIT, 'check executable unavailable: ' + str(error)
+    complete = cleanup is not None and cleanup['complete']
     return {
         "name": check["name"],
         "kind": check["kind"],
         "exit": code,
         "expected_exit": check["expect_exit"],
-        "passed": code == check["expect_exit"] and code != HARNESS_EXIT,
-        "harness_error": code == HARNESS_EXIT,
+        "passed": code == check["expect_exit"] and code != HARNESS_EXIT and complete,
+        "harness_error": code == HARNESS_EXIT or not complete,
         "seconds": round(time.monotonic() - start, 2),
         "output_tail": output[-1500:],
+        "cleanup": cleanup,
     }
 
 
@@ -661,7 +656,7 @@ def main() -> int:
             + ", ".join(mutable_test_changes[:8])
         )
 
-    verdict = "contradicted" if contradicted else "unverifiable" if unverifiable else "supported"
+    verdict = "unverifiable" if unverifiable else "contradicted" if contradicted else "supported"
     if not files and verdict == "supported":
         warnings.append("no implementation files changed")
 

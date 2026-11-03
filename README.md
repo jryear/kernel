@@ -79,3 +79,12 @@ untrusted candidate is not authentication. The caller must authenticate verify.p
 itself externally: replacing the entire guard remains outside self-check assurance.
 For local development only, an operator can compute a digest of their reviewed
 package and export it before running the six legacy regression tests.
+
+Schema1 and schema2 checks now start in a separate POSIX session/process group. The receipt
+records group cleanup, observed descendants, escaped survivors, timeout and OS
+kill/observation failures. Survivors and missing cleanup/assertion evidence make
+the verdict unverifiable. Escaped descendants are named even when best-effort
+remediation subsequently kills them. Detection uses ps sampling plus an inherited
+invocation marker; hostile children can erase it and escape between observations.
+This is observed cleanup evidence, not exhaustive containment or sandboxing.
+Legacy schema1 services (as distinct from checks) remain outside this guarantee.
