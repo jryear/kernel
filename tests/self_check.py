@@ -10,6 +10,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 # Fixture creation is frozen in the existing regression helper.
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(ROOT))
 from selftest import make_repo
 
@@ -31,7 +32,7 @@ def main():
         expected = hashlib.sha256(manifest.encode()).hexdigest()
         env = {**os.environ, 'VERIFY_RELEASE_SHA256': expected, 'PYTHONDONTWRITEBYTECODE': '1'}
         cmd = [sys.executable, str(package / 'verify.py'), 'tasks/demo.toml', '--repo', str(repo), '--base', 'main', '--baseline']
-        positive = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=30)
+        positive = subprocess.run(cmd, cwd=repo, env=env, capture_output=True, text=True, timeout=30)
         if positive.returncode != 0 or 'BASELINE_READY' not in positive.stdout:
             raise RuntimeError('intact fixture failed: ' + positive.stdout + positive.stderr)
         cases = [('ALTERED_VERIFIER', 'verify.py'), ('ALTERED_MANIFEST', 'MANIFEST.sha256'),
@@ -45,7 +46,7 @@ def main():
                 target.write_bytes(original + b'\n# altered bytes\n')
             else:
                 case_env.pop('VERIFY_RELEASE_SHA256', None)
-            result = subprocess.run(cmd, env=case_env, capture_output=True, text=True, timeout=30)
+            result = subprocess.run(cmd, cwd=repo, env=case_env, capture_output=True, text=True, timeout=30)
             if name:
                 target.write_bytes(original)
             no_verdict = not any(word in result.stdout for word in ('SUPPORTED', 'CONTRADICTED', 'UNVERIFIABLE', 'BASELINE_READY'))
