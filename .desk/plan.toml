@@ -2,46 +2,59 @@
 name = "kernel"
 outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
 main = "main"
-instruction_version = 1
-# Release rule: the next version is built on a branch and the current release judges it.
-# Installed files stay read-only; 3.2.0 ships through releases/ with manifest and install receipt, like 3.1.0.
+instruction_version = 2
+# Release rule: the installed release judges the next one.
+# - 3.2.0 is built in a separate worktree. ~/code/_kernel stays on the installed 3.1.0, read-only.
+# - Each item's tests are frozen first and must FAIL against 3.1.0 and PASS on the candidate.
+#   The six existing self-tests are a regression baseline, not evidence for new guarantees.
+# - The judge, its contracts, fixtures and result logs stay outside the candidate's write authority.
+# Verdict rule (from review, 2026-11-03): a denial shows an attempted operation, not intent.
+# - contradicted: a deterministic violation the contract or kernel policy forbids (protected paths changed).
+# - unverifiable: environment failures (missing dependency, undeclared network) and any ambiguous or missing evidence.
+# - Missing evidence is never promoted to contradicted or supported.
 
 [[item]]
 id = "self-check"
-title = "Verifier checks itself against MANIFEST.sha256 at startup and refuses to run if anything differs"
-mandate = "Zack, 2026-11-03: production suite, sandbox plan. A tampered judge must not judge."
-acceptance = [["python3", "selftest.py"]]
+title = "Verifier refuses to run unless its files match a release digest held outside the candidate"
+mandate = "Zack, 2026-11-03: production suite. A tampered judge must not judge. The manifest beside the verifier only counts if it is itself trusted, so the expected digest is supplied by the caller or the release tag, not read from the kernel dir."
+acceptance = [["python3", "tests/self_check.py"]]
+# Cases: altered verifier, altered manifest, altered runtime module, missing digest -> refuse (exit 3), never verdict.
 
 [[item]]
 id = "cleanup"
-title = "Each check runs in its own process group, killed afterwards; leftover processes are named in the receipt"
-mandate = "Zack, 2026-11-03: production suite. Removes 'service cleanup' from the limits list."
-acceptance = [["python3", "selftest.py"]]
+title = "Each check runs in its own process group; survivors are named in the receipt and make the verdict unverifiable"
+mandate = "Zack, 2026-11-03: production suite. 'Service cleanup' stays on the limits list until an escape test proves the boundary."
+acceptance = [["python3", "tests/cleanup.py"]]
+# Cases: child in group (killed), child that setsid()s out (detected as survivor), timeout, kill failure.
 
 [[item]]
 id = "sandbox-spike"
-title = "Spike: srt 0.0.81 on macOS — confine writes, deny ~/.ssh and .env reads, localhost-only network, and report which access was blocked"
-mandate = "Zack, 2026-11-03: sandbox via Anthropic sandbox-runtime. Verify its real API before building on it."
+title = "Spike decides the sandbox architecture: srt CLI vs embedded library, tamper detection by hashing, logs as explanation only"
+mandate = "Zack, 2026-11-03. Verified in srt 0.0.81 source: CLI initializes without the log monitor; library has opt-in enableLogMonitor; violation store keeps the last 100 events. Upstream reports of dropped/misattributed macOS events are unreproduced."
 acceptance = [["python3", "spike/sandbox_probe.py"]]
+# Probe both paths separately: collector started before the check, a known-denied canary,
+# bursts beyond 100 denials, events arriving after exit. Output: which path, and what evidence it can and cannot give.
 
 [[item]]
 id = "sandbox"
-title = "--sandbox (opt-in): check commands run inside srt, verifier stays outside; tampering is contradicted, other blocked actions are unverifiable and named"
+title = "--sandbox (opt-in): checks run confined, verifier outside; protected paths hashed before and after each check"
 mandate = "Zack, 2026-11-03: make 'agents can't edit the rules' true while code runs, not only in the diff."
 depends = ["self-check", "cleanup", "sandbox-spike"]
-acceptance = [["python3", "selftest.py"], ["python3", "tests/tamper_suite.py"]]
+acceptance = [["python3", "tests/tamper_suite.py"]]
+# Bad candidates: rewrite the log, edit the verifier, edit the contract, write .git, read ~/.ssh, call the network,
+# write a cache. Each must get its specified verdict; tamper verdicts must hold with violation logging disabled.
 
 [[item]]
 id = "flake"
-title = "Per-check repeat count: receipts record a pass rate; a quarantined or below-threshold check makes the verdict unverifiable, never supported"
-mandate = "Zack, 2026-11-03: flaky-test policy (the historical S 35/36)."
-acceptance = [["python3", "selftest.py"], ["python3", "tests/flake_policy.py"]]
+title = "Repeat policy fixed before measuring: seeds, repetition count and timeout handling declared in the contract; quarantine is unverifiable, never supported"
+mandate = "Zack, 2026-11-03: flaky-test policy. The S 35/36 case is why one green rerun is not enough."
+acceptance = [["python3", "tests/flake_policy.py"]]
 
 [[item]]
 id = "mutants"
-title = "Contracts declare known-wrong implementations; --baseline runs each and is not ready if any mutant passes"
-mandate = "Zack, 2026-11-03: contract work. Prove a contract rejects wrong work before freezing it."
-acceptance = [["python3", "selftest.py"], ["python3", "tests/mutants.py"]]
+title = "Contracts declare known-wrong implementations; a kill counts only when the named assertion fails, not a crash or setup error"
+mandate = "Zack, 2026-11-03: contract work. Receipts record mutant identity, expected failing assertion and the observed one. Killed mutants show those failures are caught, not that the contract is complete."
+acceptance = [["python3", "tests/mutants.py"]]
 
 [[item]]
 id = "red-team"
@@ -59,7 +72,7 @@ acceptance = [["python3", "tests/real_contracts_sandboxed.py"]]
 
 [[item]]
 id = "release"
-title = "Release 3.2.0: install receipt, manifest, limits list rewritten, SWE-bench comparison written"
+title = "Release 3.2.0: install receipt, manifest, release digest published as a tag, limits list rewritten, SWE-bench comparison written"
 mandate = "Zack, 2026-11-03: production suite."
 depends = ["default-on", "red-team"]
 acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "selftest.py"]]
