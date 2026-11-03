@@ -42,8 +42,8 @@ acceptance = [["python3", "spike/sandbox_probe.py"]]
 [[item]]
 id = "integrate-1"
 title = "Integration: self-check + cleanup combined; both frozen contracts supported by 3.1.0 on the combined tree; manifest regenerated from final contents"
+# Integrates proven-but-unmerged branches; desk deps mean done (merged), so none are declared here.
 mandate = "Zack, 2026-11-03 review: neither branch's verdict proves the combination. Expected digest comes from a trusted release receipt outside the checked files."
-depends = ["self-check", "cleanup"]
 acceptance = [["python3", "tests/self_check.py"], ["python3", "tests/cleanup.py"], ["python3", "-B", "selftest.py"]]
 
 [[item]]
