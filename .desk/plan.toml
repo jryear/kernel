@@ -1,0 +1,65 @@
+[project]
+name = "kernel"
+outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
+main = "main"
+instruction_version = 1
+# Release rule: the next version is built on a branch and the current release judges it.
+# Installed files stay read-only; 3.2.0 ships through releases/ with manifest and install receipt, like 3.1.0.
+
+[[item]]
+id = "self-check"
+title = "Verifier checks itself against MANIFEST.sha256 at startup and refuses to run if anything differs"
+mandate = "Zack, 2026-11-03: production suite, sandbox plan. A tampered judge must not judge."
+acceptance = [["python3", "selftest.py"]]
+
+[[item]]
+id = "cleanup"
+title = "Each check runs in its own process group, killed afterwards; leftover processes are named in the receipt"
+mandate = "Zack, 2026-11-03: production suite. Removes 'service cleanup' from the limits list."
+acceptance = [["python3", "selftest.py"]]
+
+[[item]]
+id = "sandbox-spike"
+title = "Spike: srt 0.0.81 on macOS — confine writes, deny ~/.ssh and .env reads, localhost-only network, and report which access was blocked"
+mandate = "Zack, 2026-11-03: sandbox via Anthropic sandbox-runtime. Verify its real API before building on it."
+acceptance = [["python3", "spike/sandbox_probe.py"]]
+
+[[item]]
+id = "sandbox"
+title = "--sandbox (opt-in): check commands run inside srt, verifier stays outside; tampering is contradicted, other blocked actions are unverifiable and named"
+mandate = "Zack, 2026-11-03: make 'agents can't edit the rules' true while code runs, not only in the diff."
+depends = ["self-check", "cleanup", "sandbox-spike"]
+acceptance = [["python3", "selftest.py"], ["python3", "tests/tamper_suite.py"]]
+
+[[item]]
+id = "flake"
+title = "Per-check repeat count: receipts record a pass rate; a quarantined or below-threshold check makes the verdict unverifiable, never supported"
+mandate = "Zack, 2026-11-03: flaky-test policy (the historical S 35/36)."
+acceptance = [["python3", "selftest.py"], ["python3", "tests/flake_policy.py"]]
+
+[[item]]
+id = "mutants"
+title = "Contracts declare known-wrong implementations; --baseline runs each and is not ready if any mutant passes"
+mandate = "Zack, 2026-11-03: contract work. Prove a contract rejects wrong work before freezing it."
+acceptance = [["python3", "selftest.py"], ["python3", "tests/mutants.py"]]
+
+[[item]]
+id = "red-team"
+title = "Red-team procedure: an agent writes mutants and adversarial checks before freeze; they ship only as a new frozen contract version"
+mandate = "Zack, 2026-11-03: separate red-team agent, judged by the same frozen contract."
+depends = ["mutants"]
+acceptance = [["python3", "tests/red_team_freeze.py"]]
+
+[[item]]
+id = "default-on"
+title = "Sandbox on by default once BidZizi's real contracts (preview-001, photos-001) return supported with it"
+mandate = "Zack, 2026-11-03: opt-in first, default once real contracts pass."
+depends = ["sandbox", "flake"]
+acceptance = [["python3", "tests/real_contracts_sandboxed.py"]]
+
+[[item]]
+id = "release"
+title = "Release 3.2.0: install receipt, manifest, limits list rewritten, SWE-bench comparison written"
+mandate = "Zack, 2026-11-03: production suite."
+depends = ["default-on", "red-team"]
+acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "selftest.py"]]
