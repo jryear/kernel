@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-10-05T22:29:41.529581+00:00",
+  "model": "gpt-6.1-sol",
+  "reasoningEffort": "medium",
+  "scope": "Shadow candidate preparation only; no installation or acceptance execution",
+  "sourceSha256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+  "candidateSha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "installedVerifierSha256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+  "protectedHashes": {
+    "original/verify.py": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+    "original/selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "candidate/selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "frozen/test_timeout_boundary.py": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+    "frozen/CASE_PLAN.json": "5867a6bad95059cd63ebee0d98093f339354152209d322195646f3fb3c8251c7",
+    "PATCH_SPEC.json": "86d3e281557082f189e94c03cf0770b7864daf493ed253598b8775cbe8fb5c61"
+  },
+  "freezeSha256": "8d4eba2f8960f0f180003e840fee14ecfd359cfb912df52c3f7d640ca8fa6992",
+  "exactDiff": "--- original/verify.py\n+++ candidate/verify.py\n@@ -43,7 +43,7 @@\n import tomllib\n from pathlib import Path\n \n-VERIFIER_VERSION = \"3.0.0\"\n+VERIFIER_VERSION = \"3.0.1\"\n SPEC_VERSION = 1\n KINDS = (\"acceptance\", \"adversarial\", \"regression\")\n HARNESS_EXIT = 99\n@@ -351,7 +351,7 @@\n         )\n         code, output = result.returncode, result.stdout + result.stderr\n     except subprocess.TimeoutExpired as error:\n-        code, output = None, f\"TIMEOUT after {error.timeout}s\"\n+        code, output = HARNESS_EXIT, f\"TIMEOUT after {error.timeout}s\"\n     return {\n         \"name\": check[\"name\"],\n         \"kind\": check[\"kind\"],\n",
+  "verification": {
+    "inMemorySyntaxCompile": "PASS",
+    "frozenHashes": "MATCH",
+    "installedVerifierUnchanged": true,
+    "acceptanceRun": false
+  },
+  "tools": [
+    "functions.exec",
+    "exec_command",
+    "python3 standard library",
+    "git status --porcelain=v1",
+    "git rev-parse HEAD"
+  ],
+  "changedFiles": [
+    "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/candidate/verify.py",
+    "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/implementation.json"
+  ],
+  "repositoryHead": "fde9bd131b55d8d8dca41d6cde19fa84995309b5",
+  "repositoryWrites": false
+}

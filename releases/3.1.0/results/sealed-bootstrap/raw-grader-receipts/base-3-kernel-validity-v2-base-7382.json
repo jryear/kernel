@@ -1,0 +1,2004 @@
+{
+  "protocol": 1,
+  "rubric_version": 2,
+  "grader_sha256": "c573ac8988cf768a0f8246d61617cc12ee8887660cd1bf34ff8375c76043a717",
+  "frozen_v1_grader_sha256": "b901e458d96c2d73ae0e76c81979cb9f2a8c3709325318ab67cc0e14d1eece00",
+  "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "cases": [
+    {
+      "id": "B1_PER_CHECK_INTEGRITY",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/sequence-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0552
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0143
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 84fb97f] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0212
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "84fb97f8ba20043d1f456c469a5ebb95b1ce1824\n",
+          "stderr": "",
+          "seconds": 0.0109
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0127
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0123
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 33ccd9c] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0185
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "33ccd9c8d338b71b3600aad95dac0824104afb39\n",
+          "stderr": "",
+          "seconds": 0.0115
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/sequence-control",
+            "--base",
+            "84fb97f8ba20043d1f456c469a5ebb95b1ce1824",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/sequence-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0794,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/sequence-control",
+            "--base",
+            "84fb97f8ba20043d1f456c469a5ebb95b1ce1824",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/sequence-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0781,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B2_DIRECT_ENTRY_POSITION",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/entry-position-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0147
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0114
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0137
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 84fb97f] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0195
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "84fb97f8ba20043d1f456c469a5ebb95b1ce1824\n",
+          "stderr": "",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0138
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0118
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 33ccd9c] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0189
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "33ccd9c8d338b71b3600aad95dac0824104afb39\n",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/entry-position-control",
+            "--base",
+            "84fb97f8ba20043d1f456c469a5ebb95b1ce1824",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/entry-position-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0827,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/entry-position-control",
+            "--base",
+            "84fb97f8ba20043d1f456c469a5ebb95b1ce1824",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/entry-position-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0807,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B2_DELIMITER_POSITIVE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/valid-delimiter/.git/\n",
+          "stderr": "",
+          "seconds": 0.0145
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0147
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 62fecd6] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0205
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "62fecd69cdd0e3babdfa0c0e7128329d74d7e553\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0126
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0123
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 482a12f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0197
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "482a12f13979f0f25962cfaa96934e79e19169cf\n",
+          "stderr": "",
+          "seconds": 0.0122
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/valid-delimiter",
+            "--base",
+            "62fecd69cdd0e3babdfa0c0e7128329d74d7e553",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/valid-delimiter-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0797,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/valid-delimiter",
+            "--base",
+            "62fecd69cdd0e3babdfa0c0e7128329d74d7e553",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/valid-delimiter-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0811,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B3_BYTE_SAFE_MANIFEST",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/binary-manifest/.git/\n",
+          "stderr": "",
+          "seconds": 0.0153
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0118
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0136
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 0e1991c] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0205
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "0e1991c7ffe74ceb68fbc7471b55cb8d2d5bc6d7\n",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0124
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate b9e7c1d] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0197
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "b9e7c1d13877e6efd5846b0dab09beabe1fc36f8\n",
+          "stderr": "",
+          "seconds": 0.0108
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'main'\n",
+          "seconds": 0.0136
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0123
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main 245b7a6] fixture\n 3 files changed, 3 insertions(+)\n create mode 100644 binary.png\n create mode 100644 crlf.txt\n create mode 100644 \"space caf\\303\\251.txt\"\n",
+          "stderr": "",
+          "seconds": 0.0188
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "245b7a6f95b781afb9ff6631cba937ae8671ef10\n",
+          "stderr": "",
+          "seconds": 0.0108
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'candidate'\n",
+          "seconds": 0.0137
+        },
+        {
+          "argv": [
+            "git",
+            "merge",
+            "245b7a6f95b781afb9ff6631cba937ae8671ef10",
+            "--no-edit"
+          ],
+          "exit": 0,
+          "stdout": "Merge made by the 'ort' strategy.\n binary.png              | Bin 0 -> 17 bytes\n crlf.txt                |   2 ++\n \"space caf\\303\\251.txt\" |   1 +\n 3 files changed, 3 insertions(+)\n create mode 100644 binary.png\n create mode 100644 crlf.txt\n create mode 100644 \"space caf\\303\\251.txt\"\n",
+          "stderr": "",
+          "seconds": 0.026
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/binary-manifest",
+            "--base",
+            "245b7a6f95b781afb9ff6631cba937ae8671ef10",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/binary-manifest-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0761,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/binary-manifest",
+            "--base",
+            "245b7a6f95b781afb9ff6631cba937ae8671ef10",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/binary-manifest-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0776,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B3_EXECUTABLE_MODE_MUTATION",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/mode-drift-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0142
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0115
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0132
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 0e1991c] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0198
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "0e1991c7ffe74ceb68fbc7471b55cb8d2d5bc6d7\n",
+          "stderr": "",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.014
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0122
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate b9e7c1d] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0185
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "b9e7c1d13877e6efd5846b0dab09beabe1fc36f8\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/mode-drift-control",
+            "--base",
+            "0e1991c7ffe74ceb68fbc7471b55cb8d2d5bc6d7",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/mode-drift-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0794,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/mode-drift-control",
+            "--base",
+            "0e1991c7ffe74ceb68fbc7471b55cb8d2d5bc6d7",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/mode-drift-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0763,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_REGRESSION_PROTOCOL",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-regression-normal/.git/\n",
+          "stderr": "",
+          "seconds": 0.0141
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 14093f7] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0195
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "14093f75c0a5e029494bdacda5ff81f18edbcbae\n",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.013
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate d81595f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0176
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d81595f2ba8f0b13b950c5fbd09490b382dfcbeb\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'main'\n",
+          "seconds": 0.0133
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.013
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main b495096] fixture\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0203
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "b4950965b420a0265f7264e0b0bb3097d39a3bf4\n",
+          "stderr": "",
+          "seconds": 0.0104
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'candidate'\n",
+          "seconds": 0.0132
+        },
+        {
+          "argv": [
+            "git",
+            "merge",
+            "b4950965b420a0265f7264e0b0bb3097d39a3bf4",
+            "--no-edit"
+          ],
+          "exit": 0,
+          "stdout": "Merge made by the 'ort' strategy.\n checks/secondary.py  |  8 ++++++++\n support/secondary.py |  1 +\n tasks/check.toml     | 11 +++++++++++\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0245
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-regression-normal",
+            "--base",
+            "b4950965b420a0265f7264e0b0bb3097d39a3bf4",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-regression-normal-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0771,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-regression-normal",
+            "--base",
+            "b4950965b420a0265f7264e0b0bb3097d39a3bf4",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-regression-normal-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0822,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B4_ADVERSARIAL_PROTOCOL",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-adversarial-normal/.git/\n",
+          "stderr": "",
+          "seconds": 0.0158
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0125
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0137
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 14093f7] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0197
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "14093f75c0a5e029494bdacda5ff81f18edbcbae\n",
+          "stderr": "",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0125
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0119
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate d81595f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0192
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d81595f2ba8f0b13b950c5fbd09490b382dfcbeb\n",
+          "stderr": "",
+          "seconds": 0.0105
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'main'\n",
+          "seconds": 0.0132
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0126
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main 32e74d4] fixture\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0202
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "32e74d4f31dfa25c93200ab502f4aa400ff8dd97\n",
+          "stderr": "",
+          "seconds": 0.0107
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'candidate'\n",
+          "seconds": 0.0134
+        },
+        {
+          "argv": [
+            "git",
+            "merge",
+            "32e74d4f31dfa25c93200ab502f4aa400ff8dd97",
+            "--no-edit"
+          ],
+          "exit": 0,
+          "stdout": "Merge made by the 'ort' strategy.\n checks/secondary.py  |  8 ++++++++\n support/secondary.py |  1 +\n tasks/check.toml     | 11 +++++++++++\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0247
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-adversarial-normal",
+            "--base",
+            "32e74d4f31dfa25c93200ab502f4aa400ff8dd97",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-adversarial-normal-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0794,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-adversarial-normal",
+            "--base",
+            "32e74d4f31dfa25c93200ab502f4aa400ff8dd97",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/secondary-adversarial-normal-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0781,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B4_BASELINE_IMPORT",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-import-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0147
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0135
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 14093f7] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0204
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "14093f75c0a5e029494bdacda5ff81f18edbcbae\n",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0125
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0123
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate d81595f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0185
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d81595f2ba8f0b13b950c5fbd09490b382dfcbeb\n",
+          "stderr": "",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-import-control",
+            "--base",
+            "14093f75c0a5e029494bdacda5ff81f18edbcbae",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-import-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0796,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-import-control",
+            "--base",
+            "14093f75c0a5e029494bdacda5ff81f18edbcbae",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-import-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0787,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_BASELINE_SETUP",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-setup-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0152
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0135
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) d1dd25e] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0202
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d1dd25ee10dc72231217e7527644218b216d3450\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0132
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0122
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate cd8badb] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0179
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "cd8badb265aa50015f097dd125abc0ad3771dc99\n",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-setup-control",
+            "--base",
+            "d1dd25ee10dc72231217e7527644218b216d3450",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-setup-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0849,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-setup-control",
+            "--base",
+            "d1dd25ee10dc72231217e7527644218b216d3450",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-setup-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0849,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_BASELINE_UNEXPECTED_FAILURE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-unexpected_base-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0141
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0135
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) d1dd25e] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.02
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d1dd25ee10dc72231217e7527644218b216d3450\n",
+          "stderr": "",
+          "seconds": 0.0106
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.013
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate cd8badb] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0187
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "cd8badb265aa50015f097dd125abc0ad3771dc99\n",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-unexpected_base-control",
+            "--base",
+            "d1dd25ee10dc72231217e7527644218b216d3450",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-unexpected_base-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0807,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-unexpected_base-control",
+            "--base",
+            "d1dd25ee10dc72231217e7527644218b216d3450",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/baseline-unexpected_base-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0801,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_BASELINE_WRONG_EXPECTED_FAILURE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/wrong-expected-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0145
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0109
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) d1dd25e] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0204
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d1dd25ee10dc72231217e7527644218b216d3450\n",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0129
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate cd8badb] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0182
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "cd8badb265aa50015f097dd125abc0ad3771dc99\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/wrong-expected-control",
+            "--base",
+            "d1dd25ee10dc72231217e7527644218b216d3450",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/wrong-expected-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0782,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/wrong-expected-control",
+            "--base",
+            "d1dd25ee10dc72231217e7527644218b216d3450",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/wrong-expected-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0778,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_LEGACY_BASELINE_LABEL",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/legacy-baseline/.git/\n",
+          "stderr": "",
+          "seconds": 0.0145
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0106
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0136
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 1bebe9f] fixture\n 4 files changed, 19 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0206
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "1bebe9f5d0246b4a2882c913d1737b5b8f342b99\n",
+          "stderr": "",
+          "seconds": 0.0109
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0124
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 8b01de0] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0176
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "8b01de0c8fd79b56aef53458a521ed3c96fc03ab\n",
+          "stderr": "",
+          "seconds": 0.0109
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/verify-base-parent-fe62j9l2/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/legacy-baseline",
+            "--base",
+            "1bebe9f5d0246b4a2882c913d1737b5b8f342b99",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-v2-grader-24o0gw2s/legacy-baseline-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 0,
+          "stdout": "BASELINE_READY  validity-fixture  base=1bebe9f5d024\n  [accep] base:fail  desired observable\n",
+          "stderr": "",
+          "seconds": 0.144,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "LEGACY_BASELINE: visible assurance label missing or mechanical behavior changed"
+    }
+  ],
+  "counts": {
+    "pass": 0,
+    "fail": 12,
+    "unavailable": 0
+  },
+  "scope": "four frozen-v1 source-review rubric corrections; not new application findings or hostile-code sandbox"
+}

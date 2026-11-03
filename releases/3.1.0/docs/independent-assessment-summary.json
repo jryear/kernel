@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-05T23:23:22.212414+00:00",
+  "assessment": "Credible mechanical gate for explicit frozen contracts; evidence validity, complete runner protection, and precise artifact binding remain separate assurance requirements.",
+  "sourceHashes": {
+    "original": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+    "candidate": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "installed": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "frozenSuite": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+    "originalSelftest": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "candidateSelftest": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69"
+  },
+  "syntheticCounterexamples": {
+    "verifierSha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "cases": [
+      {
+        "name": "mutable_runner",
+        "scope": "Disposable synthetic fixture; no application finding claimed",
+        "baselineExit": 0,
+        "baselineStdout": "BASELINE_READY  mutable_runner  base=8bdf4fe43095\n  [accep] base:fail  desired observable\n",
+        "candidateExit": 0,
+        "candidateStdout": "SUPPORTED  mutable_runner  (1 files changed)\n  [accep] base:fail -> candidate:pass  desired observable\n  logged -> /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/verification-assessment-oawmrwef/mutable_runner.jsonl\n",
+        "appBefore": "old",
+        "appAfter": "old",
+        "verifierRecord": {
+          "schema": 1,
+          "at": "2026-10-05T23:22:28.547233+00:00",
+          "verifier_version": "3.0.1",
+          "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+          "task_id": "mutable_runner",
+          "project": "synthetic-audit",
+          "goal": "app.txt exposes new behavior",
+          "spec_path": "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/verification-assessment-oawmrwef/mutable_runner/tasks/audit.toml",
+          "spec_source": "base",
+          "spec_sha256": "c5bfae9d7dfdaa46f217811c4e5f6fd0138afd4a5cb5b724726a1adcabf0f86e",
+          "base_ref": "8bdf4fe4309591ad66f3df9682fa1f38e9a7497f",
+          "merge_base": "8bdf4fe4309591ad66f3df9682fa1f38e9a7497f",
+          "head": "8bdf4fe4309591ad66f3df9682fa1f38e9a7497f",
+          "dirty_before_log": true,
+          "claim": "",
+          "raw_claim": null,
+          "raw_claim_captured_at": null,
+          "implementer_model": null,
+          "verifier_access": "unknown",
+          "verifier_inspection_reported": "unknown",
+          "contract_review": {
+            "ran": null,
+            "reviewer_model": null,
+            "findings": [],
+            "accepted_findings": []
+          },
+          "changed_files": [
+            "runner.sh"
+          ],
+          "protected_changes": [],
+          "out_of_scope": [],
+          "mutable_test_changes": [],
+          "bypasses": [],
+          "base_checks": [
+            {
+              "name": "desired observable",
+              "kind": "acceptance",
+              "exit": 1,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": false,
+              "seconds": 0.01,
+              "output_tail": ""
+            }
+          ],
+          "candidate_checks": [
+            {
+              "name": "desired observable",
+              "kind": "acceptance",
+              "exit": 0,
+              "expected_exit": 0,
+              "passed": true,
+              "harness_error": false,
+              "seconds": 0.01,
+              "output_tail": ""
+            }
+          ],
+          "verdict": "supported",
+          "reasons": [],
+          "warnings": []
+        }
+      },
+      {
+        "name": "import_error_red",
+        "scope": "Disposable synthetic fixture; no application finding claimed",
+        "baselineExit": 0,
+        "baselineStdout": "BASELINE_READY  import_error_red  base=cabf4f1761f3\n  [accep] base:fail  desired observable\n",
+        "candidateExit": 0,
+        "candidateStdout": "SUPPORTED  import_error_red  (1 files changed)\n  [accep] base:fail -> candidate:pass  desired observable\n  logged -> /private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/verification-assessment-oawmrwef/import_error_red.jsonl\n",
+        "appBefore": "new",
+        "appAfter": "new",
+        "verifierRecord": {
+          "schema": 1,
+          "at": "2026-10-05T23:22:29.055139+00:00",
+          "verifier_version": "3.0.1",
+          "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+          "task_id": "import_error_red",
+          "project": "synthetic-audit",
+          "goal": "app.txt exposes new behavior",
+          "spec_path": "/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/verification-assessment-oawmrwef/import_error_red/tasks/audit.toml",
+          "spec_source": "base",
+          "spec_sha256": "71f556dbfe7bf7bc15ea4d5e52239dacb19446dbf3d38c0e950391f7b0e1a23c",
+          "base_ref": "cabf4f1761f37c977285222e8e18b485e8d52f1e",
+          "merge_base": "cabf4f1761f37c977285222e8e18b485e8d52f1e",
+          "head": "cabf4f1761f37c977285222e8e18b485e8d52f1e",
+          "dirty_before_log": true,
+          "claim": "",
+          "raw_claim": null,
+          "raw_claim_captured_at": null,
+          "implementer_model": null,
+          "verifier_access": "unknown",
+          "verifier_inspection_reported": "unknown",
+          "contract_review": {
+            "ran": null,
+            "reviewer_model": null,
+            "findings": [],
+            "accepted_findings": []
+          },
+          "changed_files": [
+            "helper.py"
+          ],
+          "protected_changes": [],
+          "out_of_scope": [],
+          "mutable_test_changes": [],
+          "bypasses": [],
+          "base_checks": [
+            {
+              "name": "desired observable",
+              "kind": "acceptance",
+              "exit": 1,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": false,
+              "seconds": 0.03,
+              "output_tail": "Traceback (most recent call last):\n  File \"/private/var/folders/5k/l4c971c10693qw4vwrvxb_s80000gn/T/verify-base-parent-5hk0hcgw/tree/checks/behavior.py\", line 1, in <module>\n    import helper\nModuleNotFoundError: No module named 'helper'\n"
+            }
+          ],
+          "candidate_checks": [
+            {
+              "name": "desired observable",
+              "kind": "acceptance",
+              "exit": 0,
+              "expected_exit": 0,
+              "passed": true,
+              "harness_error": false,
+              "seconds": 0.03,
+              "output_tail": ""
+            }
+          ],
+          "verdict": "supported",
+          "reasons": [],
+          "warnings": []
+        }
+      }
+    ]
+  },
+  "sourceOnlyFindings": [
+    {
+      "finding": "Review metadata is optional, user-supplied, validated and logged, and does not change the mechanical verdict.",
+      "source": "candidate/verify.py:245-286,454-481,599-635"
+    },
+    {
+      "finding": "Claims bind spec/verifier hashes and HEAD, with a dirty boolean, but contain no digest or immutable snapshot of the dirty candidate tree; checks run before the diff and HEAD are collected.",
+      "source": "candidate/verify.py:527-534,603-635"
+    },
+    {
+      "finding": "Check commands run with inherited environment and shell=True. The boundary suite sanitizes its test environment, but that is not an isolation feature of the general verifier.",
+      "source": "candidate/verify.py:340-374; test_timeout_boundary.py:84-96"
+    },
+    {
+      "finding": "Service ready/stop probes have no subprocess timeout; readiness failure during __enter__ has no guaranteed __exit__ cleanup. Arbitrary check descendants are outside the proven correction.",
+      "source": "candidate/verify.py:297-337,340-351"
+    },
+    {
+      "finding": "A real contradiction takes precedence over harness errors in a mixed run; this is unchanged by the patch.",
+      "source": "candidate/verify.py:560-599"
+    }
+  ],
+  "recommendedNextTranche": [
+    "Define an explicit result protocol for unmet requirements versus unusable harness evidence, so an import/setup error cannot establish valid baseline red.",
+    "Review and protect the execution chain of completion checks, and require evidence that the intended assertions ran.",
+    "Bind verification to an exact candidate snapshot or tree digest, preserving raw outcomes and execution identity.",
+    "Exercise service startup/readiness/stop timeouts and descendant cleanup in separate bounded evidence."
+  ],
+  "decision": "The 3.0.1 timeout correction is supported by this independent rerun. Further hardening is recommended before treating arbitrary contract green as broad product or autonomous-system acceptance."
+}

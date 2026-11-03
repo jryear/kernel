@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-06T03:46:04.913209+00:00",
+  "owner": "kernel_implementation_manager",
+  "actualModel": "gpt-6.1-sol",
+  "reasoningEffort": "medium",
+  "runtime": "Codex collaboration subagent",
+  "tools": [
+    "functions.exec/exec_command",
+    "Python standard library",
+    "Git",
+    "local filesystem"
+  ],
+  "role": "Bounded source implementation, local old/new checks, commit clean exact candidate; no installed anchor writes",
+  "allowedTrackedFiles": [
+    "verify.py",
+    "VERSION",
+    "MANIFEST.sha256",
+    "kernel_runtime.py",
+    "kernel_report.py",
+    "examples/schema2_check.py",
+    "task.template.toml",
+    "AGENTS.template.md",
+    "README.md",
+    "FRONTIER.md",
+    "adopt.py"
+  ],
+  "protected": "All tasks, old/new evidence, protocol/preparation/correction docs, reviews, selftest.py, review.template.json, AGENTS.md",
+  "reviewedAuthorCommit": "f3aa61a10c3fa4eadb59a6655ee0a1b76e733aee",
+  "contract": "tasks/kernel-evidence-validity-001-v2.toml",
+  "reviewSha256": "00ee4cab861e9f22f95529fe545e40b0505a847652be867dfccae0de5d6b0ced",
+  "newNamedGroups": 58,
+  "retainedHistoricalCases": 26,
+  "preparationPlanSha256": "ca9c2603b499bb3c7239f06abe9010a04b841e9b8212c82aec41300d657d5fef",
+  "frozenBaseSelection": "Full commit containing this reviewed packet is resolved by trusted CLI after commit; do not derive it from candidate TOML",
+  "activation": "Root sends explicit start after final integrated exact-base baseline passes",
+  "releaseStatus": "Local candidate only; installed3.0.1unchanged; installation separate after review and source-bound verification"
+}

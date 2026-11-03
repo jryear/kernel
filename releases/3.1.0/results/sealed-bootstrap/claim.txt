@@ -1,0 +1,1 @@
+Schema2 validates fresh complete assertion results and exact baseline failed IDs for every check kind, protects the declared direct execution chain, binds checks to clean committed snapshots with per-check byte/mode/index/HEAD integrity, and preserves visible legacy schema1 behavior.

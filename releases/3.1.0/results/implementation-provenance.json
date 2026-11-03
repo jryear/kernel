@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-06T03:58:14.316972+00:00",
+  "phase": "bounded implementation complete; parent independent acceptance/install separate",
+  "role": "bounded implementation manager",
+  "actual_model_runtime": "gpt-6.1-sol/medium Codex collaboration runtime (parent assignment)",
+  "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "tools_used": [
+    "functions.exec",
+    "exec_command",
+    "write_stdin",
+    "collaboration.send_message"
+  ],
+  "delegation": false,
+  "source_root": "/Users/jryear/code/kernel-validity-implementation",
+  "frozen_base": "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+  "candidate_commit": "b6217c81ff5c4762c9f7632a4d0252c584b93eaf",
+  "allowed_source_files": [
+    "verify.py",
+    "VERSION",
+    "MANIFEST.sha256",
+    "kernel_runtime.py",
+    "kernel_report.py",
+    "examples/schema2_check.py",
+    "task.template.toml",
+    "AGENTS.template.md",
+    "README.md",
+    "FRONTIER.md",
+    "adopt.py"
+  ],
+  "component_hashes": {
+    "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+    "VERSION": "b2f44d3b6e29f8b1b73ea4735f006affc4d198e1fd9c7d50e736159b1ef636c6",
+    "MANIFEST.sha256": "a2e255b152deb87af4692bf9e344819be08074052d66918f847c1cc531882373",
+    "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+    "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d",
+    "examples/schema2_check.py": "39a06807a540aa4d5ee0589c8ebe0d19a8474d6845721a3105461f8398271a11",
+    "task.template.toml": "14db96ea899ebe271c433275acbd651dbc6a06662344c1c8e074817c5113607e",
+    "AGENTS.template.md": "c5a9cbeb64ec6024d4be501945946b81dc26e21bad2c18452cca3b31748f6e75",
+    "README.md": "c5a9cbeb64ec6024d4be501945946b81dc26e21bad2c18452cca3b31748f6e75",
+    "FRONTIER.md": "c5a9cbeb64ec6024d4be501945946b81dc26e21bad2c18452cca3b31748f6e75",
+    "adopt.py": "1aeda691ede9a1c33c56de1f8b461e4ec96013ff4e27df22f5b324e54f37d7d6"
+  },
+  "review_packet_hash": "00ee4cab861e9f22f95529fe545e40b0505a847652be867dfccae0de5d6b0ced",
+  "installed_verifier_hash": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "frozen_files_changed": false,
+  "installed_files_changed": false,
+  "development_evidence": "development-full-1/summary.json",
+  "known_development_failure": {
+    "receipt": "development-v1-1.json",
+    "case": "EXACT_SOURCE_AND_ASSERTION_BINDING",
+    "cause": "macOS temporary-directory alias /var versus /private/var made cwd and VERIFY_ROOT differ as strings",
+    "correction": "snapshot root.resolve()",
+    "passing_rerun": "development-v1-core-2.json"
+  },
+  "limits": [
+    "trusted frozen assertion semantics and chain completeness assumed",
+    "not malicious sandbox or execution attestation",
+    "transient self-restoring writes within one check not detected",
+    "external runtime/linked input identity not source assurance",
+    "independent review and installation owned separately by parent"
+  ],
+  "exact_direct_counts": {
+    "v1_new_pass": 46,
+    "v2_new_pass": 12,
+    "candidate_legacy_selftests_pass": 6,
+    "candidate_legacy_timeout_pass": 20,
+    "original_legacy_selftests_pass": 6,
+    "original_legacy_timeout_pass": 20,
+    "fail": 0,
+    "unavailable": 0
+  },
+  "exact_direct_evidence": "exact-commit-1/summary.json",
+  "sealed_bootstrap": {
+    "exit": 0,
+    "seconds": 181.185,
+    "verdict": "SUPPORTED",
+    "receipt": "exact-bootstrap-1/receipt.json",
+    "claim_log": "exact-bootstrap-1/claims.jsonl"
+  },
+  "final_status_porcelain": "",
+  "outer_record_claim_identity_confirmed": true
+}

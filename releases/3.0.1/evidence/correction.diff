@@ -1,0 +1,20 @@
+--- verify.py v3.0.0
++++ verify.py proposed v3.0.1
+@@ -43,7 +43,7 @@
+ import tomllib
+ from pathlib import Path
+ 
+-VERIFIER_VERSION = "3.0.0"
++VERIFIER_VERSION = "3.0.1"
+ SPEC_VERSION = 1
+ KINDS = ("acceptance", "adversarial", "regression")
+ HARNESS_EXIT = 99
+@@ -351,7 +351,7 @@
+         )
+         code, output = result.returncode, result.stdout + result.stderr
+     except subprocess.TimeoutExpired as error:
+-        code, output = None, f"TIMEOUT after {error.timeout}s"
++        code, output = HARNESS_EXIT, f"TIMEOUT after {error.timeout}s"
+     return {
+         "name": check["name"],
+         "kind": check["kind"],

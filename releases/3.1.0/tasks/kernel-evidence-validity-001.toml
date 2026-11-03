@@ -1,0 +1,34 @@
+# Bootstrap contract schema1: installed sealed3.0.1 plus direct frozen grader/review.
+# This contract cannot establish trust by letting the mutable verifier grade itself.
+spec_version = 1
+id = "kernel-evidence-validity-001"
+project = "shared-kernel"
+goal = "New schema2 contracts reject unusable assertion evidence and mutable declared execution chains, bind support to an exact clean committed snapshot, and visibly retain schema1 legacy assurance."
+bypass_policy = "fail"
+[scope]
+include = ["verify.py", "VERSION", "task.template.toml", "AGENTS.template.md", "README.md", "FRONTIER.md", "adopt.py", "MANIFEST.sha256", "kernel_runtime.py", "kernel_report.py", "examples/schema2_check.py"]
+exclude = ["selftest.py", "evidence/*", "tasks/*", "docs/*", "review.template.json", "AGENTS.md"]
+protected = ["selftest.py", "evidence/*", "tasks/*", "docs/*", "AGENTS.md", "review.template.json"]
+test_files = ["*test*", "*spec*", "evidence/*"]
+[[checks]]
+name = "meaningful RED GREEN, exact source binding, visible legacy assurance, schema2 adoption, version"
+kind = "acceptance"
+cmd = "python3 evidence/validity/grader.py --verifier verify.py --receipt /tmp/kernel-validity-core-${VERIFY_TREE}-$$.json --mode core"
+evidence = ["evidence/validity/*", "docs/SCHEMA2_PROTOCOL.md"]
+timeout = 180
+[[checks]]
+name = "unusable assertions, setup failure, command-chain mutation and input mutation are rejected"
+kind = "adversarial"
+cmd = "python3 evidence/validity/grader.py --verifier verify.py --receipt /tmp/kernel-validity-negative-${VERIFY_TREE}-$$.json --mode negative"
+evidence = ["evidence/validity/*", "docs/SCHEMA2_PROTOCOL.md"]
+timeout = 300
+[[checks]]
+name = "original six selftests and twenty timeout boundaries retain frozen bytes and behavior"
+kind = "regression"
+cmd = "python3 evidence/validity/regressions.py --verifier verify.py --receipt /tmp/kernel-validity-legacy-${VERIFY_TREE}-$$.json"
+evidence = ["evidence/validity/regressions.py", "evidence/legacy/*", "selftest.py"]
+timeout = 160
+[notes]
+assurance = "Outer schema1 is bootstrap mechanical evidence only. Independent frozen direct receipts, source review and exact revisions are also required."
+out_of_scope = "No installed trust-anchor edit, universal consumer migration, push, deploy, provider, malicious sandbox, semantic proof, reviewer attestation, exhaustive dependency or general service lifecycle assurance."
+protocol = "docs/SCHEMA2_PROTOCOL.md version1; historical false supports are intentionally preserved as schema1 limitations."

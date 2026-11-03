@@ -1,0 +1,88 @@
+{
+  "sequence": "original6 -> original20 -> installed6 -> installed20, each process waited to completion",
+  "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "runs": [
+    {
+      "versionLabel": "original",
+      "test": "six",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/jryear/code/_kernel/releases/3.0.1/predecessor/selftest.py"
+      ],
+      "beganAtUtc": "2026-10-05T23:11:46.030087+00:00",
+      "finishedAtUtc": "2026-10-05T23:11:48.105328+00:00",
+      "seconds": 2.075,
+      "expectedRawExit": 0,
+      "rawExit": 0,
+      "stdout": "PASS test_supported\nPASS test_modified_evidence_contradicted\nPASS test_uncommitted_contract_rejected\nPASS test_working_spec_cannot_choose_base\nPASS test_regression_failure_contradicted\nPASS test_test_bypass_contradicted\nPASS all 6 kernel self-tests\n",
+      "stderr": ""
+    },
+    {
+      "versionLabel": "original",
+      "test": "boundary",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/jryear/code/_kernel/releases/3.0.1/evidence/test_timeout_boundary.py",
+        "--verifier",
+        "/Users/jryear/code/_kernel/releases/3.0.1/predecessor/verify.py",
+        "--receipt",
+        "/Users/jryear/code/_kernel/releases/3.0.1/results/original-boundary.json"
+      ],
+      "beganAtUtc": "2026-10-05T23:11:48.105670+00:00",
+      "finishedAtUtc": "2026-10-05T23:12:04.224582+00:00",
+      "seconds": 16.119,
+      "expectedRawExit": 1,
+      "rawExit": 1,
+      "stdout": "FAIL unit_timeout_acceptance: Actual check timeout must record exit99, got None\nFAIL unit_timeout_adversarial: Actual check timeout must record exit99, got None\nFAIL unit_timeout_regression: Actual check timeout must record exit99, got None\nPASS unit_finite_failure\nPASS unit_actual_99\nFAIL unit_custom_expected_exit: Actual check timeout must record exit99, got None\nPASS unit_expected_99_forbidden\nFAIL cli_base_timeout_acceptance: Timeout base must exit2, got 0\nFAIL cli_base_timeout_adversarial: Timeout base must exit2, got 0\nFAIL cli_base_timeout_regression: Base timeout must be reported HARNESS, not ordinary failure\nFAIL cli_candidate_timeout_acceptance: Timeout-only candidate must be UNVERIFIABLE exit2, got 1/contradicted\nFAIL cli_candidate_timeout_adversarial: Timeout-only candidate must be UNVERIFIABLE exit2, got 1/contradicted\nFAIL cli_candidate_timeout_regression: Timeout-only candidate must be UNVERIFIABLE exit2, got 1/contradicted\nPASS cli_finite_red_to_green\nPASS cli_candidate_failure_acceptance\nPASS cli_candidate_failure_adversarial\nPASS cli_candidate_failure_regression\nPASS cli_actual_99\nPASS cli_custom_expected_exit\nPASS cli_expected_99_forbidden\n{\"rawExit\": 1, \"counts\": {\"pass\": 10, \"fail\": 10, \"unavailable\": 0}, \"elapsedSeconds\": 16.075, \"receipt\": \"/Users/jryear/code/_kernel/releases/3.0.1/results/original-boundary.json\"}\n",
+      "stderr": "",
+      "rawReceiptSHA256": "5c9e88895ec2bd42039db29f369b36a848824e04a5094ff9b8f57b509ca1289c"
+    },
+    {
+      "versionLabel": "installed",
+      "test": "six",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/jryear/code/_kernel/selftest.py"
+      ],
+      "beganAtUtc": "2026-10-05T23:12:04.224977+00:00",
+      "finishedAtUtc": "2026-10-05T23:12:06.425185+00:00",
+      "seconds": 2.2,
+      "expectedRawExit": 0,
+      "rawExit": 0,
+      "stdout": "PASS test_supported\nPASS test_modified_evidence_contradicted\nPASS test_uncommitted_contract_rejected\nPASS test_working_spec_cannot_choose_base\nPASS test_regression_failure_contradicted\nPASS test_test_bypass_contradicted\nPASS all 6 kernel self-tests\n",
+      "stderr": ""
+    },
+    {
+      "versionLabel": "installed",
+      "test": "boundary",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/jryear/code/_kernel/releases/3.0.1/evidence/test_timeout_boundary.py",
+        "--verifier",
+        "/Users/jryear/code/_kernel/verify.py",
+        "--receipt",
+        "/Users/jryear/code/_kernel/releases/3.0.1/results/installed-boundary.json"
+      ],
+      "beganAtUtc": "2026-10-05T23:12:06.425539+00:00",
+      "finishedAtUtc": "2026-10-05T23:12:22.106317+00:00",
+      "seconds": 15.681,
+      "expectedRawExit": 0,
+      "rawExit": 0,
+      "stdout": "PASS unit_timeout_acceptance\nPASS unit_timeout_adversarial\nPASS unit_timeout_regression\nPASS unit_finite_failure\nPASS unit_actual_99\nPASS unit_custom_expected_exit\nPASS unit_expected_99_forbidden\nPASS cli_base_timeout_acceptance\nPASS cli_base_timeout_adversarial\nPASS cli_base_timeout_regression\nPASS cli_candidate_timeout_acceptance\nPASS cli_candidate_timeout_adversarial\nPASS cli_candidate_timeout_regression\nPASS cli_finite_red_to_green\nPASS cli_candidate_failure_acceptance\nPASS cli_candidate_failure_adversarial\nPASS cli_candidate_failure_regression\nPASS cli_actual_99\nPASS cli_custom_expected_exit\nPASS cli_expected_99_forbidden\n{\"rawExit\": 0, \"counts\": {\"pass\": 20, \"fail\": 0, \"unavailable\": 0}, \"elapsedSeconds\": 15.633, \"receipt\": \"/Users/jryear/code/_kernel/releases/3.0.1/results/installed-boundary.json\"}\n",
+      "stderr": "",
+      "rawReceiptSHA256": "afc2de0c99c4ca592b96ffb0526c0b91b8a6d9ce8d55231cce31ed1d497b3199"
+    }
+  ],
+  "versionReadback": {
+    "rawExit": 0,
+    "stdout": "3.0.1\n",
+    "stderr": ""
+  },
+  "installedVerifierSHA256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "frozenSuiteSHA256": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+  "allRawExitsExpected": true
+}

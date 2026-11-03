@@ -1,0 +1,21 @@
+FAIL unit_timeout_acceptance: Actual check timeout must record exit99, got None
+FAIL unit_timeout_adversarial: Actual check timeout must record exit99, got None
+FAIL unit_timeout_regression: Actual check timeout must record exit99, got None
+PASS unit_finite_failure
+PASS unit_actual_99
+FAIL unit_custom_expected_exit: Actual check timeout must record exit99, got None
+PASS unit_expected_99_forbidden
+FAIL cli_base_timeout_acceptance: Timeout base must exit2, got 0
+FAIL cli_base_timeout_adversarial: Timeout base must exit2, got 0
+FAIL cli_base_timeout_regression: Base timeout must be reported HARNESS, not ordinary failure
+FAIL cli_candidate_timeout_acceptance: Timeout-only candidate must be UNVERIFIABLE exit2, got 1/contradicted
+FAIL cli_candidate_timeout_adversarial: Timeout-only candidate must be UNVERIFIABLE exit2, got 1/contradicted
+FAIL cli_candidate_timeout_regression: Timeout-only candidate must be UNVERIFIABLE exit2, got 1/contradicted
+PASS cli_finite_red_to_green
+PASS cli_candidate_failure_acceptance
+PASS cli_candidate_failure_adversarial
+PASS cli_candidate_failure_regression
+PASS cli_actual_99
+PASS cli_custom_expected_exit
+PASS cli_expected_99_forbidden
+{"rawExit": 1, "counts": {"pass": 10, "fail": 10, "unavailable": 0}, "elapsedSeconds": 16.075, "receipt": "/Users/jryear/code/_kernel/releases/3.0.1/results/original-boundary.json"}

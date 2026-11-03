@@ -1,0 +1,59 @@
+{
+  "commands": [
+    {
+      "name": "original26",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/regressions.py",
+        "--verifier",
+        "/Users/jryear/code/_kernel/verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-commit-1/original26.json"
+      ],
+      "exit": 0,
+      "seconds": 17.108
+    },
+    {
+      "name": "v1-46",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/grader.py",
+        "--verifier",
+        "verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-commit-1/v1-46.json",
+        "--mode",
+        "all"
+      ],
+      "exit": 0,
+      "seconds": 91.204
+    },
+    {
+      "name": "v2-12",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/v2/grader.py",
+        "--verifier",
+        "verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-commit-1/v2-12.json"
+      ],
+      "exit": 0,
+      "seconds": 35.415
+    },
+    {
+      "name": "candidate26",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/regressions.py",
+        "--verifier",
+        "verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-commit-1/candidate26.json"
+      ],
+      "exit": 0,
+      "seconds": 17.85
+    }
+  ],
+  "phase": "exact-commit-1"
+}

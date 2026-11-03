@@ -1,0 +1,315 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-06T04:01:59.657064+00:00",
+  "verdict": "APPROVE_EXACT_CANDIDATE_FOR_BOUNDED_CONTRACT",
+  "candidate": "b6217c81ff5c4762c9f7632a4d0252c584b93eaf",
+  "frozenBase": "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning": "high",
+    "role": "independent consequential-tranche auditor and verifier",
+    "tools": [
+      "functions.exec",
+      "exec_command",
+      "write_stdin",
+      "Git read-only object inspection/archive",
+      "Python standard library",
+      "collaboration.send_message"
+    ],
+    "agentsSpawned": 0,
+    "runtime": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O"
+  },
+  "sourceBinding": {
+    "archiveSha256": "26bbd46f89fed5982cce5aa541b61d14b4e2785121a25bb13e2bbcb574a46a9c",
+    "sourceFiles": 34,
+    "sourceFilesUnchangedAfter": true,
+    "frozenPathsChecked": 20,
+    "frozenPathMismatches": 0,
+    "releaseManifestEntriesChecked": 12,
+    "releaseManifestSha256": "a2e255b152deb87af4692bf9e344819be08074052d66918f847c1cc531882373",
+    "verifierComponents": {
+      "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+      "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+      "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+    },
+    "componentBindingSha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0"
+  },
+  "changedCandidatePaths": [
+    "AGENTS.template.md",
+    "FRONTIER.md",
+    "MANIFEST.sha256",
+    "README.md",
+    "VERSION",
+    "adopt.py",
+    "examples/schema2_check.py",
+    "kernel_report.py",
+    "kernel_runtime.py",
+    "task.template.toml",
+    "verify.py"
+  ],
+  "reviewerChangedPaths": [
+    "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217"
+  ],
+  "trackedReviewFilesChanged": false,
+  "contractVerification": {
+    "execution": "sequential from private exact Git archive; disposable credential-free synthetic repositories",
+    "newV1": {
+      "pass": 46,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "newV2": {
+      "pass": 12,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "historicalSelftests": {
+      "pass": 6,
+      "fail": 0
+    },
+    "historicalTimeout": {
+      "pass": 20,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "totalNamedFrozenCases": 84,
+    "allCommandsExit": 0,
+    "runs": [
+      {
+        "name": "v1-all",
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "evidence/validity/grader.py",
+          "--verifier",
+          "verify.py",
+          "--mode",
+          "all",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v1-all.json"
+        ],
+        "exit": 0,
+        "seconds": 95.37243341701105,
+        "receipt_sha256": "ab56c7cffc112f5bca338ba0964281ab193673af5251a1ec36ba2b3edddb73b5"
+      },
+      {
+        "name": "v2",
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "evidence/validity/v2/grader.py",
+          "--verifier",
+          "verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v2.json"
+        ],
+        "exit": 0,
+        "seconds": 35.568954707996454,
+        "receipt_sha256": "0de1a332ae3f20edfa6ba4cfb5e1e9f721af49cd4157fe49a5fa9a2a6b76fccd"
+      },
+      {
+        "name": "original26",
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "evidence/validity/regressions.py",
+          "--verifier",
+          "verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/original26.json"
+        ],
+        "exit": 0,
+        "seconds": 17.937840041005984,
+        "receipt_sha256": "7a2834901438b6d93336b6be02e51a70f8003af1e18517b962098518430e3448"
+      }
+    ],
+    "stochasticEvaluations": false
+  },
+  "additionalIndependentProbes": {
+    "classification": "Deterministic probes separate from frozen contract gates",
+    "pass": 7,
+    "fail": 0,
+    "cases": [
+      {
+        "id": "DIRECT_BARE_ENTRY_AND_PACKAGE_BINDING",
+        "status": "pass",
+        "rejection": null
+      },
+      {
+        "id": "RUNTIME_SYMLINK_INTO_REPOSITORY_REJECTED",
+        "status": "pass",
+        "rejection": null
+      },
+      {
+        "id": "RESULT_BOOLEAN_PROTOCOL",
+        "status": "pass",
+        "rejection": "unsupported terminal result protocol"
+      },
+      {
+        "id": "RESULT_DUPLICATE_KEY",
+        "status": "pass",
+        "rejection": "duplicate JSON key: protocol"
+      },
+      {
+        "id": "RESULT_SYMLINK",
+        "status": "pass",
+        "rejection": "result must be a regular non-symlink file"
+      },
+      {
+        "id": "ENTRY_DIRECTORY_SYMLINK_REJECTED",
+        "status": "pass",
+        "rejection": null
+      },
+      {
+        "id": "CALLER_MUTATION_AFTER_CAPTURE",
+        "status": "pass"
+      }
+    ]
+  },
+  "sourceReviewFindings": [
+    {
+      "id": "C1",
+      "status": "supported-by-source-and-execution",
+      "claim": "Every check kind uses strict complete fresh result validation; invalid/setup/import/timeout evidence cannot establish intended baseline RED.",
+      "citations": [
+        "kernel_report.py:13-54",
+        "kernel_report.py:57-90",
+        "kernel_runtime.py:326-363"
+      ],
+      "evidence": "Frozen V1/V2 pass plus boolean, duplicate-key and symlink-result independent probes."
+    },
+    {
+      "id": "C2",
+      "status": "supported-by-source-and-execution",
+      "claim": "The parsed argv grammar identifies actual entry; direct bare entries become absolute inside the snapshot; declared repository chains are frozen; purported external runtime resolving inside repo is rejected.",
+      "citations": [
+        "kernel_runtime.py:53-116",
+        "kernel_runtime.py:149-161",
+        "kernel_runtime.py:258-277",
+        "kernel_report.py:66-75"
+      ],
+      "evidence": "Frozen positional/delimiter/changed chain cases plus direct bare entry, runtime symlink and entry-directory-symlink probes."
+    },
+    {
+      "id": "C3",
+      "status": "supported-by-source-and-execution",
+      "claim": "Fixed captured commits and raw byte manifests bind source; snapshots are inspected before/after every check for physical bytes/modes, index and HEAD; caller mutation is observed after execution.",
+      "citations": [
+        "verify.py:488-498",
+        "kernel_runtime.py:119-144",
+        "kernel_runtime.py:164-229",
+        "kernel_runtime.py:233-245",
+        "kernel_runtime.py:285-289",
+        "kernel_runtime.py:305-325"
+      ],
+      "evidence": "Frozen binary/CRLF/nonASCII/mode/inter-check/commit mutation cases plus caller mutation independent probe."
+    },
+    {
+      "id": "C4",
+      "status": "supported-by-source-and-execution",
+      "claim": "Schema2 records the three verifier component hashes at the start-of-schema2 boundary, and the release manifest covers all managed runtime/template files.",
+      "citations": [
+        "kernel_runtime.py:248-252",
+        "kernel_runtime.py:365-377",
+        "MANIFEST.sha256:1"
+      ],
+      "evidence": "All12 MANIFEST entries rehashed; independent positive completion component map/digest compared to extracted immutable source bytes."
+    },
+    {
+      "id": "C5",
+      "status": "supported-with-explicit-limits",
+      "claim": "Schema1 retains historical behavior with visible legacy assurance; adoption defaults to schema2 and preserves existing owner files; supported checks remain source-only evidence.",
+      "citations": [
+        "verify.py:536-538",
+        "verify.py:620-625",
+        "verify.py:657-661",
+        "adopt.py:39-65",
+        "README.md:1"
+      ],
+      "evidence": "Historical26 plus V1 adoption/legacy and V2 legacy-baseline cases pass. Documentation states exact boundaries."
+    }
+  ],
+  "materialBlockers": [],
+  "nonblockingObservations": [
+    "Component hashes describe the schema2 start boundary. They do not attest immutable loaded bytecode, a trusted Python/runtime installation, or mutation after that observed boundary.",
+    "Ignored inputs, linked dependencies and runtime installations are outside tracked source identity. Declared chain completeness still requires review.",
+    "Per-check integrity detects observed mutation across check boundaries; it does not continuously monitor transient edits restored within one check.",
+    "Valid structured JSON remains a report from the frozen harness, not independent proof that semantic assertions executed. Review provenance remains supplied metadata.",
+    "No generic service readiness/stop or arbitrary descendant cleanup guarantee is added; schema2 service/setup command strings are rejected."
+  ],
+  "notEstablished": [
+    "Universal installation performed or accepted",
+    "BidZizi implementation, production readiness or deployment",
+    "Hosted/provider behavior",
+    "Malicious-code sandboxing",
+    "External dependency/runtime hermeticity",
+    "Independent review attestation from metadata",
+    "General process lifecycle assurance"
+  ],
+  "receipts": {
+    "provenance.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/provenance.json",
+      "sha256": "48fcbb7b274704cc72fd1cb7240b3a12484da923e4803f2808e815ffc4a995c2"
+    },
+    "frozen-byte-check.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/frozen-byte-check.json",
+      "sha256": "ab9bf1959338c081904077735fc84bdfd92249f731f4ea818d59c194ea01a330"
+    },
+    "RUNS.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/RUNS.json",
+      "sha256": "6bf827e7cbf1369709da620effc6299ec779d7f4d9068a9a847b33f25302ea93"
+    },
+    "v1-all.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v1-all.json",
+      "sha256": "ab56c7cffc112f5bca338ba0964281ab193673af5251a1ec36ba2b3edddb73b5"
+    },
+    "v1-all.stdout.txt": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v1-all.stdout.txt",
+      "sha256": "e7a182bf88489c8d7189ae63bde82c964bf32bfeae3b75d69f17616763f080d9"
+    },
+    "v1-all.stderr.txt": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v1-all.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "v2.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v2.json",
+      "sha256": "0de1a332ae3f20edfa6ba4cfb5e1e9f721af49cd4157fe49a5fa9a2a6b76fccd"
+    },
+    "v2.stdout.txt": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v2.stdout.txt",
+      "sha256": "53c5fe4945b34ef03b8e8aa9e66c19adb85179359a445b18733ad1935c2addfb"
+    },
+    "v2.stderr.txt": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v2.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original26.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/original26.json",
+      "sha256": "7a2834901438b6d93336b6be02e51a70f8003af1e18517b962098518430e3448"
+    },
+    "original26.stdout.txt": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/original26.stdout.txt",
+      "sha256": "e51579e67332592aa408dca5fb979beb769a02f8e5d395decde136f63dd1642e"
+    },
+    "original26.stderr.txt": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/original26.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "probes.py": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/probes.py",
+      "sha256": "9abf4046ea35ddf0bb12eee55262cb4459e399eac54c842e7d7428ecc3c89f97"
+    },
+    "independent-probes.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/independent-probes.json",
+      "sha256": "b0b963256522ecdb40eed2156f30e2d956d3ef6ab7567caa2da88c4f7069a43e"
+    },
+    "caller_probe.py": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/caller_probe.py",
+      "sha256": "247df06aa251a906986946f9dfa431885adcbfe73820a0c122d5d307af71c0a2"
+    },
+    "caller-probe.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/caller-probe.json",
+      "sha256": "a54667d3dc1367537b092debc04c54826cd67eddf656c4619cd2c6d7df3ee572"
+    }
+  },
+  "nextAction": "Parent may use this exact-candidate audit with the separate sealed bootstrap result for the authorized versioned installation decision. Install exactly reviewed bytes, preserve predecessor and reverify installed package; do not rewrite historical consumer contracts silently."
+}

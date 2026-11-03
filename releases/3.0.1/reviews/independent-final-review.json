@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-05T22:33:36.766530+00:00",
+  "reviewer": {
+    "modelAsDispatched": "gpt-6.1-sol",
+    "reasoningEffort": "high",
+    "toolsUsed": [
+      "functions.exec",
+      "exec_command",
+      "python3 stdlib read/hash/receipt inspection and report write",
+      "rg",
+      "read-only source/diff inspection"
+    ],
+    "agentsSpawned": 0
+  },
+  "classification": "Independent source and retained-receipt audit; not a fresh independent execution or deterministic application gate",
+  "result": "No blockers found within the specified two-line timeout-classification correction. Ready for user review of shadow patch and evidence; installation remains outside this review.",
+  "blockers": [],
+  "verification": {
+    "freezeHashMismatches": [],
+    "exactSpecifiedTwoLineChange": true,
+    "frozenEvidenceUnchanged": true,
+    "selftestsByteIdentical": true,
+    "retainedBaselineMatchesFreeze": true,
+    "pairedReceiptsMatchActualVerifierAndSuiteHashes": true,
+    "receipts": {
+      "original": {
+        "version": "3.0.0",
+        "selftests": {
+          "rawExit": 0,
+          "passed": 6,
+          "seconds": 2.254
+        },
+        "boundary": {
+          "rawExit": 1,
+          "counts": {
+            "pass": 10,
+            "fail": 10,
+            "unavailable": 0
+          },
+          "seconds": 16.216
+        }
+      },
+      "candidate": {
+        "version": "3.0.1",
+        "selftests": {
+          "rawExit": 0,
+          "passed": 6,
+          "seconds": 2.296
+        },
+        "boundary": {
+          "rawExit": 0,
+          "counts": {
+            "pass": 20,
+            "fail": 0,
+            "unavailable": 0
+          },
+          "seconds": 16.178
+        }
+      }
+    }
+  },
+  "findings": [
+    {
+      "id": "timeout-classification",
+      "classification": "Source inference corroborated by retained actual-subprocess and miniGit CLI receipts",
+      "source": [
+        "candidate/verify.py:354",
+        "candidate/verify.py:360",
+        "candidate/verify.py:361",
+        "candidate/verify.py:439",
+        "candidate/verify.py:566",
+        "candidate/verify.py:574"
+      ],
+      "conclusion": "TimeoutExpired now records inner exit99, passed=false and harness_error=true while retaining TIMEOUT diagnostics. Base timeouts of all three check kinds fail readiness; candidate timeout-only cases become UNVERIFIABLE exit2 and avoid the ordinary candidate-failure list.",
+      "evidence": [
+        "unit_timeout_acceptance",
+        "unit_timeout_adversarial",
+        "unit_timeout_regression",
+        "cli_base_timeout_acceptance",
+        "cli_base_timeout_adversarial",
+        "cli_base_timeout_regression",
+        "cli_candidate_timeout_acceptance",
+        "cli_candidate_timeout_adversarial",
+        "cli_candidate_timeout_regression"
+      ],
+      "probe": "Frozen commands execute a real Python sleep2 with timeout1, including separate frozen base/candidate miniGit CLI cases; they do not fabricate timeout result dictionaries."
+    },
+    {
+      "id": "classification-controls",
+      "classification": "Retained receipt inspection and source audit; no rerun",
+      "source": [
+        "candidate/verify.py:195",
+        "candidate/verify.py:360",
+        "frozen/test_timeout_boundary.py:149",
+        "frozen/test_timeout_boundary.py:256",
+        "frozen/test_timeout_boundary.py:266",
+        "frozen/test_timeout_boundary.py:280",
+        "frozen/test_timeout_boundary.py:288",
+        "frozen/test_timeout_boundary.py:298"
+      ],
+      "conclusion": "Finite RED base still yields BASELINE_READY and healthy candidate SUPPORTED; ordinary acceptance/adversarial/regression candidate failures remain CONTRADICTED exit1. Actual99 remains harness/unverifiable. Expected7 remains valid and passes; timeout with expected7 remains harness. Expected99 remains SPEC_ERROR exit3. Existing six immutable controls pass on both copies."
+    },
+    {
+      "id": "evidence-ownership",
+      "classification": "Filesystem hash and receipt binding audit",
+      "source": [
+        "FREEZE.json",
+        "PATCH_SPEC.json",
+        "frozen/CASE_PLAN.json",
+        "frozen/test_timeout_boundary.py"
+      ],
+      "conclusion": "Every freeze hash matches current packet. Candidate equals original plus precisely the specified version bump and timeout assignment. Both paired receipts bind the same frozen suite hash and actual respective verifier source hash. Suite uses disposable local miniGit repositories, explicit trusted base selection, committed/protected evidence and sanitized child environment."
+    }
+  ],
+  "limitsAndCounterexamples": [
+    {
+      "classification": "Source inference; not separately executed",
+      "source": [
+        "candidate/verify.py:599",
+        "PATCH_SPEC.json"
+      ],
+      "statement": "A run containing a timeout plus an ordinary contradiction still resolves CONTRADICTED because existing contradiction precedence is unchanged. The proven claim is timeout-only UNVERIFIABLE, not unconditional UNVERIFIABLE whenever any timeout exists. No mixed-failure fixture is required by this bounded patch spec."
+    },
+    {
+      "classification": "Scope limitation",
+      "statement": "Actual timeout fixtures use an exec-replaced single Python process. Evidence does not establish arbitrary descendant/process-group cleanup; service readiness and setup timeout handling are unchanged and outside the correction."
+    },
+    {
+      "classification": "Evidence boundary",
+      "statement": "Final review executed no tests, network/provider requests or application gates. Paired local shadow-copy test results were inspected, not independently rerun. No installed-kernel state was refreshed in this final audit; installation and user acceptance remain separate."
+    }
+  ],
+  "filesInspected": [
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/FREEZE.json",
+      "sha256": "8d4eba2f8960f0f180003e840fee14ecfd359cfb912df52c3f7d640ca8fa6992"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/PATCH_SPEC.json",
+      "sha256": "86d3e281557082f189e94c03cf0770b7864daf493ed253598b8775cbe8fb5c61"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/original/verify.py",
+      "sha256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/candidate/verify.py",
+      "sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/original/selftest.py",
+      "sha256": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/candidate/selftest.py",
+      "sha256": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/frozen/test_timeout_boundary.py",
+      "sha256": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/frozen/CASE_PLAN.json",
+      "sha256": "5867a6bad95059cd63ebee0d98093f339354152209d322195646f3fb3c8251c7"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/correction.diff",
+      "sha256": "b05a5d5e2eeaff6e6e8f0320f5f5d35b8919a0c3c201966762687a6e8b77526b"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/original-paired-run.json",
+      "sha256": "1cffed957214bf665702c142d4d00ff6c7e113db8d273f6198c6676d66d402fc"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/candidate-paired-run.json",
+      "sha256": "7628fbf2a39371c6f54ad86b442d0cbd8b07d65615791e4a85b7d1056122dde0"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/original-paired-boundary.json",
+      "sha256": "062a421c4b7687694b62045da75e6c1a319c0411a4161e0fd4acad0e7332c058"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/candidate-paired-boundary.json",
+      "sha256": "68ca5ffeb5e0d55c0cf8931bab4f31908cd3ed9880a709965918de6bd8dc72ee"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/baseline-new-fixtures.json",
+      "sha256": "e7cf8e6e438d3f70619507224d5a359c481399017e2459980a5b071a2ea882ad"
+    }
+  ],
+  "persistentWrites": [
+    "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/independent-final-review.json"
+  ]
+}

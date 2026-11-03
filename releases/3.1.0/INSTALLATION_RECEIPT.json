@@ -1,0 +1,154 @@
+{
+  "version": "3.1.0",
+  "installedAtUtc": "2026-10-06T04:08:26.099577+00:00",
+  "installedRoot": "/Users/jryear/code/_kernel",
+  "frozenRelease": "/Users/jryear/code/_kernel/releases/3.1.0",
+  "sourceCommit": "b6217c81ff5c4762c9f7632a4d0252c584b93eaf",
+  "sourceTree": "cbffa720d726631734cd27232928e566a3d8eb5e",
+  "trustedFrozenBase": "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+  "managedFiles": {
+    "AGENTS.template.md": "c5a9cbeb64ec6024d4be501945946b81dc26e21bad2c18452cca3b31748f6e75",
+    "FRONTIER.md": "c5a9cbeb64ec6024d4be501945946b81dc26e21bad2c18452cca3b31748f6e75",
+    "README.md": "c5a9cbeb64ec6024d4be501945946b81dc26e21bad2c18452cca3b31748f6e75",
+    "VERSION": "b2f44d3b6e29f8b1b73ea4735f006affc4d198e1fd9c7d50e736159b1ef636c6",
+    "adopt.py": "1aeda691ede9a1c33c56de1f8b461e4ec96013ff4e27df22f5b324e54f37d7d6",
+    "examples/schema2_check.py": "39a06807a540aa4d5ee0589c8ebe0d19a8474d6845721a3105461f8398271a11",
+    "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d",
+    "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+    "review.template.json": "710e567c3276367a8b246ae6a37b8aa0a6df616f2fc7f24f9abd711b1b0de36b",
+    "selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "task.template.toml": "14db96ea899ebe271c433275acbd651dbc6a06662344c1c8e074817c5113607e",
+    "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5"
+  },
+  "managedManifestSha256": "a2e255b152deb87af4692bf9e344819be08074052d66918f847c1cc531882373",
+  "managedFileCount": 12,
+  "managedFileMismatches": 0,
+  "protectedFrozenFiles": 22,
+  "protectedMismatches": 0,
+  "installedVerification": {
+    "namedFrozenCaseGroups": 84,
+    "v1": {
+      "pass": 46,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "v2": {
+      "pass": 12,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "selftests": {
+      "pass": 6,
+      "fail": 0
+    },
+    "timeout": {
+      "pass": 20,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "commandExitCodes": [
+      0,
+      0,
+      0
+    ],
+    "commands": [
+      {
+        "name": "v1-all",
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "evidence/validity/grader.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/installed-3.1.0/v1-all.json",
+          "--mode",
+          "all"
+        ],
+        "startedAtUtc": "2026-10-06T04:06:03.042739+00:00",
+        "endedAtUtc": "2026-10-06T04:07:29.808552+00:00",
+        "seconds": 86.766,
+        "exit": 0,
+        "timeout": false,
+        "receiptSha256": "ca45bd324e6211e89e38ca9e91638515a72414fe24d6106924d079ed18bc26e2"
+      },
+      {
+        "name": "v2",
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "evidence/validity/v2/grader.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/installed-3.1.0/v2.json"
+        ],
+        "startedAtUtc": "2026-10-06T04:07:29.809196+00:00",
+        "endedAtUtc": "2026-10-06T04:08:03.157601+00:00",
+        "seconds": 33.348,
+        "exit": 0,
+        "timeout": false,
+        "receiptSha256": "a716c48748c93d8ecd4e1a5171c52a995240d9cc92fea7083daf5f6647f1c5ab"
+      },
+      {
+        "name": "original26",
+        "argv": [
+          "/opt/homebrew/opt/python@3.14/bin/python3.14",
+          "evidence/validity/regressions.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/installed-3.1.0/original26.json"
+        ],
+        "startedAtUtc": "2026-10-06T04:08:03.157956+00:00",
+        "endedAtUtc": "2026-10-06T04:08:20.867743+00:00",
+        "seconds": 17.71,
+        "exit": 0,
+        "timeout": false,
+        "receiptSha256": "7eb4c9d41327207329b9fbf3f0653edb74d05a5e3afa9fdf6bc286032edd615f"
+      }
+    ]
+  },
+  "independentReview": {
+    "model": "gpt-6-astra/high",
+    "verdict": "APPROVE exact candidate",
+    "namedFrozenCaseGroups": 84,
+    "additionalProbes": 7,
+    "reviewSha256": "084eb2769004208312492b7dd34bac5804ff0e6481016a4438d7ce00ae8152a6"
+  },
+  "implementationModel": "gpt-6.1-sol/medium",
+  "sealed3_0_1Bootstrap": "SUPPORTED exit0",
+  "selfVerificationProbe": "SUPPORTED exit0; legacy-schema1 bootstrap and additional probe, not independent trust",
+  "predecessor": {
+    "version": "3.0.1",
+    "releaseManifestSha256": "bb91c088b1485ceca3f8667834e959265c637e2225e9e05b613e052feeb4dbfa",
+    "filesRehashed": 45,
+    "mismatches": 0,
+    "managedRootBackup": "predecessor/managed-root"
+  },
+  "bidzizi": {
+    "sourceUnchanged": true,
+    "primaryHead": "94fa63935af6aaf5f83f8d904612c6d4d4c4db0f",
+    "dirtyStatusUnchanged": true,
+    "dirtyFileHashesUnchanged": true,
+    "kernelConsumerContractsMigrated": false
+  },
+  "claude": {
+    "latestCritiqueReturned": false,
+    "actualModelForLatestProbe": null,
+    "failure": "bounded request timed out without output; no fallback"
+  },
+  "unestablished": [
+    "Semantic assertion execution attestation",
+    "Complete dynamic command/dependency chain discovery",
+    "Immutable external runtime/dependencies/providers",
+    "Independent review attestation from metadata",
+    "General service readiness/stop and arbitrary descendant cleanup",
+    "Continuous transient within-check mutation monitoring",
+    "Historical schema1 hardened evidence validity",
+    "Production or hosted application readiness"
+  ],
+  "integrityAnomalies": [
+    "Earlier disputed identical timestamps remain preserved/excluded in 3.0.1 release; cause unexplained",
+    "Earlier BidZizi baseline seven harness99 not reproduced by fresh unchanged runs; cause unexplained"
+  ],
+  "effectScope": "Local source integration, shared-kernel installation and read-only versioned freeze only; no public push, application merge, provider or deployment changes."
+}

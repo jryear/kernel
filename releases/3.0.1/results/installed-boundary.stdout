@@ -1,0 +1,21 @@
+PASS unit_timeout_acceptance
+PASS unit_timeout_adversarial
+PASS unit_timeout_regression
+PASS unit_finite_failure
+PASS unit_actual_99
+PASS unit_custom_expected_exit
+PASS unit_expected_99_forbidden
+PASS cli_base_timeout_acceptance
+PASS cli_base_timeout_adversarial
+PASS cli_base_timeout_regression
+PASS cli_candidate_timeout_acceptance
+PASS cli_candidate_timeout_adversarial
+PASS cli_candidate_timeout_regression
+PASS cli_finite_red_to_green
+PASS cli_candidate_failure_acceptance
+PASS cli_candidate_failure_adversarial
+PASS cli_candidate_failure_regression
+PASS cli_actual_99
+PASS cli_custom_expected_exit
+PASS cli_expected_99_forbidden
+{"rawExit": 0, "counts": {"pass": 20, "fail": 0, "unavailable": 0}, "elapsedSeconds": 15.633, "receipt": "/Users/jryear/code/_kernel/releases/3.0.1/results/installed-boundary.json"}

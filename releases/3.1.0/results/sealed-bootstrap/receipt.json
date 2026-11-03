@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "/Users/jryear/code/_kernel/verify.py",
+    "tasks/kernel-evidence-validity-001-v2.toml",
+    "--repo",
+    "/Users/jryear/code/kernel-validity-implementation",
+    "--base",
+    "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+    "--claim",
+    "Schema2 validates fresh complete assertion results and exact baseline failed IDs for every check kind, protects the declared direct execution chain, binds checks to clean committed snapshots with per-check byte/mode/index/HEAD integrity, and preserves visible legacy schema1 behavior.",
+    "--raw-claim-file",
+    "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/claim.txt",
+    "--implementer-model",
+    "gpt-6.1-sol/medium Codex collaboration runtime",
+    "--verifier-access",
+    "yes",
+    "--verifier-inspection-reported",
+    "yes",
+    "--log",
+    "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/claims.jsonl"
+  ],
+  "exit": 0,
+  "seconds": 181.185,
+  "source_commit": "b6217c81ff5c4762c9f7632a4d0252c584b93eaf",
+  "installed_verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "model_runtime": "gpt-6.1-sol/medium Codex collaboration runtime"
+}

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "frozenAtUtc": "2026-10-05T22:28:59.093832+00:00",
+  "reviewer": "root Astra audit; independent evidence author gpt-6.1-sol/high",
+  "review": "Actual subprocess timeouts; separate immutable miniGit CLI contracts; ordinary-failure, healthy-candidate, real99 and expected-exit controls reviewed. Test sources accepted unchanged before implementation.",
+  "hashes": {
+    "original/verify.py": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+    "original/selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "candidate/selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "frozen/test_timeout_boundary.py": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+    "frozen/CASE_PLAN.json": "5867a6bad95059cd63ebee0d98093f339354152209d322195646f3fb3c8251c7",
+    "PATCH_SPEC.json": "86d3e281557082f189e94c03cf0770b7864daf493ed253598b8775cbe8fb5c61"
+  },
+  "candidateVerifierAbsentAtFreeze": true,
+  "installedVerifierSha256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+  "baselineRetained": {
+    "receipt": "results/baseline-new-fixtures.json",
+    "sha256": "e7cf8e6e438d3f70619507224d5a359c481399017e2459980a5b071a2ea882ad",
+    "counts": {
+      "pass": 10,
+      "fail": 10,
+      "unavailable": 0
+    },
+    "rawExit": 1
+  },
+  "authority": "Shadow candidate preparation only; no installation or product implementation"
+}

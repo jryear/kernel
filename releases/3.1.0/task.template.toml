@@ -1,0 +1,31 @@
+# Freeze this contract and its reviewed executable evidence on the trusted base.
+# The example checks app.txt: base contains old, candidate contains new.
+# Use an external verifier and Python 3.11+; select trusted base via CLI.
+# python3 ~/code/_kernel/verify.py tasks/TASK.toml --repo . --base BASE --baseline
+# python3 ~/code/_kernel/verify.py tasks/TASK.toml --repo . --base BASE \
+#   --claim "app exposes new behavior" --implementer-model "actual model/runtime"
+# Schema 2 logs default to an external temporary directory; --log must be outside repo.
+# Historical schema 1 is legacy assurance and requires explicit reviewed migration.
+spec_version = 2
+id = "project-area-001"
+project = "project"
+goal = "app exposes new behavior"
+bypass_policy = "fail"
+[scope]
+include = ["app.txt"]
+exclude = ["*.env"]
+protected = ["evidence/*"]
+test_files = ["*test*", "*spec*"]
+[[checks]]
+name = "app exposes new behavior"
+kind = "acceptance"
+timeout = 30
+argv = ["python3", "evidence/schema2_check.py"]
+entry = "evidence/schema2_check.py"
+chain = ["evidence/schema2_check.py"]
+evidence = ["evidence/schema2_check.py"]
+assertions = ["NEW_BEHAVIOR"]
+baseline_failures = ["NEW_BEHAVIOR"]
+[notes]
+assumptions = "Reviewed trusted harness; declared chain completeness; external runtime correctness."
+out_of_scope = "Sandboxing, semantic attestation, external dependency hermeticity, reviewer attestation and general service cleanup."

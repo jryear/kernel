@@ -1,0 +1,12 @@
+{
+  "atUtc": "2026-10-06T03:32:52.538567+00:00",
+  "root": "/Users/jryear/code/bidzizi",
+  "head": "94fa63935af6aaf5f83f8d904612c6d4d4c4db0f",
+  "status": " M AGENTS.md\n M README.md\n?? docs/PRODUCT_SLICE_001_DISCOVERY.md\n?? prototypes/holiday-social/\n?? prototypes/lanyard/\n?? prototypes/winter-exchange/\n",
+  "ownedDirtyFileHashes": {
+    "AGENTS.md": "1d7337208068fc6df9916c1a5d7b078aefddd2131213349861b78037a7edb413",
+    "README.md": "5fda22f55ca190c51319e31b689c75b3a9115fb0b6aacf24173e4a66c4662748",
+    "docs/PRODUCT_SLICE_001_DISCOVERY.md": "7bbadfc761dce70e55d92b0353ce3c32896cfd9b366697fc452e4c9b31af0069"
+  },
+  "scope": "Preserve user-owned existing dirty work; no tracked source changes in primary"
+}

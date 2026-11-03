@@ -1,0 +1,26 @@
+{
+  "base": "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+  "paths": [
+    "selftest.py",
+    "tasks/kernel-evidence-validity-001-v2.toml",
+    "tasks/kernel-evidence-validity-001.toml",
+    "docs/CONTRACT_PREPARATION.json",
+    "docs/WORKER_ASSIGNMENTS.json",
+    "docs/SCHEMA2_PROTOCOL.v2.md",
+    "docs/SCHEMA2_PROTOCOL.md",
+    "docs/predecessor-binding.json",
+    "docs/CONTRACT_CORRECTION.v2.json",
+    "docs/IMPLEMENTATION_ASSIGNMENT.json",
+    "docs/SLICE_DECISIONS.md",
+    "docs/independent-assessment-summary.json",
+    "docs/reviews/claude-design-probe.json",
+    "docs/reviews/kernel-v2-approved-audit.json",
+    "docs/reviews/kernel-v1-blocked-audit.json",
+    "docs/reviews/kernel-initial-design-audit.json",
+    "evidence/legacy/test_timeout_boundary.py",
+    "evidence/validity/grader.py",
+    "evidence/validity/regressions.py",
+    "evidence/validity/v2/grader.py"
+  ],
+  "mismatches": 0
+}

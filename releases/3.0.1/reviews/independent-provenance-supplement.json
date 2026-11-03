@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-05T22:37:14.874563+00:00",
+  "reviewer": {
+    "modelAsDispatched": "gpt-6.1-sol",
+    "reasoningEffort": "high",
+    "toolsUsed": [
+      "functions.exec",
+      "exec_command",
+      "python3 stdlib file/hash/JSON/timestamp inspection and sole report write"
+    ],
+    "agentsSpawned": 0
+  },
+  "classification": "Bounded independent source/hash and retained raw-receipt review; no new test execution or gate proof",
+  "result": "No remaining blocker for the bounded correction review using the sequential receipts. User review and any installation authority remain separate.",
+  "blockers": [],
+  "priorReview": {
+    "path": "results/independent-final-review.json",
+    "unchangedSha256": "e57b857af57beb6ad926e7d05caf503beb32363874c1ed8bc30a81772872f2d2",
+    "supplementEffect": "Supersedes reliance on earlier paired execution receipts for final evidence; retains prior source findings and scope limitations."
+  },
+  "priorConcern": {
+    "id": "B1",
+    "confirmed": true,
+    "earlierParallelSharedRecordAt": [
+      {
+        "case": "cli_finite_red_to_green",
+        "at": "2026-10-05T22:30:40.553127+00:00"
+      },
+      {
+        "case": "cli_candidate_failure_regression",
+        "at": "2026-10-05T22:30:42.428070+00:00"
+      },
+      {
+        "case": "cli_actual_99",
+        "at": "2026-10-05T22:30:42.835305+00:00"
+      }
+    ],
+    "cause": "Unexplained; do not infer independent execution from those coincident timestamps.",
+    "disposition": "Earlier parallel receipts and critique preserved, excluded from this supplement final execution evidence. No assertion that rerun explains the old anomaly.",
+    "rawShapeClarification": "Both old and new raw suite receipts have processes/argv; cliProcesses was a synthesized prompt view, not a raw suite field."
+  },
+  "independentlyChecked": {
+    "allFreezeByteHashesMatch": true,
+    "candidateExactTwoSpecifiedChangesOnly": true,
+    "selftestsRemainByteIdentical": true,
+    "parentSequenceAndNonoverlappingIntervals": true,
+    "rawSequentialReceiptHashesMatchParentCapture": true,
+    "suiteAndVerifierHashesMatchActualFiles": true,
+    "rawCliShapeProcessesWithArgv": true,
+    "all18CliRecordsWithinCorrespondingParentBoundaryIntervals": true,
+    "crossVersionSharedSequentialCliTimestamps": [],
+    "countsRecomputedFromCaseStatusesMatchReceipt": true,
+    "embeddedVerifierSourceHashesMatchSuppliedCopies": true,
+    "embeddedProtectedOutOfScopeBypassListsEmpty": true
+  },
+  "acceptedExecutionEvidence": {
+    "parentRecord": "results/SEQUENTIAL_RUN.json",
+    "sequence": [
+      "original6",
+      "original20",
+      "candidate6",
+      "candidate20"
+    ],
+    "runs": [
+      {
+        "version": "original",
+        "test": "six",
+        "beganAtUtc": "2026-10-05T22:34:52.540047+00:00",
+        "finishedAtUtc": "2026-10-05T22:34:54.809662+00:00",
+        "rawExit": 0,
+        "seconds": 2.27,
+        "passes": 6
+      },
+      {
+        "version": "original",
+        "test": "boundary",
+        "beganAtUtc": "2026-10-05T22:34:54.809980+00:00",
+        "finishedAtUtc": "2026-10-05T22:35:10.878171+00:00",
+        "rawExit": 1,
+        "seconds": 16.068,
+        "counts": {
+          "pass": 10,
+          "fail": 10,
+          "unavailable": 0
+        },
+        "rawReceiptSha256": "b0bdde1513bb9124bc270816276f0ec83df5c89a04e21eccc6f525fff93ce7ea"
+      },
+      {
+        "version": "candidate",
+        "test": "six",
+        "beganAtUtc": "2026-10-05T22:35:10.878684+00:00",
+        "finishedAtUtc": "2026-10-05T22:35:13.093093+00:00",
+        "rawExit": 0,
+        "seconds": 2.214,
+        "passes": 6
+      },
+      {
+        "version": "candidate",
+        "test": "boundary",
+        "beganAtUtc": "2026-10-05T22:35:13.093432+00:00",
+        "finishedAtUtc": "2026-10-05T22:35:29.167198+00:00",
+        "rawExit": 0,
+        "seconds": 16.074,
+        "counts": {
+          "pass": 20,
+          "fail": 0,
+          "unavailable": 0
+        },
+        "rawReceiptSha256": "0a0dc648d26e6a253954ef4843420e763b2a09091e90e3c1228e796118900e5b"
+      }
+    ],
+    "cliRecords": {
+      "original": [
+        {
+          "case": "cli_candidate_timeout_acceptance",
+          "at": "2026-10-05T22:35:04.362729+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_candidate_timeout_adversarial",
+          "at": "2026-10-05T22:35:05.802768+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_candidate_timeout_regression",
+          "at": "2026-10-05T22:35:07.239609+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_finite_red_to_green",
+          "at": "2026-10-05T22:35:07.856504+00:00",
+          "verdict": "supported"
+        },
+        {
+          "case": "cli_candidate_failure_acceptance",
+          "at": "2026-10-05T22:35:08.396216+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_candidate_failure_adversarial",
+          "at": "2026-10-05T22:35:09.019584+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_candidate_failure_regression",
+          "at": "2026-10-05T22:35:09.643953+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_actual_99",
+          "at": "2026-10-05T22:35:10.033119+00:00",
+          "verdict": "unverifiable"
+        },
+        {
+          "case": "cli_custom_expected_exit",
+          "at": "2026-10-05T22:35:10.578658+00:00",
+          "verdict": "supported"
+        }
+      ],
+      "candidate": [
+        {
+          "case": "cli_candidate_timeout_acceptance",
+          "at": "2026-10-05T22:35:22.645185+00:00",
+          "verdict": "unverifiable"
+        },
+        {
+          "case": "cli_candidate_timeout_adversarial",
+          "at": "2026-10-05T22:35:24.082267+00:00",
+          "verdict": "unverifiable"
+        },
+        {
+          "case": "cli_candidate_timeout_regression",
+          "at": "2026-10-05T22:35:25.507978+00:00",
+          "verdict": "unverifiable"
+        },
+        {
+          "case": "cli_finite_red_to_green",
+          "at": "2026-10-05T22:35:26.140268+00:00",
+          "verdict": "supported"
+        },
+        {
+          "case": "cli_candidate_failure_acceptance",
+          "at": "2026-10-05T22:35:26.698044+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_candidate_failure_adversarial",
+          "at": "2026-10-05T22:35:27.317272+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_candidate_failure_regression",
+          "at": "2026-10-05T22:35:27.942899+00:00",
+          "verdict": "contradicted"
+        },
+        {
+          "case": "cli_actual_99",
+          "at": "2026-10-05T22:35:28.327465+00:00",
+          "verdict": "unverifiable"
+        },
+        {
+          "case": "cli_custom_expected_exit",
+          "at": "2026-10-05T22:35:28.869421+00:00",
+          "verdict": "supported"
+        }
+      ]
+    },
+    "effect": "Original still fails exactly ten timeout-dependent cases with ten passing controls; candidate passes all20 and both unchanged six-test runs pass. Candidate base timeouts return2, timeout-only candidate cases return2/unverifiable; finite RED-to-GREEN, ordinary candidate failures, real99, expected7 and forbidden expected99 retain intended outcomes."
+  },
+  "limits": [
+    "This reviewer did not execute the sequential runs. Conclusions come from raw receipt/source/hash inspection and the recorded parent intervals; they are not cryptographic proof of execution authenticity.",
+    "Base timeout full non-baseline execution is source-covered but lacks a separate CLI fixture; the base-timeout CLI cases exercise --baseline. Source routes base harness errors and baseline-not-ready reasons to unverifiable absent a contradiction.",
+    "Mixed contradiction-plus-timeout precedence remains unchanged and is source-reviewed rather than separately exercised; use timeout-only UNVERIFIABLE wording.",
+    "Finite controls also have timeout1, so load can cause a fail-closed spurious harness failure. No unavailable cases or such finite-control failure occurred in the retained sequential receipts.",
+    "Actual exit99 and timeout99 share reserved harness classification; no separate timed_out schema field is introduced. Process-group cleanup and service/setup timeout behavior remain outside the patch.",
+    "No installed-kernel, database/provider, application, release or deployment verification occurred in this supplement."
+  ],
+  "filesInspected": [
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/FREEZE.json",
+      "sha256": "8d4eba2f8960f0f180003e840fee14ecfd359cfb912df52c3f7d640ca8fa6992"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/PATCH_SPEC.json",
+      "sha256": "86d3e281557082f189e94c03cf0770b7864daf493ed253598b8775cbe8fb5c61"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/original/verify.py",
+      "sha256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/candidate/verify.py",
+      "sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/original/selftest.py",
+      "sha256": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/candidate/selftest.py",
+      "sha256": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/frozen/test_timeout_boundary.py",
+      "sha256": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/frozen/CASE_PLAN.json",
+      "sha256": "5867a6bad95059cd63ebee0d98093f339354152209d322195646f3fb3c8251c7"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/correction.diff",
+      "sha256": "b05a5d5e2eeaff6e6e8f0320f5f5d35b8919a0c3c201966762687a6e8b77526b"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/SEQUENTIAL_RUN.json",
+      "sha256": "24a1edd3ac3fd2448d2c19b0e1f13c441f40ee5f1b1cf46301d9b993aeb49bac"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/PROVENANCE_RESOLUTION.json",
+      "sha256": "4f96adfae0ab6c69d8b2bc45d9451690f9658669173867c6c2a9c72e5c06a5ef"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/claude-review.json",
+      "sha256": "7432905faadf512206ee9947be76b4201329f481b7e3811f3baecac35427c90c"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/original-sequential-boundary.json",
+      "sha256": "b0bdde1513bb9124bc270816276f0ec83df5c89a04e21eccc6f525fff93ce7ea"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/candidate-sequential-boundary.json",
+      "sha256": "0a0dc648d26e6a253954ef4843420e763b2a09091e90e3c1228e796118900e5b"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/original-paired-boundary.json",
+      "sha256": "062a421c4b7687694b62045da75e6c1a319c0411a4161e0fd4acad0e7332c058"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/candidate-paired-boundary.json",
+      "sha256": "68ca5ffeb5e0d55c0cf8931bab4f31908cd3ed9880a709965918de6bd8dc72ee"
+    },
+    {
+      "path": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/independent-final-review.json",
+      "sha256": "e57b857af57beb6ad926e7d05caf503beb32363874c1ed8bc30a81772872f2d2"
+    }
+  ],
+  "persistentWrites": [
+    "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/results/independent-provenance-supplement.json"
+  ]
+}

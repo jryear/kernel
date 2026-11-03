@@ -1,0 +1,3457 @@
+{
+  "protocol": 1,
+  "exit": 0,
+  "rows": [
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/tmp/kernel-original-regressions-k9ui99dw/selftest.py"
+      ],
+      "exit": 0,
+      "stdout": "PASS test_supported\nPASS test_modified_evidence_contradicted\nPASS test_uncommitted_contract_rejected\nPASS test_working_spec_cannot_choose_base\nPASS test_regression_failure_contradicted\nPASS test_test_bypass_contradicted\nPASS all 6 kernel self-tests\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/private/tmp/verify-base-parent-9mq_qhc_/tree/evidence/legacy/test_timeout_boundary.py",
+        "--verifier",
+        "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+        "--receipt",
+        "/tmp/kernel-original-regressions-k9ui99dw/timeout.json"
+      ],
+      "exit": 0,
+      "stdout": "PASS unit_timeout_acceptance\nPASS unit_timeout_adversarial\nPASS unit_timeout_regression\nPASS unit_finite_failure\nPASS unit_actual_99\nPASS unit_custom_expected_exit\nPASS unit_expected_99_forbidden\nPASS cli_base_timeout_acceptance\nPASS cli_base_timeout_adversarial\nPASS cli_base_timeout_regression\nPASS cli_candidate_timeout_acceptance\nPASS cli_candidate_timeout_adversarial\nPASS cli_candidate_timeout_regression\nPASS cli_finite_red_to_green\nPASS cli_candidate_failure_acceptance\nPASS cli_candidate_failure_adversarial\nPASS cli_candidate_failure_regression\nPASS cli_actual_99\nPASS cli_custom_expected_exit\nPASS cli_expected_99_forbidden\n{\"rawExit\": 0, \"counts\": {\"pass\": 20, \"fail\": 0, \"unavailable\": 0}, \"elapsedSeconds\": 15.126, \"receipt\": \"/tmp/kernel-original-regressions-k9ui99dw/timeout.json\"}\n",
+      "stderr": ""
+    }
+  ],
+  "timeout_suite": {
+    "schema": 1,
+    "suite": "/private/tmp/verify-base-parent-9mq_qhc_/tree/evidence/legacy/test_timeout_boundary.py",
+    "suiteSha256": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+    "verifier": "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+    "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "classificationScope": "actual check timeout classification only; no process-group cleanup, database, network, installed-kernel or application acceptance claim",
+    "sanitizedEnvironment": "allowlist only; disposable HOME; no provider/Git credentials/configs/hooks; no remote protocols",
+    "verifierSha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "verifierVersion": "3.0.1",
+    "cases": [
+      {
+        "name": "unit_timeout_acceptance",
+        "innerChecks": [
+          {
+            "source": "import time; time.sleep(2)",
+            "kind": "acceptance",
+            "expectedExit": 0,
+            "secondsObserved": 1.007,
+            "result": {
+              "name": "probe",
+              "kind": "acceptance",
+              "exit": 99,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": true,
+              "seconds": 1.01,
+              "output_tail": "TIMEOUT after 1s"
+            }
+          }
+        ],
+        "baseline": {
+          "ready": false,
+          "reasons": [
+            "harness error on base: probe"
+          ]
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.007
+      },
+      {
+        "name": "unit_timeout_adversarial",
+        "innerChecks": [
+          {
+            "source": "import time; time.sleep(2)",
+            "kind": "adversarial",
+            "expectedExit": 0,
+            "secondsObserved": 1.008,
+            "result": {
+              "name": "probe",
+              "kind": "adversarial",
+              "exit": 99,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": true,
+              "seconds": 1.01,
+              "output_tail": "TIMEOUT after 1s"
+            }
+          }
+        ],
+        "baseline": {
+          "ready": false,
+          "reasons": [
+            "harness error on base: probe"
+          ]
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.008
+      },
+      {
+        "name": "unit_timeout_regression",
+        "innerChecks": [
+          {
+            "source": "import time; time.sleep(2)",
+            "kind": "regression",
+            "expectedExit": 0,
+            "secondsObserved": 1.008,
+            "result": {
+              "name": "probe",
+              "kind": "regression",
+              "exit": 99,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": true,
+              "seconds": 1.01,
+              "output_tail": "TIMEOUT after 1s"
+            }
+          }
+        ],
+        "baseline": {
+          "ready": false,
+          "reasons": [
+            "harness error on base: probe"
+          ]
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.008
+      },
+      {
+        "name": "unit_finite_failure",
+        "innerChecks": [
+          {
+            "source": "raise SystemExit(1)",
+            "kind": "acceptance",
+            "expectedExit": 0,
+            "secondsObserved": 0.04,
+            "result": {
+              "name": "probe",
+              "kind": "acceptance",
+              "exit": 1,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": false,
+              "seconds": 0.04,
+              "output_tail": ""
+            }
+          }
+        ],
+        "baseline": {
+          "ready": true,
+          "reasons": []
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.04
+      },
+      {
+        "name": "unit_actual_99",
+        "innerChecks": [
+          {
+            "source": "raise SystemExit(99)",
+            "kind": "acceptance",
+            "expectedExit": 0,
+            "secondsObserved": 0.025,
+            "result": {
+              "name": "probe",
+              "kind": "acceptance",
+              "exit": 99,
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": true,
+              "seconds": 0.03,
+              "output_tail": ""
+            }
+          }
+        ],
+        "baseline": {
+          "ready": false,
+          "reasons": [
+            "harness error on base: probe"
+          ]
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.025
+      },
+      {
+        "name": "unit_custom_expected_exit",
+        "innerChecks": [
+          {
+            "source": "raise SystemExit(7)",
+            "kind": "acceptance",
+            "expectedExit": 7,
+            "secondsObserved": 0.022,
+            "result": {
+              "name": "probe",
+              "kind": "acceptance",
+              "exit": 7,
+              "expected_exit": 7,
+              "passed": true,
+              "harness_error": false,
+              "seconds": 0.02,
+              "output_tail": ""
+            }
+          },
+          {
+            "source": "import time; time.sleep(2)",
+            "kind": "acceptance",
+            "expectedExit": 7,
+            "secondsObserved": 1.006,
+            "result": {
+              "name": "probe",
+              "kind": "acceptance",
+              "exit": 99,
+              "expected_exit": 7,
+              "passed": false,
+              "harness_error": true,
+              "seconds": 1.01,
+              "output_tail": "TIMEOUT after 1s"
+            }
+          }
+        ],
+        "baseline": {
+          "ready": false,
+          "reasons": [
+            "harness error on base: probe"
+          ]
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.028
+      },
+      {
+        "name": "unit_expected_99_forbidden",
+        "specError": "check 'reserved' cannot expect reserved harness exit 99",
+        "status": "pass",
+        "message": "",
+        "seconds": 0.0
+      },
+      {
+        "name": "cli_base_timeout_acceptance",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.079,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_base_timeout_acceptance/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.015,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.022,
+            "stdout": "[main (root-commit) 7b84872] Freeze synthetic contract and executable evidence\n 3 files changed, 35 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "7b848724b9e399afe5ea5466ba17bdcd28d92c65\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main f4a2610] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "f4a26106277b49e167936c5ad1347db5ef40fd64\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "7b848724b9e399afe5ea5466ba17bdcd28d92c65"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_base_timeout_acceptance/repo",
+              "--base",
+              "7b848724b9e399afe5ea5466ba17bdcd28d92c65",
+              "--baseline"
+            ],
+            "returncode": 2,
+            "seconds": 1.131,
+            "stdout": "BASELINE_NOT_READY  timeout-boundary-001  base=7b848724b9e3\n  [accep] base:HARNESS  target\n  - harness error on base: target\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "acceptance",
+          "mode": "timeout_base",
+          "expectedExit": 0,
+          "baseSha": "7b848724b9e399afe5ea5466ba17bdcd28d92c65",
+          "candidateSha": "f4a26106277b49e167936c5ad1347db5ef40fd64",
+          "frozenContractSha256": "e5714cd36789efb0b3d4bff879ce832c77c190555b9de5c8faba3f569e600220",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.32
+      },
+      {
+        "name": "cli_base_timeout_adversarial",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_base_timeout_adversarial/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.015,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.019,
+            "stdout": "[main (root-commit) b40d347] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "b40d347f9fd46ecbbf7ca35d3c1a1a243a44777f\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.016,
+            "stdout": "[main 7115334] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "711533487be79b1ceeab5a88575be515a1a25963\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "b40d347f9fd46ecbbf7ca35d3c1a1a243a44777f"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_base_timeout_adversarial/repo",
+              "--base",
+              "b40d347f9fd46ecbbf7ca35d3c1a1a243a44777f",
+              "--baseline"
+            ],
+            "returncode": 2,
+            "seconds": 1.154,
+            "stdout": "BASELINE_NOT_READY  timeout-boundary-001  base=b40d347f9fd4\n  [accep] base:fail  control acceptance\n  [adver] base:HARNESS  target\n  - harness error on base: target\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "adversarial",
+          "mode": "timeout_base",
+          "expectedExit": 0,
+          "baseSha": "b40d347f9fd46ecbbf7ca35d3c1a1a243a44777f",
+          "candidateSha": "711533487be79b1ceeab5a88575be515a1a25963",
+          "frozenContractSha256": "bdfa632a0e7d415710d37deb4842c7ed185ac656e5c559fc95222d01c1bb3d7e",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.277
+      },
+      {
+        "name": "cli_base_timeout_regression",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_base_timeout_regression/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.016,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.021,
+            "stdout": "[main (root-commit) ac80362] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "ac80362b8eb3d3bf42e837d99e4a7388dc0210e2\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main e79f3c6] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "e79f3c6228f985b8cc611a0af078f4c2e8a3c292\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "ac80362b8eb3d3bf42e837d99e4a7388dc0210e2"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_base_timeout_regression/repo",
+              "--base",
+              "ac80362b8eb3d3bf42e837d99e4a7388dc0210e2",
+              "--baseline"
+            ],
+            "returncode": 2,
+            "seconds": 1.159,
+            "stdout": "BASELINE_NOT_READY  timeout-boundary-001  base=ac80362b8eb3\n  [accep] base:fail  control acceptance\n  [regre] base:HARNESS  target\n  - harness error on base: target\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "regression",
+          "mode": "timeout_base",
+          "expectedExit": 0,
+          "baseSha": "ac80362b8eb3d3bf42e837d99e4a7388dc0210e2",
+          "candidateSha": "e79f3c6228f985b8cc611a0af078f4c2e8a3c292",
+          "frozenContractSha256": "93b9bbf198b45365975217e6fdde626f768b7fda41f795c0aa2867613ff4f783",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.291
+      },
+      {
+        "name": "cli_candidate_timeout_acceptance",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_acceptance/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.015,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.02,
+            "stdout": "[main (root-commit) 0df9244] Freeze synthetic contract and executable evidence\n 3 files changed, 35 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "0df92445b54b6f4ff53de5dabe22ba8a338a79b2\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.016,
+            "stdout": "[main e676ff0] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "e676ff0a665befcd8b3d2fee1f2610672d0b0407\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "0df92445b54b6f4ff53de5dabe22ba8a338a79b2"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_acceptance/repo",
+              "--base",
+              "0df92445b54b6f4ff53de5dabe22ba8a338a79b2",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_acceptance/verdict.jsonl"
+            ],
+            "returncode": 2,
+            "seconds": 1.196,
+            "stdout": "UNVERIFIABLE  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:HARNESS  target\n  - harness errors (exit 99); not evidence: candidate:target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_acceptance/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "acceptance",
+          "mode": "timeout_candidate",
+          "expectedExit": 0,
+          "baseSha": "0df92445b54b6f4ff53de5dabe22ba8a338a79b2",
+          "candidateSha": "e676ff0a665befcd8b3d2fee1f2610672d0b0407",
+          "frozenContractSha256": "4427e29a68fae28126d65cabf2e1dc7d4e142ca3ec608918e25d977e5880dc4f",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:28.522808+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_acceptance/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "4427e29a68fae28126d65cabf2e1dc7d4e142ca3ec608918e25d977e5880dc4f",
+            "base_ref": "0df92445b54b6f4ff53de5dabe22ba8a338a79b2",
+            "merge_base": "0df92445b54b6f4ff53de5dabe22ba8a338a79b2",
+            "head": "e676ff0a665befcd8b3d2fee1f2610672d0b0407",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 99,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": true,
+                "seconds": 1.0,
+                "output_tail": "TIMEOUT after 1s"
+              }
+            ],
+            "verdict": "unverifiable",
+            "reasons": [
+              "harness errors (exit 99); not evidence: candidate:target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "acceptance",
+          "exit": 99,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": true,
+          "seconds": 1.0,
+          "output_tail": "TIMEOUT after 1s"
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.319
+      },
+      {
+        "name": "cli_candidate_timeout_adversarial",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_adversarial/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "[main (root-commit) 4189e53] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "4189e53cf730003a448547ba2016c6e476677517\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "[main e0d0e9b] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.014,
+            "stdout": "e0d0e9b6efe3b87902ce9d110558cb9cc698093d\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "4189e53cf730003a448547ba2016c6e476677517"
+            ],
+            "returncode": 0,
+            "seconds": 0.014,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_adversarial/repo",
+              "--base",
+              "4189e53cf730003a448547ba2016c6e476677517",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_adversarial/verdict.jsonl"
+            ],
+            "returncode": 2,
+            "seconds": 1.265,
+            "stdout": "UNVERIFIABLE  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:pass  control acceptance\n  [adver] base:pass -> candidate:HARNESS  target\n  - harness errors (exit 99); not evidence: candidate:target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_adversarial/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "adversarial",
+          "mode": "timeout_candidate",
+          "expectedExit": 0,
+          "baseSha": "4189e53cf730003a448547ba2016c6e476677517",
+          "candidateSha": "e0d0e9b6efe3b87902ce9d110558cb9cc698093d",
+          "frozenContractSha256": "833b85e97cf3d486d264b3b95a72826ecb4694f69f1b60c0260d6cf0c0429f25",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:29.907904+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_adversarial/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "833b85e97cf3d486d264b3b95a72826ecb4694f69f1b60c0260d6cf0c0429f25",
+            "base_ref": "4189e53cf730003a448547ba2016c6e476677517",
+            "merge_base": "4189e53cf730003a448547ba2016c6e476677517",
+            "head": "e0d0e9b6efe3b87902ce9d110558cb9cc698093d",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "adversarial",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "adversarial",
+                "exit": 99,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": true,
+                "seconds": 1.01,
+                "output_tail": "TIMEOUT after 1s"
+              }
+            ],
+            "verdict": "unverifiable",
+            "reasons": [
+              "harness errors (exit 99); not evidence: candidate:target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "adversarial",
+          "exit": 99,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": true,
+          "seconds": 1.01,
+          "output_tail": "TIMEOUT after 1s"
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.389
+      },
+      {
+        "name": "cli_candidate_timeout_regression",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.014,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_regression/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "[main (root-commit) 1c3486d] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "1c3486dcba17788dddcf477f254d9fecbbe3b305\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.019,
+            "stdout": "[main 9655b19] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "9655b19ab8198762b73801b4ee80c90dea56900d\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "1c3486dcba17788dddcf477f254d9fecbbe3b305"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_regression/repo",
+              "--base",
+              "1c3486dcba17788dddcf477f254d9fecbbe3b305",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_regression/verdict.jsonl"
+            ],
+            "returncode": 2,
+            "seconds": 1.264,
+            "stdout": "UNVERIFIABLE  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:pass  control acceptance\n  [regre] base:pass -> candidate:HARNESS  target\n  - harness errors (exit 99); not evidence: candidate:target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_regression/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "regression",
+          "mode": "timeout_candidate",
+          "expectedExit": 0,
+          "baseSha": "1c3486dcba17788dddcf477f254d9fecbbe3b305",
+          "candidateSha": "9655b19ab8198762b73801b4ee80c90dea56900d",
+          "frozenContractSha256": "e7df614b1b6a71657728643dd789337d572298bd68430edb9bad022ff9bdba08",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:31.293125+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_timeout_regression/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "e7df614b1b6a71657728643dd789337d572298bd68430edb9bad022ff9bdba08",
+            "base_ref": "1c3486dcba17788dddcf477f254d9fecbbe3b305",
+            "merge_base": "1c3486dcba17788dddcf477f254d9fecbbe3b305",
+            "head": "9655b19ab8198762b73801b4ee80c90dea56900d",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "regression",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "regression",
+                "exit": 99,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": true,
+                "seconds": 1.01,
+                "output_tail": "TIMEOUT after 1s"
+              }
+            ],
+            "verdict": "unverifiable",
+            "reasons": [
+              "harness errors (exit 99); not evidence: candidate:target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "regression",
+          "exit": 99,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": true,
+          "seconds": 1.01,
+          "output_tail": "TIMEOUT after 1s"
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 1.383
+      },
+      {
+        "name": "cli_finite_red_to_green",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_finite_red_to_green/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main (root-commit) 90b3608] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "90b360894c5f564882e718297a1b9c4473ec6e41\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.016,
+            "stdout": "[main dc16ecf] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "dc16ecf081c759113d851cf399bc49eb5d63d469\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "90b360894c5f564882e718297a1b9c4473ec6e41"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_finite_red_to_green/repo",
+              "--base",
+              "90b360894c5f564882e718297a1b9c4473ec6e41",
+              "--baseline"
+            ],
+            "returncode": 0,
+            "seconds": 0.151,
+            "stdout": "BASELINE_READY  timeout-boundary-001  base=90b360894c5f\n  [accep] base:fail  control acceptance\n  [regre] base:pass  target\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_finite_red_to_green/repo",
+              "--base",
+              "90b360894c5f564882e718297a1b9c4473ec6e41",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_finite_red_to_green/verdict.jsonl"
+            ],
+            "returncode": 0,
+            "seconds": 0.243,
+            "stdout": "SUPPORTED  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:pass  control acceptance\n  [regre] base:pass -> candidate:pass  target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_finite_red_to_green/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "regression",
+          "mode": "normal",
+          "expectedExit": 0,
+          "baseSha": "90b360894c5f564882e718297a1b9c4473ec6e41",
+          "candidateSha": "dc16ecf081c759113d851cf399bc49eb5d63d469",
+          "frozenContractSha256": "448026c884f9310f24d8a3099c07c4155c3eaaa46724bd08d61410018709f989",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:31.801328+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_finite_red_to_green/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "448026c884f9310f24d8a3099c07c4155c3eaaa46724bd08d61410018709f989",
+            "base_ref": "90b360894c5f564882e718297a1b9c4473ec6e41",
+            "merge_base": "90b360894c5f564882e718297a1b9c4473ec6e41",
+            "head": "dc16ecf081c759113d851cf399bc49eb5d63d469",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "regression",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "regression",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "verdict": "supported",
+            "reasons": [],
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "message": "",
+        "seconds": 0.505
+      },
+      {
+        "name": "cli_candidate_failure_acceptance",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_acceptance/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main (root-commit) c12f078] Freeze synthetic contract and executable evidence\n 3 files changed, 35 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "c12f078e8a65be34e134d6f28e22c9e06f888c5b\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main fb0e9c8] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "fb0e9c8b4042233ca17e48bc325345af06c15d69\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "c12f078e8a65be34e134d6f28e22c9e06f888c5b"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_acceptance/repo",
+              "--base",
+              "c12f078e8a65be34e134d6f28e22c9e06f888c5b",
+              "--baseline"
+            ],
+            "returncode": 0,
+            "seconds": 0.131,
+            "stdout": "BASELINE_READY  timeout-boundary-001  base=c12f078e8a65\n  [accep] base:fail  target\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_acceptance/repo",
+              "--base",
+              "c12f078e8a65be34e134d6f28e22c9e06f888c5b",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_acceptance/verdict.jsonl"
+            ],
+            "returncode": 1,
+            "seconds": 0.205,
+            "stdout": "CONTRADICTED  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:FAIL  target\n  - failed on candidate: target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_acceptance/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "acceptance",
+          "mode": "fail_candidate",
+          "expectedExit": 0,
+          "baseSha": "c12f078e8a65be34e134d6f28e22c9e06f888c5b",
+          "candidateSha": "fb0e9c8b4042233ca17e48bc325345af06c15d69",
+          "frozenContractSha256": "9c32429c3025c6f42a8d0d1676e224d0809e3a26f8571b5fde15c7f17f6a45aa",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:32.250245+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_acceptance/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "9c32429c3025c6f42a8d0d1676e224d0809e3a26f8571b5fde15c7f17f6a45aa",
+            "base_ref": "c12f078e8a65be34e134d6f28e22c9e06f888c5b",
+            "merge_base": "c12f078e8a65be34e134d6f28e22c9e06f888c5b",
+            "head": "fb0e9c8b4042233ca17e48bc325345af06c15d69",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "verdict": "contradicted",
+            "reasons": [
+              "failed on candidate: target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "acceptance",
+          "exit": 1,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": false,
+          "seconds": 0.02,
+          "output_tail": ""
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.448
+      },
+      {
+        "name": "cli_candidate_failure_adversarial",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_adversarial/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main (root-commit) 96aba91] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "96aba913615ce3b00f3716cd0534f33c32ed9621\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.016,
+            "stdout": "[main 4dd8c18] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "4dd8c18c77b02f78f71f6e5621b7200483f2dec8\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "96aba913615ce3b00f3716cd0534f33c32ed9621"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_adversarial/repo",
+              "--base",
+              "96aba913615ce3b00f3716cd0534f33c32ed9621",
+              "--baseline"
+            ],
+            "returncode": 0,
+            "seconds": 0.158,
+            "stdout": "BASELINE_READY  timeout-boundary-001  base=96aba913615c\n  [accep] base:fail  control acceptance\n  [adver] base:pass  target\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_adversarial/repo",
+              "--base",
+              "96aba913615ce3b00f3716cd0534f33c32ed9621",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_adversarial/verdict.jsonl"
+            ],
+            "returncode": 1,
+            "seconds": 0.249,
+            "stdout": "CONTRADICTED  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:pass  control acceptance\n  [adver] base:pass -> candidate:FAIL  target\n  - failed on candidate: target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_adversarial/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "adversarial",
+          "mode": "fail_candidate",
+          "expectedExit": 0,
+          "baseSha": "96aba913615ce3b00f3716cd0534f33c32ed9621",
+          "candidateSha": "4dd8c18c77b02f78f71f6e5621b7200483f2dec8",
+          "frozenContractSha256": "bd9fbcbb00a3eb2c8f4d54d8a21397889447db79de1e87bc23257e3669a1d976",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:32.766301+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_adversarial/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "bd9fbcbb00a3eb2c8f4d54d8a21397889447db79de1e87bc23257e3669a1d976",
+            "base_ref": "96aba913615ce3b00f3716cd0534f33c32ed9621",
+            "merge_base": "96aba913615ce3b00f3716cd0534f33c32ed9621",
+            "head": "4dd8c18c77b02f78f71f6e5621b7200483f2dec8",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "adversarial",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "adversarial",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "verdict": "contradicted",
+            "reasons": [
+              "failed on candidate: target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "adversarial",
+          "exit": 1,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": false,
+          "seconds": 0.02,
+          "output_tail": ""
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.517
+      },
+      {
+        "name": "cli_candidate_failure_regression",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_regression/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "[main (root-commit) 7860f1e] Freeze synthetic contract and executable evidence\n 3 files changed, 43 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main 1e006a3] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "1e006a30b6015ee5c1635b2efeb3ea837f847be2\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_regression/repo",
+              "--base",
+              "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d",
+              "--baseline"
+            ],
+            "returncode": 0,
+            "seconds": 0.149,
+            "stdout": "BASELINE_READY  timeout-boundary-001  base=7860f1ebf5a2\n  [accep] base:fail  control acceptance\n  [regre] base:pass  target\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_regression/repo",
+              "--base",
+              "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_regression/verdict.jsonl"
+            ],
+            "returncode": 1,
+            "seconds": 0.255,
+            "stdout": "CONTRADICTED  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:pass  control acceptance\n  [regre] base:pass -> candidate:FAIL  target\n  - failed on candidate: target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_regression/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "regression",
+          "mode": "fail_candidate",
+          "expectedExit": 0,
+          "baseSha": "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d",
+          "candidateSha": "1e006a30b6015ee5c1635b2efeb3ea837f847be2",
+          "frozenContractSha256": "be3a2b6c7fa93f43d85fdf935aca4e39da51765e7650dbb927263aade2eb1b1a",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:33.285592+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_candidate_failure_regression/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "be3a2b6c7fa93f43d85fdf935aca4e39da51765e7650dbb927263aade2eb1b1a",
+            "base_ref": "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d",
+            "merge_base": "7860f1ebf5a2a2a803c9ae81f54c9b5ddc17c59d",
+            "head": "1e006a30b6015ee5c1635b2efeb3ea837f847be2",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "regression",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "control acceptance",
+                "kind": "acceptance",
+                "exit": 0,
+                "expected_exit": 0,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              },
+              {
+                "name": "target",
+                "kind": "regression",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "verdict": "contradicted",
+            "reasons": [
+              "failed on candidate: target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "regression",
+          "exit": 1,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": false,
+          "seconds": 0.02,
+          "output_tail": ""
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.519
+      },
+      {
+        "name": "cli_actual_99",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_actual_99/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main (root-commit) 004814e] Freeze synthetic contract and executable evidence\n 3 files changed, 35 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "004814e740f80c17b71ead21b9bab2af31b16c24\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main 5ecd475] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "5ecd475fa664f60c60b650ea266be3379a47cb89\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "004814e740f80c17b71ead21b9bab2af31b16c24"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.01,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_actual_99/repo",
+              "--base",
+              "004814e740f80c17b71ead21b9bab2af31b16c24",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_actual_99/verdict.jsonl"
+            ],
+            "returncode": 2,
+            "seconds": 0.225,
+            "stdout": "UNVERIFIABLE  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:HARNESS  target\n  - harness errors (exit 99); not evidence: candidate:target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_actual_99/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "acceptance",
+          "mode": "harness_candidate",
+          "expectedExit": 0,
+          "baseSha": "004814e740f80c17b71ead21b9bab2af31b16c24",
+          "candidateSha": "5ecd475fa664f60c60b650ea266be3379a47cb89",
+          "frozenContractSha256": "0f22f2cb52d1a92c7e1167c42b4dd3679080996593ce2fd2f876d88c0fa2610d",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:33.619066+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_actual_99/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "0f22f2cb52d1a92c7e1167c42b4dd3679080996593ce2fd2f876d88c0fa2610d",
+            "base_ref": "004814e740f80c17b71ead21b9bab2af31b16c24",
+            "merge_base": "004814e740f80c17b71ead21b9bab2af31b16c24",
+            "head": "5ecd475fa664f60c60b650ea266be3379a47cb89",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 1,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 99,
+                "expected_exit": 0,
+                "passed": false,
+                "harness_error": true,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "verdict": "unverifiable",
+            "reasons": [
+              "harness errors (exit 99); not evidence: candidate:target"
+            ],
+            "warnings": []
+          }
+        ],
+        "targetClassification": {
+          "name": "target",
+          "kind": "acceptance",
+          "exit": 99,
+          "expected_exit": 0,
+          "passed": false,
+          "harness_error": true,
+          "seconds": 0.02,
+          "output_tail": ""
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.337
+      },
+      {
+        "name": "cli_custom_expected_exit",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.014,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_custom_expected_exit/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.019,
+            "stdout": "[main (root-commit) b11e571] Freeze synthetic contract and executable evidence\n 3 files changed, 35 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "b11e57146ba2f606ff819757a6f72077163f85ad\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "[main 000ab09] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "000ab0938bed95d0b8168a8cdb2a130084fe3779\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "b11e57146ba2f606ff819757a6f72077163f85ad"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.012,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_custom_expected_exit/repo",
+              "--base",
+              "b11e57146ba2f606ff819757a6f72077163f85ad",
+              "--baseline"
+            ],
+            "returncode": 0,
+            "seconds": 0.137,
+            "stdout": "BASELINE_READY  timeout-boundary-001  base=b11e57146ba2\n  [accep] base:fail  target\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_custom_expected_exit/repo",
+              "--base",
+              "b11e57146ba2f606ff819757a6f72077163f85ad",
+              "--claim",
+              "synthetic timeout boundary control",
+              "--implementer-model",
+              "fixed local app marker fixture",
+              "--log",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_custom_expected_exit/verdict.jsonl"
+            ],
+            "returncode": 0,
+            "seconds": 0.222,
+            "stdout": "SUPPORTED  timeout-boundary-001  (1 files changed)\n  [accep] base:fail -> candidate:pass  target\n  logged -> /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_custom_expected_exit/verdict.jsonl\n",
+            "stderr": ""
+          }
+        ],
+        "fixture": {
+          "kind": "acceptance",
+          "mode": "expected",
+          "expectedExit": 7,
+          "baseSha": "b11e57146ba2f606ff819757a6f72077163f85ad",
+          "candidateSha": "000ab0938bed95d0b8168a8cdb2a130084fe3779",
+          "frozenContractSha256": "6ff65c80c3a703962cd16c9c2e0e9ce651b50f2be09873ab8cbd6df78b794a97",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "verifierRecords": [
+          {
+            "schema": 1,
+            "at": "2026-10-06T03:46:34.098707+00:00",
+            "verifier_version": "3.0.1",
+            "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+            "task_id": "timeout-boundary-001",
+            "project": "synthetic",
+            "goal": "classify actual check outcomes",
+            "spec_path": "/private/tmp/kernel-timeout-evidence-r6rxl80f/cli_custom_expected_exit/repo/tasks/check.toml",
+            "spec_source": "base",
+            "spec_sha256": "6ff65c80c3a703962cd16c9c2e0e9ce651b50f2be09873ab8cbd6df78b794a97",
+            "base_ref": "b11e57146ba2f606ff819757a6f72077163f85ad",
+            "merge_base": "b11e57146ba2f606ff819757a6f72077163f85ad",
+            "head": "000ab0938bed95d0b8168a8cdb2a130084fe3779",
+            "dirty_before_log": false,
+            "claim": "synthetic timeout boundary control",
+            "raw_claim": null,
+            "raw_claim_captured_at": null,
+            "implementer_model": "fixed local app marker fixture",
+            "verifier_access": "unknown",
+            "verifier_inspection_reported": "unknown",
+            "contract_review": {
+              "ran": null,
+              "reviewer_model": null,
+              "findings": [],
+              "accepted_findings": []
+            },
+            "changed_files": [
+              "app.txt"
+            ],
+            "protected_changes": [],
+            "out_of_scope": [],
+            "mutable_test_changes": [],
+            "bypasses": [],
+            "base_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 0,
+                "expected_exit": 7,
+                "passed": false,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "candidate_checks": [
+              {
+                "name": "target",
+                "kind": "acceptance",
+                "exit": 7,
+                "expected_exit": 7,
+                "passed": true,
+                "harness_error": false,
+                "seconds": 0.02,
+                "output_tail": ""
+              }
+            ],
+            "verdict": "supported",
+            "reasons": [],
+            "warnings": []
+          }
+        ],
+        "status": "pass",
+        "message": "",
+        "seconds": 0.481
+      },
+      {
+        "name": "cli_expected_99_forbidden",
+        "processes": [
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "init",
+              "-b",
+              "main",
+              "--template=/tmp/kernel-timeout-evidence-r6rxl80f/empty-git-template"
+            ],
+            "returncode": 0,
+            "seconds": 0.014,
+            "stdout": "Initialized empty Git repository in /private/tmp/kernel-timeout-evidence-r6rxl80f/cli_expected_99_forbidden/repo/.git/\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt",
+              "checks/check.py",
+              "tasks/check.toml"
+            ],
+            "returncode": 0,
+            "seconds": 0.013,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Freeze synthetic contract and executable evidence"
+            ],
+            "returncode": 0,
+            "seconds": 0.018,
+            "stdout": "[main (root-commit) f5d20dc] Freeze synthetic contract and executable evidence\n 3 files changed, 35 insertions(+)\n create mode 100644 app.txt\n create mode 100644 checks/check.py\n create mode 100644 tasks/check.toml\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "f5d20dcd82496b3974eab75cc8c7049c5f4bf44b\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "add",
+              "app.txt"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "commit",
+              "-m",
+              "Synthetic candidate marker only"
+            ],
+            "returncode": 0,
+            "seconds": 0.017,
+            "stdout": "[main bcf03f1] Synthetic candidate marker only\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "rev-parse",
+              "HEAD"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "bcf03f1915b49ff2765f8fcdc705d2a9b533f0e6\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "diff",
+              "--name-only",
+              "f5d20dcd82496b3974eab75cc8c7049c5f4bf44b"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "app.txt\n",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/usr/bin/git",
+              "-c",
+              "commit.gpgsign=false",
+              "-c",
+              "core.hooksPath=/dev/null",
+              "status",
+              "--porcelain"
+            ],
+            "returncode": 0,
+            "seconds": 0.011,
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "argv": [
+              "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "-B",
+              "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+              "tasks/check.toml",
+              "--repo",
+              "/tmp/kernel-timeout-evidence-r6rxl80f/cli_expected_99_forbidden/repo",
+              "--base",
+              "f5d20dcd82496b3974eab75cc8c7049c5f4bf44b",
+              "--baseline"
+            ],
+            "returncode": 3,
+            "seconds": 0.074,
+            "stdout": "",
+            "stderr": "SPEC_ERROR  check 'target' cannot expect reserved harness exit 99\n"
+          }
+        ],
+        "fixture": {
+          "kind": "acceptance",
+          "mode": "normal",
+          "expectedExit": 99,
+          "baseSha": "f5d20dcd82496b3974eab75cc8c7049c5f4bf44b",
+          "candidateSha": "bcf03f1915b49ff2765f8fcdc705d2a9b533f0e6",
+          "frozenContractSha256": "bf954c93a5d504c01fe1cb7815f34274c09d1ccaf49d7f5e09311e287746002d",
+          "frozenCheckSourceSha256": "f8df07b7740778b53e020a04f6874efeeffd461872defba0017540f3ce0cea2e",
+          "appOnlyChanged": true,
+          "clean": true
+        },
+        "status": "pass",
+        "message": "",
+        "seconds": 0.19
+      }
+    ],
+    "rawExit": 0,
+    "elapsedSeconds": 15.126,
+    "counts": {
+      "pass": 20,
+      "fail": 0,
+      "unavailable": 0
+    }
+  },
+  "expected_counts": {
+    "selftests": 6,
+    "timeout_cases": 20
+  }
+}

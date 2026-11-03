@@ -1,0 +1,7 @@
+PASS test_supported
+PASS test_modified_evidence_contradicted
+PASS test_uncommitted_contract_rejected
+PASS test_working_spec_cannot_choose_base
+PASS test_regression_failure_contradicted
+PASS test_test_bypass_contradicted
+PASS all 6 kernel self-tests

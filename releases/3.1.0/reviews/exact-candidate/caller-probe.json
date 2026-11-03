@@ -1,0 +1,498 @@
+{
+  "kind": "additional independent deterministic probe, not frozen contract gate",
+  "id": "CALLER_MUTATION_AFTER_CAPTURE",
+  "status": "pass",
+  "result": {
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/source/verify.py",
+      "tasks/check.toml",
+      "--repo",
+      "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation",
+      "--base",
+      "13b2040ad24083b36bf3554af3852db4682eb1ba",
+      "--log",
+      "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation-candidate.jsonl"
+    ],
+    "exit": 2,
+    "stdout": "UNVERIFIABLE  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  [accep] candidate:pass  desired observable\n  - caller identity changed: tracked content changed: app.txt\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation-candidate.jsonl\n",
+    "stderr": "",
+    "seconds": 0.7806,
+    "records": [
+      {
+        "schema": 2,
+        "at": "2026-10-06T04:01:06.958617+00:00",
+        "verifier_version": "3.1.0",
+        "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+        "verifier_package_binding": {
+          "components": {
+            "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+            "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+            "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+          },
+          "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+          "boundary": "schema2-start-loaded-components"
+        },
+        "assurance": "schema2-evidence-validity",
+        "task_id": "validity-fixture",
+        "project": "synthetic",
+        "goal": "app exposes new behavior",
+        "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation/tasks/check.toml",
+        "spec_source": "base",
+        "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+        "base_ref": "13b2040ad24083b36bf3554af3852db4682eb1ba",
+        "merge_base": "13b2040ad24083b36bf3554af3852db4682eb1ba",
+        "head": "ccb01519ad40c0ee3ef09d6a4f9e7d5d25da011b",
+        "dirty_before_log": false,
+        "claim": "",
+        "raw_claim": null,
+        "raw_claim_captured_at": null,
+        "implementer_model": null,
+        "verifier_access": "unknown",
+        "verifier_inspection_reported": "unknown",
+        "contract_review": {
+          "ran": null,
+          "reviewer_model": null,
+          "findings": [],
+          "accepted_findings": []
+        },
+        "source_binding": {
+          "base": {
+            "commit": "13b2040ad24083b36bf3554af3852db4682eb1ba",
+            "tree": "a6de0a9643db81876478661dfd4eeb253bdb8930",
+            "manifest_sha256": "ea478e490b0377fa5b3a38d5b058dde97935fca84b7eea846d3ee0b9c0c692f9"
+          },
+          "candidate": {
+            "commit": "ccb01519ad40c0ee3ef09d6a4f9e7d5d25da011b",
+            "tree": "1cb99825dd872d15cdbd9356bb67b048505ab1b0",
+            "manifest_sha256": "336cb18b39fbcbd54dd8eb2722e257721f41c38cca07cfc2605508947d5218e0"
+          },
+          "candidate_snapshot": true,
+          "clean_before": true,
+          "unchanged_after": false
+        },
+        "external_inputs": [],
+        "runtime_inputs": [
+          {
+            "check": "desired observable",
+            "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+          }
+        ],
+        "changed_files": [
+          "app.txt"
+        ],
+        "protected_changes": [],
+        "out_of_scope": [],
+        "mutable_test_changes": [],
+        "bypasses": [],
+        "base_checks": [
+          {
+            "name": "desired observable",
+            "kind": "acceptance",
+            "expected_exit": 0,
+            "passed": false,
+            "harness_error": false,
+            "exit": 1,
+            "seconds": 0.02,
+            "output": "",
+            "output_tail": "",
+            "assertion_result": {
+              "protocol": 1,
+              "check": "desired observable",
+              "phase": "base",
+              "run_id": "bad9a29e1a6f4511a2527357cbead635",
+              "assertions": [
+                {
+                  "id": "NEW_BEHAVIOR",
+                  "status": "fail",
+                  "detail": "observed=old"
+                },
+                {
+                  "id": "COMPLETE_OBSERVATION",
+                  "status": "pass",
+                  "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-a60kunkk/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-a60kunkk/tree\"}"
+                }
+              ]
+            },
+            "failed_assertions": [
+              "NEW_BEHAVIOR"
+            ]
+          }
+        ],
+        "candidate_checks": [
+          {
+            "name": "desired observable",
+            "kind": "acceptance",
+            "expected_exit": 0,
+            "passed": true,
+            "harness_error": false,
+            "exit": 0,
+            "seconds": 0.02,
+            "output": "",
+            "output_tail": "",
+            "assertion_result": {
+              "protocol": 1,
+              "check": "desired observable",
+              "phase": "candidate",
+              "run_id": "45f43d6dd3c345fa83165656bd016208",
+              "assertions": [
+                {
+                  "id": "NEW_BEHAVIOR",
+                  "status": "pass",
+                  "detail": "observed=new"
+                },
+                {
+                  "id": "COMPLETE_OBSERVATION",
+                  "status": "pass",
+                  "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-nal52fg5/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-nal52fg5/tree\"}"
+                }
+              ]
+            },
+            "failed_assertions": []
+          }
+        ],
+        "verdict": "unverifiable",
+        "reasons": [
+          "caller identity changed: tracked content changed: app.txt"
+        ],
+        "warnings": []
+      }
+    ]
+  },
+  "processes": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "-b",
+        "main"
+      ],
+      "exit": 0,
+      "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation/.git/\n",
+      "stderr": "",
+      "seconds": 0.0533
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "core.hooksPath",
+        "/dev/null"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.0115
+    },
+    {
+      "argv": [
+        "git",
+        "add",
+        "-A"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.0132
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "--allow-empty",
+        "-m",
+        "fixture"
+      ],
+      "exit": 0,
+      "stdout": "[main (root-commit) c02a235] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+      "stderr": "",
+      "seconds": 0.019
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "c02a235d6932f9a985e0e0be32115df038b40fd4\n",
+      "stderr": "",
+      "seconds": 0.0112
+    },
+    {
+      "argv": [
+        "git",
+        "switch",
+        "-c",
+        "candidate"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Switched to a new branch 'candidate'\n",
+      "seconds": 0.0131
+    },
+    {
+      "argv": [
+        "git",
+        "add",
+        "-A"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.0118
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "--allow-empty",
+        "-m",
+        "fixture"
+      ],
+      "exit": 0,
+      "stdout": "[candidate ba7ea31] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+      "stderr": "",
+      "seconds": 0.0178
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "ba7ea31b50f1cf5ca5aab4e02be42c0e6f7bc7dd\n",
+      "stderr": "",
+      "seconds": 0.0099
+    },
+    {
+      "argv": [
+        "git",
+        "switch",
+        "main"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Switched to branch 'main'\n",
+      "seconds": 0.0125
+    },
+    {
+      "argv": [
+        "git",
+        "add",
+        "-A"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.012
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "--allow-empty",
+        "-m",
+        "fixture"
+      ],
+      "exit": 0,
+      "stdout": "[main 13b2040] fixture\n 1 file changed, 1 insertion(+)\n",
+      "stderr": "",
+      "seconds": 0.0191
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdout": "13b2040ad24083b36bf3554af3852db4682eb1ba\n",
+      "stderr": "",
+      "seconds": 0.0102
+    },
+    {
+      "argv": [
+        "git",
+        "switch",
+        "candidate"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Switched to branch 'candidate'\n",
+      "seconds": 0.0124
+    },
+    {
+      "argv": [
+        "git",
+        "merge",
+        "13b2040ad24083b36bf3554af3852db4682eb1ba",
+        "--no-edit"
+      ],
+      "exit": 0,
+      "stdout": "Merge made by the 'ort' strategy.\n checks/check.py | 1 +\n 1 file changed, 1 insertion(+)\n",
+      "stderr": "",
+      "seconds": 0.024
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/source/verify.py",
+        "tasks/check.toml",
+        "--repo",
+        "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation",
+        "--base",
+        "13b2040ad24083b36bf3554af3852db4682eb1ba",
+        "--log",
+        "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation-candidate.jsonl"
+      ],
+      "exit": 2,
+      "stdout": "UNVERIFIABLE  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  [accep] candidate:pass  desired observable\n  - caller identity changed: tracked content changed: app.txt\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation-candidate.jsonl\n",
+      "stderr": "",
+      "seconds": 0.7806,
+      "records": [
+        {
+          "schema": 2,
+          "at": "2026-10-06T04:01:06.958617+00:00",
+          "verifier_version": "3.1.0",
+          "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+          "verifier_package_binding": {
+            "components": {
+              "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+              "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+            },
+            "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+            "boundary": "schema2-start-loaded-components"
+          },
+          "assurance": "schema2-evidence-validity",
+          "task_id": "validity-fixture",
+          "project": "synthetic",
+          "goal": "app exposes new behavior",
+          "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/caller-mutation/tasks/check.toml",
+          "spec_source": "base",
+          "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+          "base_ref": "13b2040ad24083b36bf3554af3852db4682eb1ba",
+          "merge_base": "13b2040ad24083b36bf3554af3852db4682eb1ba",
+          "head": "ccb01519ad40c0ee3ef09d6a4f9e7d5d25da011b",
+          "dirty_before_log": false,
+          "claim": "",
+          "raw_claim": null,
+          "raw_claim_captured_at": null,
+          "implementer_model": null,
+          "verifier_access": "unknown",
+          "verifier_inspection_reported": "unknown",
+          "contract_review": {
+            "ran": null,
+            "reviewer_model": null,
+            "findings": [],
+            "accepted_findings": []
+          },
+          "source_binding": {
+            "base": {
+              "commit": "13b2040ad24083b36bf3554af3852db4682eb1ba",
+              "tree": "a6de0a9643db81876478661dfd4eeb253bdb8930",
+              "manifest_sha256": "ea478e490b0377fa5b3a38d5b058dde97935fca84b7eea846d3ee0b9c0c692f9"
+            },
+            "candidate": {
+              "commit": "ccb01519ad40c0ee3ef09d6a4f9e7d5d25da011b",
+              "tree": "1cb99825dd872d15cdbd9356bb67b048505ab1b0",
+              "manifest_sha256": "336cb18b39fbcbd54dd8eb2722e257721f41c38cca07cfc2605508947d5218e0"
+            },
+            "candidate_snapshot": true,
+            "clean_before": true,
+            "unchanged_after": false
+          },
+          "external_inputs": [],
+          "runtime_inputs": [
+            {
+              "check": "desired observable",
+              "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+              "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+            }
+          ],
+          "changed_files": [
+            "app.txt"
+          ],
+          "protected_changes": [],
+          "out_of_scope": [],
+          "mutable_test_changes": [],
+          "bypasses": [],
+          "base_checks": [
+            {
+              "name": "desired observable",
+              "kind": "acceptance",
+              "expected_exit": 0,
+              "passed": false,
+              "harness_error": false,
+              "exit": 1,
+              "seconds": 0.02,
+              "output": "",
+              "output_tail": "",
+              "assertion_result": {
+                "protocol": 1,
+                "check": "desired observable",
+                "phase": "base",
+                "run_id": "bad9a29e1a6f4511a2527357cbead635",
+                "assertions": [
+                  {
+                    "id": "NEW_BEHAVIOR",
+                    "status": "fail",
+                    "detail": "observed=old"
+                  },
+                  {
+                    "id": "COMPLETE_OBSERVATION",
+                    "status": "pass",
+                    "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-a60kunkk/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-a60kunkk/tree\"}"
+                  }
+                ]
+              },
+              "failed_assertions": [
+                "NEW_BEHAVIOR"
+              ]
+            }
+          ],
+          "candidate_checks": [
+            {
+              "name": "desired observable",
+              "kind": "acceptance",
+              "expected_exit": 0,
+              "passed": true,
+              "harness_error": false,
+              "exit": 0,
+              "seconds": 0.02,
+              "output": "",
+              "output_tail": "",
+              "assertion_result": {
+                "protocol": 1,
+                "check": "desired observable",
+                "phase": "candidate",
+                "run_id": "45f43d6dd3c345fa83165656bd016208",
+                "assertions": [
+                  {
+                    "id": "NEW_BEHAVIOR",
+                    "status": "pass",
+                    "detail": "observed=new"
+                  },
+                  {
+                    "id": "COMPLETE_OBSERVATION",
+                    "status": "pass",
+                    "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-nal52fg5/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/redteam-caller-probe-1523ptk2/verify-snapshot-nal52fg5/tree\"}"
+                  }
+                ]
+              },
+              "failed_assertions": []
+            }
+          ],
+          "verdict": "unverifiable",
+          "reasons": [
+            "caller identity changed: tracked content changed: app.txt"
+          ],
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

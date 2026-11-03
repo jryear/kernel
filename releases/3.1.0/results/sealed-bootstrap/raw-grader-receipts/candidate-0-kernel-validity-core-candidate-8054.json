@@ -1,0 +1,1529 @@
+{
+  "protocol": 1,
+  "grader_sha256": "b901e458d96c2d73ae0e76c81979cb9f2a8c3709325318ab67cc0e14d1eece00",
+  "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+  "mode": "core",
+  "cases": [
+    {
+      "id": "MEANINGFUL_RED_GREEN",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive/.git/\n",
+          "stderr": "",
+          "seconds": 0.0572
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0119
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0138
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 5b82225] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0219
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1\n",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0127
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0126
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate e562bfd] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0191
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "e562bfdb87c6426b803a2924e83487d1ccf22f6b\n",
+          "stderr": "",
+          "seconds": 0.0105
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive",
+            "--base",
+            "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 0,
+          "stdout": "BASELINE_READY  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive-baseline.jsonl\n",
+          "stderr": "",
+          "seconds": 0.6043,
+          "records": [
+            {
+              "schema": 2,
+              "at": "2026-10-06T03:59:16.101261+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "verifier_package_binding": {
+                "components": {
+                  "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+                  "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+                  "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+                },
+                "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+                "boundary": "schema2-start-loaded-components"
+              },
+              "assurance": "schema2-evidence-validity",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+              "base_ref": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "merge_base": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "head": "e562bfdb87c6426b803a2924e83487d1ccf22f6b",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "source_binding": {
+                "base": {
+                  "commit": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate": {
+                  "commit": "e562bfdb87c6426b803a2924e83487d1ccf22f6b",
+                  "tree": "35a679e9964602867cf8afc80d5d5a7a04bab653",
+                  "manifest_sha256": "acc835ca4a2cb5d3c3bd1d4fb744c2034c20632b40af397a1bd12686b344da3b"
+                },
+                "candidate_snapshot": false,
+                "clean_before": true,
+                "unchanged_after": true
+              },
+              "external_inputs": [],
+              "runtime_inputs": [
+                {
+                  "check": "desired observable",
+                  "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+                  "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+                }
+              ],
+              "changed_files": [
+                "app.txt"
+              ],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.03,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "base",
+                    "run_id": "a30fa833e75347b0bc990a05ceabd8f7",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-fhc6pxw6/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-fhc6pxw6/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "candidate_checks": [],
+              "verdict": "baseline_ready",
+              "reasons": [],
+              "warnings": []
+            }
+          ]
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive",
+            "--base",
+            "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive-candidate.jsonl"
+          ],
+          "exit": 0,
+          "stdout": "SUPPORTED  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  [accep] candidate:pass  desired observable\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive-candidate.jsonl\n",
+          "stderr": "",
+          "seconds": 0.8367,
+          "records": [
+            {
+              "schema": 2,
+              "at": "2026-10-06T03:59:16.937883+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "verifier_package_binding": {
+                "components": {
+                  "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+                  "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+                  "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+                },
+                "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+                "boundary": "schema2-start-loaded-components"
+              },
+              "assurance": "schema2-evidence-validity",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+              "base_ref": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "merge_base": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "head": "e562bfdb87c6426b803a2924e83487d1ccf22f6b",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "source_binding": {
+                "base": {
+                  "commit": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate": {
+                  "commit": "e562bfdb87c6426b803a2924e83487d1ccf22f6b",
+                  "tree": "35a679e9964602867cf8afc80d5d5a7a04bab653",
+                  "manifest_sha256": "acc835ca4a2cb5d3c3bd1d4fb744c2034c20632b40af397a1bd12686b344da3b"
+                },
+                "candidate_snapshot": true,
+                "clean_before": true,
+                "unchanged_after": true
+              },
+              "external_inputs": [],
+              "runtime_inputs": [
+                {
+                  "check": "desired observable",
+                  "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+                  "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+                }
+              ],
+              "changed_files": [
+                "app.txt"
+              ],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.03,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "base",
+                    "run_id": "287b9a5362d04d3babb9694420666de8",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-zxxldsah/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-zxxldsah/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "candidate_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": true,
+                  "harness_error": false,
+                  "exit": 0,
+                  "seconds": 0.02,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "candidate",
+                    "run_id": "fc5aa60a7b7349b5b842d3424b88284f",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "pass",
+                        "detail": "observed=new"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-5z0oppdu/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-5z0oppdu/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": []
+                }
+              ],
+              "verdict": "supported",
+              "reasons": [],
+              "warnings": []
+            }
+          ]
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0129
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 80ae73a] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0186
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "80ae73acc8d5537fb4270a00da46dbca994a4046\n",
+          "stderr": "",
+          "seconds": 0.0106
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive",
+            "--base",
+            "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive-candidate.jsonl"
+          ],
+          "exit": 1,
+          "stdout": "CONTRADICTED  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  [accep] candidate:fail  desired observable\n  - failed on candidate: desired observable\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive-candidate.jsonl\n",
+          "stderr": "",
+          "seconds": 0.7916,
+          "records": [
+            {
+              "schema": 2,
+              "at": "2026-10-06T03:59:16.937883+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "verifier_package_binding": {
+                "components": {
+                  "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+                  "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+                  "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+                },
+                "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+                "boundary": "schema2-start-loaded-components"
+              },
+              "assurance": "schema2-evidence-validity",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+              "base_ref": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "merge_base": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "head": "e562bfdb87c6426b803a2924e83487d1ccf22f6b",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "source_binding": {
+                "base": {
+                  "commit": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate": {
+                  "commit": "e562bfdb87c6426b803a2924e83487d1ccf22f6b",
+                  "tree": "35a679e9964602867cf8afc80d5d5a7a04bab653",
+                  "manifest_sha256": "acc835ca4a2cb5d3c3bd1d4fb744c2034c20632b40af397a1bd12686b344da3b"
+                },
+                "candidate_snapshot": true,
+                "clean_before": true,
+                "unchanged_after": true
+              },
+              "external_inputs": [],
+              "runtime_inputs": [
+                {
+                  "check": "desired observable",
+                  "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+                  "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+                }
+              ],
+              "changed_files": [
+                "app.txt"
+              ],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.03,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "base",
+                    "run_id": "287b9a5362d04d3babb9694420666de8",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-zxxldsah/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-zxxldsah/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "candidate_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": true,
+                  "harness_error": false,
+                  "exit": 0,
+                  "seconds": 0.02,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "candidate",
+                    "run_id": "fc5aa60a7b7349b5b842d3424b88284f",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "pass",
+                        "detail": "observed=new"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-5z0oppdu/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-5z0oppdu/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": []
+                }
+              ],
+              "verdict": "supported",
+              "reasons": [],
+              "warnings": []
+            },
+            {
+              "schema": 2,
+              "at": "2026-10-06T03:59:17.771972+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "verifier_package_binding": {
+                "components": {
+                  "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+                  "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+                  "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+                },
+                "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+                "boundary": "schema2-start-loaded-components"
+              },
+              "assurance": "schema2-evidence-validity",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/positive/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+              "base_ref": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "merge_base": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+              "head": "80ae73acc8d5537fb4270a00da46dbca994a4046",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "source_binding": {
+                "base": {
+                  "commit": "5b8222570beaaa12d42ba1ab28cdcc529dc6fca1",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate": {
+                  "commit": "80ae73acc8d5537fb4270a00da46dbca994a4046",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate_snapshot": true,
+                "clean_before": true,
+                "unchanged_after": true
+              },
+              "external_inputs": [],
+              "runtime_inputs": [
+                {
+                  "check": "desired observable",
+                  "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+                  "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+                }
+              ],
+              "changed_files": [],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.02,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "base",
+                    "run_id": "07f7307ffee74ddb9aa6258c0555ee0f",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-ul78m7jb/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-ul78m7jb/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "candidate_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.02,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "candidate",
+                    "run_id": "d97fc4248f8342be926c6f9ed95cbfcd",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-8l1ueb_a/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-8l1ueb_a/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "verdict": "contradicted",
+              "reasons": [
+                "failed on candidate: desired observable"
+              ],
+              "warnings": []
+            }
+          ]
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "EXACT_SOURCE_AND_ASSERTION_BINDING",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding/.git/\n",
+          "stderr": "",
+          "seconds": 0.0166
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0126
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0157
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 9f209e8] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0221
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf\n",
+          "stderr": "",
+          "seconds": 0.0104
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0134
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0127
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate a6b5120] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0336
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a\n",
+          "stderr": "",
+          "seconds": 0.0105
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding",
+            "--base",
+            "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 0,
+          "stdout": "BASELINE_READY  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding-baseline.jsonl\n",
+          "stderr": "",
+          "seconds": 0.555,
+          "records": [
+            {
+              "schema": 2,
+              "at": "2026-10-06T03:59:18.475786+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "verifier_package_binding": {
+                "components": {
+                  "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+                  "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+                  "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+                },
+                "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+                "boundary": "schema2-start-loaded-components"
+              },
+              "assurance": "schema2-evidence-validity",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+              "base_ref": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+              "merge_base": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+              "head": "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "source_binding": {
+                "base": {
+                  "commit": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate": {
+                  "commit": "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a",
+                  "tree": "35a679e9964602867cf8afc80d5d5a7a04bab653",
+                  "manifest_sha256": "acc835ca4a2cb5d3c3bd1d4fb744c2034c20632b40af397a1bd12686b344da3b"
+                },
+                "candidate_snapshot": false,
+                "clean_before": true,
+                "unchanged_after": true
+              },
+              "external_inputs": [],
+              "runtime_inputs": [
+                {
+                  "check": "desired observable",
+                  "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+                  "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+                }
+              ],
+              "changed_files": [
+                "app.txt"
+              ],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.02,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "base",
+                    "run_id": "1591f83352e4449e8d05c4d7d842b2cc",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-8xe7n89j/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-8xe7n89j/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "candidate_checks": [],
+              "verdict": "baseline_ready",
+              "reasons": [],
+              "warnings": []
+            }
+          ]
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding",
+            "--base",
+            "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding-candidate.jsonl"
+          ],
+          "exit": 0,
+          "stdout": "SUPPORTED  validity-fixture  assurance=schema2-evidence-validity\n  [accep] base:fail  desired observable\n  [accep] candidate:pass  desired observable\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding-candidate.jsonl\n",
+          "stderr": "",
+          "seconds": 0.8041,
+          "records": [
+            {
+              "schema": 2,
+              "at": "2026-10-06T03:59:19.280222+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "verifier_package_binding": {
+                "components": {
+                  "verify.py": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+                  "kernel_runtime.py": "d185f76b12c30a0758fee453c8806508919fa0df2a457c8fb55fd124b7d1ac93",
+                  "kernel_report.py": "6c8c21d2f8bbcd81a5a6b0f2abb69166dc7603d7bf5df76e84d803fc5997bd0d"
+                },
+                "manifest_sha256": "8d67bd79e547634041dc377c05316aaac9d4cd7851469f18555a1b4b456fabf0",
+                "boundary": "schema2-start-loaded-components"
+              },
+              "assurance": "schema2-evidence-validity",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/binding/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "155f4ce8802dc6ebe55a7b2814092658407cd3fcda6dd3b6446830d784e79afa",
+              "base_ref": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+              "merge_base": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+              "head": "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "source_binding": {
+                "base": {
+                  "commit": "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf",
+                  "tree": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c",
+                  "manifest_sha256": "896d1fced293fbfa06efd5bed931e0c7e001823095e79d567cb4a662602e3dd4"
+                },
+                "candidate": {
+                  "commit": "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a",
+                  "tree": "35a679e9964602867cf8afc80d5d5a7a04bab653",
+                  "manifest_sha256": "acc835ca4a2cb5d3c3bd1d4fb744c2034c20632b40af397a1bd12686b344da3b"
+                },
+                "candidate_snapshot": true,
+                "clean_before": true,
+                "unchanged_after": true
+              },
+              "external_inputs": [],
+              "runtime_inputs": [
+                {
+                  "check": "desired observable",
+                  "declared": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+                  "resolved": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+                }
+              ],
+              "changed_files": [
+                "app.txt"
+              ],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "exit": 1,
+                  "seconds": 0.02,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "base",
+                    "run_id": "4773155257f94a86b5ad45fe6e287d50",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "fail",
+                        "detail": "observed=old"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-ttkykc2y/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-ttkykc2y/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": [
+                    "NEW_BEHAVIOR"
+                  ]
+                }
+              ],
+              "candidate_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "expected_exit": 0,
+                  "passed": true,
+                  "harness_error": false,
+                  "exit": 0,
+                  "seconds": 0.03,
+                  "output": "",
+                  "output_tail": "",
+                  "assertion_result": {
+                    "protocol": 1,
+                    "check": "desired observable",
+                    "phase": "candidate",
+                    "run_id": "0b9d7198bf464ea581cf9923490fc8a0",
+                    "assertions": [
+                      {
+                        "id": "NEW_BEHAVIOR",
+                        "status": "pass",
+                        "detail": "observed=new"
+                      },
+                      {
+                        "id": "COMPLETE_OBSERVATION",
+                        "status": "pass",
+                        "detail": "{\"cwd\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-g_p0hxyp/tree\", \"root\": \"/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/verify-snapshot-g_p0hxyp/tree\"}"
+                      }
+                    ]
+                  },
+                  "failed_assertions": []
+                }
+              ],
+              "verdict": "supported",
+              "reasons": [],
+              "warnings": []
+            }
+          ]
+        },
+        {
+          "argv": [
+            "git",
+            "ls-tree",
+            "-r",
+            "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf"
+          ],
+          "exit": 0,
+          "stdout": "100644 blob 489ce0f857e7634a0eb9f328265a3e91fad49f61\tapp.txt\n100755 blob dccf680478647525c9802bd6d768f3920fb32652\tchecks/check.py\n100644 blob 640c640872f52a0eb1181188db14e8081a3b701c\tsupport/helper.py\n100644 blob 6e58a5bc63e6916ade19e2574fda2b2b4e04913c\ttasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0119
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "489ce0f857e7634a0eb9f328265a3e91fad49f61"
+          ],
+          "exit": 0,
+          "stdout": "old",
+          "stderr": "",
+          "seconds": 0.0119
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "dccf680478647525c9802bd6d768f3920fb32652"
+          ],
+          "exit": 0,
+          "stdout": "import json, os, sys, time, subprocess\nfrom pathlib import Path\nmode = sys.argv[1]\nphase = os.environ[\"VERIFY_TREE\"]\nvalue = Path(\"app.txt\").read_text().strip()\nif mode == \"import\" and phase == \"base\": import nonexistent_validity_dependency\nif mode == \"setup\" and phase == \"base\": raise RuntimeError(\"fixture setup exception\")\nif mode == \"timeout\" and phase == \"candidate\": time.sleep(2)\nif mode == \"missing\" and phase == \"candidate\": sys.exit(0)\nif mode == \"ordinary1\" and phase == \"base\": sys.exit(1)\nrows = [{\"id\":\"NEW_BEHAVIOR\", \"status\":\"pass\" if value == \"new\" else \"fail\", \"detail\":\"observed=\"+value}, {\"id\":\"COMPLETE_OBSERVATION\", \"status\":\"pass\", \"detail\":json.dumps({\"cwd\":os.getcwd(),\"root\":os.environ[\"VERIFY_ROOT\"]})}]\nif mode == \"unexpected_base\" and phase == \"base\": rows[1][\"status\"]=\"fail\"\nif mode == \"wrong\" and phase == \"candidate\": rows[0][\"id\"]=\"UNDECLARED\"\nif mode == \"duplicate\" and phase == \"candidate\": rows.append(dict(rows[0]))\nif mode == \"incomplete\" and phase == \"candidate\": rows=rows[:1]\nif mode == \"skip\" and phase == \"candidate\": rows=[]\nif mode == \"mutate\" and phase == \"candidate\": Path(\"app.txt\").write_text(\"tampered\")\nif mode == \"mutate_base\" and phase == \"base\": Path(\"app.txt\").write_text(\"tampered\")\nif mode == \"commit_during\" and phase == \"candidate\":\n    Path(\"app.txt\").write_text(\"tampered\")\n    subprocess.run([\"git\",\"add\",\"app.txt\"],check=True)\n    subprocess.run([\"git\",\"commit\",\"-m\",\"during-check\"],check=True)\nif mode == \"untracked_during\" and phase == \"candidate\": Path(\"surprise.txt\").write_text(\"generated\")\nresult={\"protocol\":1,\"check\":\"desired observable\",\"phase\":phase,\"run_id\":os.environ[\"VERIFY_RUN_ID\"],\"assertions\":rows}\nif mode == \"wrong_phase\" and phase == \"candidate\": result[\"phase\"]=\"base\"\nif mode == \"wrong_check\" and phase == \"candidate\": result[\"check\"]=\"another check\"\nif mode == \"wrong_token\" and phase == \"candidate\": result[\"run_id\"]=\"stale-token\"\nif mode == \"extra_key\" and phase == \"candidate\": result[\"forged\"]=True\nif mode == \"unknown_status\" and phase == \"candidate\": rows[0][\"status\"]=\"skipped\"\nif mode == \"invalid_detail\" and phase == \"candidate\": rows[0][\"detail\"]=42\nif mode == \"malformed\" and phase == \"candidate\": Path(os.environ[\"VERIFY_RESULT_JSON\"]).write_text(\"{broken\")\nelse: Path(os.environ[\"VERIFY_RESULT_JSON\"]).write_text(json.dumps(result))\nif mode == \"99\" and phase == \"candidate\": sys.exit(99)\nif mode == \"exit_mismatch\" and phase == \"candidate\": sys.exit(1)\nsys.exit(1 if any(r[\"status\"]==\"fail\" for r in rows) else 0)\n",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "640c640872f52a0eb1181188db14e8081a3b701c"
+          ],
+          "exit": 0,
+          "stdout": "# frozen declared helper\n",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "6e58a5bc63e6916ade19e2574fda2b2b4e04913c"
+          ],
+          "exit": 0,
+          "stdout": "spec_version=2\nid=\"validity-fixture\"\nproject=\"synthetic\"\ngoal=\"app exposes new behavior\"\n[scope]\ninclude=[\"app.txt\",\"runner.py\",\"helper.py\",\"support/*\"]\nprotected=[]\ntest_files=[]\n[[checks]]\nname=\"desired observable\"\nkind=\"acceptance\"\ntimeout=1\nevidence=[\"checks/*\"]\nargv=[\"/opt/homebrew/opt/python@3.14/bin/python3.14\", \"checks/check.py\", \"normal\"]\nentry=\"checks/check.py\"\nchain=[\"checks/check.py\",\"support/helper.py\"]\nassertions=[\"NEW_BEHAVIOR\",\"COMPLETE_OBSERVATION\"]\nbaseline_failures=[\"NEW_BEHAVIOR\"]\n",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "9f209e8ffa9e0699b3514ae7c50f4b8b06f90acf^{tree}"
+          ],
+          "exit": 0,
+          "stdout": "f8d7a0496a22ee87edf2f20475be164cbcdf7f3c\n",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "ls-tree",
+            "-r",
+            "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a"
+          ],
+          "exit": 0,
+          "stdout": "100644 blob 3e5126c4e761fd09582fc517918a1601b218dff0\tapp.txt\n100755 blob dccf680478647525c9802bd6d768f3920fb32652\tchecks/check.py\n100644 blob 640c640872f52a0eb1181188db14e8081a3b701c\tsupport/helper.py\n100644 blob 6e58a5bc63e6916ade19e2574fda2b2b4e04913c\ttasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "3e5126c4e761fd09582fc517918a1601b218dff0"
+          ],
+          "exit": 0,
+          "stdout": "new",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "dccf680478647525c9802bd6d768f3920fb32652"
+          ],
+          "exit": 0,
+          "stdout": "import json, os, sys, time, subprocess\nfrom pathlib import Path\nmode = sys.argv[1]\nphase = os.environ[\"VERIFY_TREE\"]\nvalue = Path(\"app.txt\").read_text().strip()\nif mode == \"import\" and phase == \"base\": import nonexistent_validity_dependency\nif mode == \"setup\" and phase == \"base\": raise RuntimeError(\"fixture setup exception\")\nif mode == \"timeout\" and phase == \"candidate\": time.sleep(2)\nif mode == \"missing\" and phase == \"candidate\": sys.exit(0)\nif mode == \"ordinary1\" and phase == \"base\": sys.exit(1)\nrows = [{\"id\":\"NEW_BEHAVIOR\", \"status\":\"pass\" if value == \"new\" else \"fail\", \"detail\":\"observed=\"+value}, {\"id\":\"COMPLETE_OBSERVATION\", \"status\":\"pass\", \"detail\":json.dumps({\"cwd\":os.getcwd(),\"root\":os.environ[\"VERIFY_ROOT\"]})}]\nif mode == \"unexpected_base\" and phase == \"base\": rows[1][\"status\"]=\"fail\"\nif mode == \"wrong\" and phase == \"candidate\": rows[0][\"id\"]=\"UNDECLARED\"\nif mode == \"duplicate\" and phase == \"candidate\": rows.append(dict(rows[0]))\nif mode == \"incomplete\" and phase == \"candidate\": rows=rows[:1]\nif mode == \"skip\" and phase == \"candidate\": rows=[]\nif mode == \"mutate\" and phase == \"candidate\": Path(\"app.txt\").write_text(\"tampered\")\nif mode == \"mutate_base\" and phase == \"base\": Path(\"app.txt\").write_text(\"tampered\")\nif mode == \"commit_during\" and phase == \"candidate\":\n    Path(\"app.txt\").write_text(\"tampered\")\n    subprocess.run([\"git\",\"add\",\"app.txt\"],check=True)\n    subprocess.run([\"git\",\"commit\",\"-m\",\"during-check\"],check=True)\nif mode == \"untracked_during\" and phase == \"candidate\": Path(\"surprise.txt\").write_text(\"generated\")\nresult={\"protocol\":1,\"check\":\"desired observable\",\"phase\":phase,\"run_id\":os.environ[\"VERIFY_RUN_ID\"],\"assertions\":rows}\nif mode == \"wrong_phase\" and phase == \"candidate\": result[\"phase\"]=\"base\"\nif mode == \"wrong_check\" and phase == \"candidate\": result[\"check\"]=\"another check\"\nif mode == \"wrong_token\" and phase == \"candidate\": result[\"run_id\"]=\"stale-token\"\nif mode == \"extra_key\" and phase == \"candidate\": result[\"forged\"]=True\nif mode == \"unknown_status\" and phase == \"candidate\": rows[0][\"status\"]=\"skipped\"\nif mode == \"invalid_detail\" and phase == \"candidate\": rows[0][\"detail\"]=42\nif mode == \"malformed\" and phase == \"candidate\": Path(os.environ[\"VERIFY_RESULT_JSON\"]).write_text(\"{broken\")\nelse: Path(os.environ[\"VERIFY_RESULT_JSON\"]).write_text(json.dumps(result))\nif mode == \"99\" and phase == \"candidate\": sys.exit(99)\nif mode == \"exit_mismatch\" and phase == \"candidate\": sys.exit(1)\nsys.exit(1 if any(r[\"status\"]==\"fail\" for r in rows) else 0)\n",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "640c640872f52a0eb1181188db14e8081a3b701c"
+          ],
+          "exit": 0,
+          "stdout": "# frozen declared helper\n",
+          "stderr": "",
+          "seconds": 0.0105
+        },
+        {
+          "argv": [
+            "git",
+            "cat-file",
+            "blob",
+            "6e58a5bc63e6916ade19e2574fda2b2b4e04913c"
+          ],
+          "exit": 0,
+          "stdout": "spec_version=2\nid=\"validity-fixture\"\nproject=\"synthetic\"\ngoal=\"app exposes new behavior\"\n[scope]\ninclude=[\"app.txt\",\"runner.py\",\"helper.py\",\"support/*\"]\nprotected=[]\ntest_files=[]\n[[checks]]\nname=\"desired observable\"\nkind=\"acceptance\"\ntimeout=1\nevidence=[\"checks/*\"]\nargv=[\"/opt/homebrew/opt/python@3.14/bin/python3.14\", \"checks/check.py\", \"normal\"]\nentry=\"checks/check.py\"\nchain=[\"checks/check.py\",\"support/helper.py\"]\nassertions=[\"NEW_BEHAVIOR\",\"COMPLETE_OBSERVATION\"]\nbaseline_failures=[\"NEW_BEHAVIOR\"]\n",
+          "stderr": "",
+          "seconds": 0.0108
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "a6b51202e3ed8b1dfd5dcbcd1e07c9d5e661078a^{tree}"
+          ],
+          "exit": 0,
+          "stdout": "35a679e9964602867cf8afc80d5d5a7a04bab653\n",
+          "stderr": "",
+          "seconds": 0.0109
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "LEGACY_ASSURANCE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/legacy/.git/\n",
+          "stderr": "",
+          "seconds": 0.0147
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 7bda240] fixture\n 4 files changed, 19 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0199
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "7bda240a99ab5567824855f54a5e6c756bef118a\n",
+          "stderr": "",
+          "seconds": 0.0108
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0123
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 157ded1] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0195
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "157ded17c4852f01444ab065eb3f481e36cae71f\n",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/legacy",
+            "--base",
+            "7bda240a99ab5567824855f54a5e6c756bef118a",
+            "--log",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/legacy-candidate.jsonl"
+          ],
+          "exit": 0,
+          "stdout": "SUPPORTED  validity-fixture  (1 files changed)  assurance=legacy-schema1\n  [accep] base:fail -> candidate:pass  desired observable\n  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/legacy-candidate.jsonl\n",
+          "stderr": "",
+          "seconds": 0.257,
+          "records": [
+            {
+              "schema": 1,
+              "assurance": "legacy-schema1",
+              "at": "2026-10-06T03:59:19.773902+00:00",
+              "verifier_version": "3.1.0",
+              "verifier_sha256": "0f638fc9b7a7682ab814c7923557ecbb0871f35140f1aa6838efde17855d4ca5",
+              "task_id": "validity-fixture",
+              "project": "synthetic",
+              "goal": "app exposes new behavior",
+              "spec_path": "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/legacy/tasks/check.toml",
+              "spec_source": "base",
+              "spec_sha256": "506c393456095b352ff9dbc92245dfa1bd769bbf1442c5313dc76915b66e4ef6",
+              "base_ref": "7bda240a99ab5567824855f54a5e6c756bef118a",
+              "merge_base": "7bda240a99ab5567824855f54a5e6c756bef118a",
+              "head": "157ded17c4852f01444ab065eb3f481e36cae71f",
+              "dirty_before_log": false,
+              "claim": "",
+              "raw_claim": null,
+              "raw_claim_captured_at": null,
+              "implementer_model": null,
+              "verifier_access": "unknown",
+              "verifier_inspection_reported": "unknown",
+              "contract_review": {
+                "ran": null,
+                "reviewer_model": null,
+                "findings": [],
+                "accepted_findings": []
+              },
+              "changed_files": [
+                "app.txt"
+              ],
+              "protected_changes": [],
+              "out_of_scope": [],
+              "mutable_test_changes": [],
+              "bypasses": [],
+              "base_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "exit": 1,
+                  "expected_exit": 0,
+                  "passed": false,
+                  "harness_error": false,
+                  "seconds": 0.02,
+                  "output_tail": ""
+                }
+              ],
+              "candidate_checks": [
+                {
+                  "name": "desired observable",
+                  "kind": "acceptance",
+                  "exit": 0,
+                  "expected_exit": 0,
+                  "passed": true,
+                  "harness_error": false,
+                  "seconds": 0.02,
+                  "output_tail": ""
+                }
+              ],
+              "verdict": "supported",
+              "reasons": [],
+              "warnings": []
+            }
+          ]
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "SCHEMA2_ADOPTION",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/.git/\n",
+          "stderr": "",
+          "seconds": 0.0147
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/adopt.py",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption",
+            "--project",
+            "fixture-project"
+          ],
+          "exit": 0,
+          "stdout": "write /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/tasks/task.template.toml\nwrite /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/evidence/schema2_check.py\nwrite /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/tasks/review.template.json\nskip  /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/AGENTS.md (preserved)\nwrite /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/.claims/.gitignore\n\nNext: edit AGENTS.md and tasks/task.template.toml; keep ~/code/_kernel read-only to implementation agents.\n",
+          "stderr": "",
+          "seconds": 0.0482
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/adopt.py",
+            "/Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption",
+            "--project",
+            "fixture-project"
+          ],
+          "exit": 0,
+          "stdout": "skip  /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/tasks/task.template.toml (exists)\nskip  /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/evidence/schema2_check.py (exists)\nskip  /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/tasks/review.template.json (exists)\nskip  /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/validity-grader-fv612obn/adoption/AGENTS.md (preserved)\n\nNext: edit AGENTS.md and tasks/task.template.toml; keep ~/code/_kernel read-only to implementation agents.\n",
+          "stderr": "",
+          "seconds": 0.0482
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "RELEASE_VERSION",
+      "processes": [
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/Users/jryear/code/kernel-validity-implementation/verify.py",
+            "--version"
+          ],
+          "exit": 0,
+          "stdout": "3.1.0\n",
+          "stderr": "",
+          "seconds": 0.0463
+        }
+      ],
+      "status": "pass"
+    }
+  ],
+  "counts": {
+    "pass": 5,
+    "fail": 0,
+    "unavailable": 0
+  },
+  "scope": "deterministic synthetic source-only fixtures; no networks, providers, sandbox, review attestation or exhaustive dynamic-chain guarantee"
+}

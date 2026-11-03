@@ -1,0 +1,21 @@
+{
+  "status": "Proposed correction for isolated-copy review; installed trust anchor must stay unchanged",
+  "sourceVersion": "3.0.0",
+  "sourceSha256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+  "proposedVersion": "3.0.1",
+  "changes": [
+    "Bump VERIFIER_VERSION from 3.0.0 to 3.0.1",
+    "In run_check's subprocess.TimeoutExpired branch, assign HARNESS_EXIT (99) instead of None"
+  ],
+  "requiredObservableEffects": [
+    "Actual timed-out check returns exit99, harness_error=true, passed=false, with TIMEOUT diagnostic",
+    "Acceptance, adversarial and regression timeouts cannot establish baseline readiness",
+    "Isolated candidate timeout is UNVERIFIABLE exit2 and is not listed as an ordinary candidate failure",
+    "Finite failed acceptance can still establish RED; ordinary product failures remain CONTRADICTED",
+    "Explicit non99 expected_exit remains supported; expected_exit99 remains forbidden",
+    "Original six smoke/regression selftests remain byte-identical and pass"
+  ],
+  "scopeLimit": "run_check timeout classification only. No service-startup or process-group termination redesign, no change to mixed-failure verdict precedence, no product gate or deployment claim.",
+  "evidenceOwnership": "Independent gpt-6.1-sol/high author before Sol Medium candidate implementation; parent reviews and hashes evidence before dispatch",
+  "installation": "Not authorized by this preparation request; user will review exact patch and evidence in chat first"
+}

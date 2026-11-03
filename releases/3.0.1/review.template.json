@@ -1,0 +1,13 @@
+{
+  "ran": true,
+  "reviewer_model": "model/runtime",
+  "findings": [
+    {
+      "id": "R1",
+      "kind": "counterexample",
+      "summary": "A candidate could pass the current acceptance check while violating the intended outcome because ...",
+      "citations": ["tasks/project-area-001.toml:42-46", "tests/acceptance/example.sh:10-18"]
+    }
+  ],
+  "accepted_findings": ["R1"]
+}

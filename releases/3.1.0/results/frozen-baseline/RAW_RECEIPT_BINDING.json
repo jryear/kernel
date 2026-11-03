@@ -1,0 +1,45 @@
+[
+  {
+    "mode": "core",
+    "original": "/tmp/kernel-validity-core-base-48012.json",
+    "copy": "/Users/jryear/.local/state/kernel-evidence-validity/integrated-baseline/exact-base-raw/core.json",
+    "sha256": "e86f713604b2a84c690bd48c1caf20348ea7b1d38b550e503c3a3faf51d9a9e4",
+    "counts": {
+      "pass": 0,
+      "fail": 5,
+      "unavailable": 0
+    }
+  },
+  {
+    "mode": "negative",
+    "original": "/tmp/kernel-validity-negative-base-48105.json",
+    "copy": "/Users/jryear/.local/state/kernel-evidence-validity/integrated-baseline/exact-base-raw/negative.json",
+    "sha256": "0218e682755d6ac4b71f6f2c98df4f351d5e607ecab584cb7dde3143292dbe3b",
+    "counts": {
+      "pass": 0,
+      "fail": 41,
+      "unavailable": 0
+    }
+  },
+  {
+    "mode": "legacy",
+    "original": "/tmp/kernel-validity-legacy-base-49146.json",
+    "copy": "/Users/jryear/.local/state/kernel-evidence-validity/integrated-baseline/exact-base-raw/legacy.json",
+    "sha256": "e941b32f3b7d6497a76b2d8e468a4b1c67f905f16b034a399d8798ae9de589b8",
+    "counts": {
+      "selftests": 6,
+      "timeout_cases": 20
+    }
+  },
+  {
+    "mode": "v2",
+    "original": "/tmp/kernel-validity-v2-base-49993.json",
+    "copy": "/Users/jryear/.local/state/kernel-evidence-validity/integrated-baseline/exact-base-raw/v2.json",
+    "sha256": "b3cdd48d4924edf52a5b0413ed75e6c960cacbccf03d1d7a6d5c42ec076ecf7f",
+    "counts": {
+      "pass": 0,
+      "fail": 12,
+      "unavailable": 0
+    }
+  }
+]

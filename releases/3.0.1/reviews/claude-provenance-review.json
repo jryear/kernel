@@ -1,0 +1,36 @@
+{
+  "route": "Existing authenticated Claude CLI; no fallback",
+  "argv": [
+    "/Users/jryear/.local/bin/claude",
+    "-p",
+    "--output-format",
+    "json",
+    "--tools",
+    "",
+    "--strict-mcp-config",
+    "--mcp-config",
+    "{\"mcpServers\":{}}",
+    "--setting-sources",
+    "",
+    "--settings",
+    "{\"disableAllHooks\":true}",
+    "--no-session-persistence",
+    "--permission-mode",
+    "plan"
+  ],
+  "rawExit": 0,
+  "timedOut": false,
+  "seconds": 43.212,
+  "promptSha256": "4e2158076d3df17540f6ce6a6b5289b1563390b96eb5c963412dbbbd5006bf65",
+  "promptBytes": 321842,
+  "completedAtUtc": "2026-10-05T22:37:17.724652+00:00",
+  "classification": "Source-only follow-up; not deterministic proof or own execution",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "tools": [],
+  "mcpServers": [],
+  "subtype": "success",
+  "isError": false,
+  "result": "# Source-only follow-up: B1 provenance (sequential raw runs)\n\nAll of this comes from reading the text you supplied. I ran nothing and recomputed no hashes. Every SHA-256 below is as declared. The only thing I checked is internal consistency.\n\n## Verdict\n\n**For bounded local evidence on check-timeout classification, B1 is resolved by the fresh sequential receipts.** Nothing blocks the evidence within the stated scope. Some caveats remain, listed below.\n\n## What the fresh records establish\n\n1. **The shape matches the frozen suite.**\n   - CLI cases carry `processes` with full `argv`, `returncode`, `stdout`, `stderr` and `seconds`.\n   - Unit cases carry `innerChecks` and no `processes`, which is exactly what `BoundarySuite.check` and `process` emit.\n   - My earlier field-shape objection applied to the summarized view, not to these receipts.\n\n2. **The four runs are sequential and don't overlap.** In the parent record, each run ends before the next begins, with gaps of about 0.3\u20130.5 ms:\n   - original6 \u2192 original20 \u2192 candidate6 \u2192 candidate20\n   - original20: `22:34:54.810` to `22:35:10.878`\n   - candidate20: `22:35:13.093` to `22:35:29.167`\n\n3. **Timestamps are consistent.**\n   - All 9 original `at` values fall in 22:35:04\u201310.\n   - All 9 candidate `at` values fall in 22:35:22\u201328.\n   - Each set lies inside its parent interval, and no values are shared.\n   - Gaps between consecutive records match the next case's `seconds`. For example, 05.80 \u2192 07.24 is 1.437, and `cli_candidate_timeout_regression` took 1.437.\n   - Reconstructing the first candidate record from the parent start gives about 22.64. The recorded value is 22.645.\n\n4. **Durations add up.** Case `seconds` sum to about 15.98 s. That compares with `elapsedSeconds` 16.018 and the parent's 16.068, a gap of about 50 ms for interpreter start. The candidate run lines up the same way.\n\n5. **The verifier is bound to the records.** Each `verifierRecords[].verifier_sha256` matches the receipt's `verifierSha256`. The frozen suite itself asserts that match against the bytes it loaded, `94b7\u2026` for the original and `130e\u2026` for the candidate.\n\n6. **The suite discriminates.**\n   - The original fails exactly the 10 timeout-dependent cases and shows the pre-patch behavior: `base:fail` leads to BASELINE_READY, and a candidate timeout gives CONTRADICTED.\n   - `cli_base_timeout_regression` fails on the original for the right reason: it exits 2 via \"regression fails\", not HARNESS.\n   - The candidate passes 20/20.\n   - Controls are unchanged across both versions: finite RED\u2192GREEN, ordinary failure, real 99, expected 7 and expected 99.\n\n7. **The diff matches the source.** Comparing the two supplied `verify.py` texts, they differ only in `VERIFIER_VERSION` and the `TimeoutExpired` line. That agrees with `correction.diff`, and the hunk offsets line up: line 46 holds the version and line 354 the except body. I compared the text visually, not byte for byte, so whitespace-level identity rests on the declared hashes.\n\n## Remaining caveats (not blocking within scope)\n\n- **No independent attestation.**\n  - `SEQUENTIAL_RUN.json` and `PROVENANCE_RESOLUTION.json` come from the same operator pipeline as the receipts.\n  - The `rawReceiptSHA256` values and the \"freshAudit\" booleans are self-reported, and I could not recompute them.\n  - The evidence is internally coherent, which a fabrication would find hard to achieve. It is still not third-party verification.\n- **The earlier coincidence is still unexplained.** Exact microsecond matches between parallel processes in 3 of about 9 records cannot be dismissed as chance, and I'm not attributing them to concurrency.\n  - Excluding those receipts is the right call.\n  - Record it as an open pipeline-integrity item. If a copy or merge step produced it, that step should be found before any later evidence relies on the same tooling.\n- **`selftest.py` source was not supplied.** The selftest result rests on the declared hash `c392\u2026` and its stdout only.\n- **Single run each.** With `timeout = 1` on the finite controls, flake risk is unmeasured. A flake would fail the run, not falsely pass it.\n- **Carried forward unchanged from the prior review:**\n  - Mixed-precedence cases are untested.\n  - A base timeout in a full (non-`--baseline`) run is untested.\n  - `exit: 99` conflates a real exit 99 with a timeout.\n  - Descendant cleanup is not exercised, because the `exec` fixture masks it.\n\n## Scope\n\nThis supports only \"the 3.0.1 `run_check` change classifies actual check timeouts as reserved-99 harness errors in local synthetic fixtures.\" It makes no claim about service or descendant cleanup, mixed-verdict design, or any installed kernel, application or release.\n\nYour session is in plan mode, but no tools were available to me here, so I wrote no plan file and did not call ExitPlanMode."
+}

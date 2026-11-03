@@ -1,0 +1,23 @@
+{
+  "authorizedByUser": "Let's install and freeze this, this is excellent. Time t get back to bidzizi work",
+  "recordedAtUtc": "2026-10-05T23:11:23.176152+00:00",
+  "installedRoot": "/Users/jryear/code/_kernel",
+  "releaseRoot": "/Users/jryear/code/_kernel/releases/3.0.1",
+  "changedManagedFiles": [
+    "verify.py",
+    "VERSION",
+    "MANIFEST.sha256"
+  ],
+  "oldHashes": {
+    "verify.py": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+    "VERSION": "2985be8b28d3ade858e8d8fb4bc22f565b1bf6020dff982dce141f7721b9999c",
+    "MANIFEST.sha256": "5056c2349a3dc41de4bafc68858e6c9ab073f77d82cf1a8b7b419134533e6086"
+  },
+  "newHashes": {
+    "verify.py": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "VERSION": "06e3fe4a7a1884d20d81cc7065ca8cfd4c394ec602c4d180ddc39bbd4f7da521",
+    "MANIFEST.sha256": "84fdaa02fd02fe2324b0a54e65ec463f2b23d942436f56e17c513bdf48277cbc"
+  },
+  "verifierCodeChange": "Exactly the reviewed two-line3.0.1correction",
+  "next": "Sequential original/installed six and20, consumer version/hash/manifest checks, then freeze release modes"
+}

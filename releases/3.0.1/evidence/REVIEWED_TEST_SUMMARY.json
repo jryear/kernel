@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "acceptedEvidence": "fresh sequential executions only; earlier parallel receipts retained with unresolved timestamp-coincidence cause, not relied upon",
+  "sourceVersion": "3.0.0",
+  "proposedVersion": "3.0.1",
+  "sourceSHA256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+  "candidateSHA256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "frozenSuiteSHA256": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+  "existingSix": {
+    "original": {
+      "pass": 6,
+      "rawExit": 0
+    },
+    "candidate": {
+      "pass": 6,
+      "rawExit": 0
+    }
+  },
+  "frozen20": {
+    "original": {
+      "counts": {
+        "pass": 10,
+        "fail": 10,
+        "unavailable": 0
+      },
+      "rawExit": 1
+    },
+    "candidate": {
+      "counts": {
+        "pass": 20,
+        "fail": 0,
+        "unavailable": 0
+      },
+      "rawExit": 0
+    }
+  },
+  "unavailableCasesBoth": 0,
+  "executionOrder": "original6 then original20 then candidate6 then candidate20; no parallel test processes",
+  "installedUnchangedCheckedAtUtc": "2026-10-05T22:37:05.549088+00:00",
+  "installedSHA256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+  "scope": "Local synthetic miniGit subprocess classification only; no app/hosted/deploy/service/process-group test claim",
+  "evidenceLinks": [
+    "results/SEQUENTIAL_RUN.json",
+    "results/original-sequential-boundary.json",
+    "results/candidate-sequential-boundary.json",
+    "results/PROVENANCE_RESOLUTION.json"
+  ],
+  "pending": "User review, installation not performed"
+}

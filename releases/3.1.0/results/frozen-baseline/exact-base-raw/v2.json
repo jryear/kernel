@@ -1,0 +1,2004 @@
+{
+  "protocol": 1,
+  "rubric_version": 2,
+  "grader_sha256": "c573ac8988cf768a0f8246d61617cc12ee8887660cd1bf34ff8375c76043a717",
+  "frozen_v1_grader_sha256": "b901e458d96c2d73ae0e76c81979cb9f2a8c3709325318ab67cc0e14d1eece00",
+  "verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "cases": [
+    {
+      "id": "B1_PER_CHECK_INTEGRITY",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/sequence-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0561
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0129
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 779e4c2] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0189
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "779e4c27d7f9e65cc07bdb43c4825a993ebc091b\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate e3a2eed] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0169
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "e3a2eed588cafab0d613bbb98367483f1d0e9011\n",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/sequence-control",
+            "--base",
+            "779e4c27d7f9e65cc07bdb43c4825a993ebc091b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/sequence-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0726,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/sequence-control",
+            "--base",
+            "779e4c27d7f9e65cc07bdb43c4825a993ebc091b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/sequence-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0731,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B2_DIRECT_ENTRY_POSITION",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/entry-position-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.013
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0107
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 779e4c2] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0178
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "779e4c27d7f9e65cc07bdb43c4825a993ebc091b\n",
+          "stderr": "",
+          "seconds": 0.0099
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0115
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0109
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate e3a2eed] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.017
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "e3a2eed588cafab0d613bbb98367483f1d0e9011\n",
+          "stderr": "",
+          "seconds": 0.0104
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/entry-position-control",
+            "--base",
+            "779e4c27d7f9e65cc07bdb43c4825a993ebc091b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/entry-position-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0707,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/entry-position-control",
+            "--base",
+            "779e4c27d7f9e65cc07bdb43c4825a993ebc091b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/entry-position-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.071,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B2_DELIMITER_POSITIVE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/valid-delimiter/.git/\n",
+          "stderr": "",
+          "seconds": 0.0127
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0099
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0118
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) 94ca85f] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0178
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "94ca85f842a65decbcc62b4cb9f855866aa50b3d\n",
+          "stderr": "",
+          "seconds": 0.0101
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0107
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 5d4954a] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0166
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "5d4954adbf13de336ebb7f7a01d91b2f5bbec8b6\n",
+          "stderr": "",
+          "seconds": 0.0104
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/valid-delimiter",
+            "--base",
+            "94ca85f842a65decbcc62b4cb9f855866aa50b3d",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/valid-delimiter-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0736,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/valid-delimiter",
+            "--base",
+            "94ca85f842a65decbcc62b4cb9f855866aa50b3d",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/valid-delimiter-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0737,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B3_BYTE_SAFE_MANIFEST",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/binary-manifest/.git/\n",
+          "stderr": "",
+          "seconds": 0.013
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0107
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0123
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) caa505e] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0184
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "caa505e86d3a2330a0a9997047ee01f86ca9d93f\n",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 709d4da] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0168
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "709d4da89d1ccf38c0bd23234d6d65a190071d8e\n",
+          "stderr": "",
+          "seconds": 0.0101
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'main'\n",
+          "seconds": 0.0119
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main 56a3048] fixture\n 3 files changed, 3 insertions(+)\n create mode 100644 binary.png\n create mode 100644 crlf.txt\n create mode 100644 \"space caf\\303\\251.txt\"\n",
+          "stderr": "",
+          "seconds": 0.0167
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "56a30481137570ffd727c96957d9a6b4d49bc8dc\n",
+          "stderr": "",
+          "seconds": 0.0103
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'candidate'\n",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "merge",
+            "56a30481137570ffd727c96957d9a6b4d49bc8dc",
+            "--no-edit"
+          ],
+          "exit": 0,
+          "stdout": "Merge made by the 'ort' strategy.\n binary.png              | Bin 0 -> 17 bytes\n crlf.txt                |   2 ++\n \"space caf\\303\\251.txt\" |   1 +\n 3 files changed, 3 insertions(+)\n create mode 100644 binary.png\n create mode 100644 crlf.txt\n create mode 100644 \"space caf\\303\\251.txt\"\n",
+          "stderr": "",
+          "seconds": 0.0218
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/binary-manifest",
+            "--base",
+            "56a30481137570ffd727c96957d9a6b4d49bc8dc",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/binary-manifest-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0706,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/binary-manifest",
+            "--base",
+            "56a30481137570ffd727c96957d9a6b4d49bc8dc",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/binary-manifest-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0727,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B3_EXECUTABLE_MODE_MUTATION",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/mode-drift-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0134
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0099
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) caa505e] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0176
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "caa505e86d3a2330a0a9997047ee01f86ca9d93f\n",
+          "stderr": "",
+          "seconds": 0.0101
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 709d4da] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0163
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "709d4da89d1ccf38c0bd23234d6d65a190071d8e\n",
+          "stderr": "",
+          "seconds": 0.0099
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/mode-drift-control",
+            "--base",
+            "caa505e86d3a2330a0a9997047ee01f86ca9d93f",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/mode-drift-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0707,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/mode-drift-control",
+            "--base",
+            "caa505e86d3a2330a0a9997047ee01f86ca9d93f",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/mode-drift-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0739,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_REGRESSION_PROTOCOL",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/secondary-regression-normal/.git/\n",
+          "stderr": "",
+          "seconds": 0.0152
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0121
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) caa505e] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0181
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "caa505e86d3a2330a0a9997047ee01f86ca9d93f\n",
+          "stderr": "",
+          "seconds": 0.0102
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0115
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 709d4da] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0168
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "709d4da89d1ccf38c0bd23234d6d65a190071d8e\n",
+          "stderr": "",
+          "seconds": 0.01
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'main'\n",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0115
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main 35e1248] fixture\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0178
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "35e1248c7da1ecdfccabbf064e1a2f3357ff9633\n",
+          "stderr": "",
+          "seconds": 0.0103
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'candidate'\n",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "merge",
+            "35e1248c7da1ecdfccabbf064e1a2f3357ff9633",
+            "--no-edit"
+          ],
+          "exit": 0,
+          "stdout": "Merge made by the 'ort' strategy.\n checks/secondary.py  |  8 ++++++++\n support/secondary.py |  1 +\n tasks/check.toml     | 11 +++++++++++\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0228
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-regression-normal",
+            "--base",
+            "35e1248c7da1ecdfccabbf064e1a2f3357ff9633",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-regression-normal-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0709,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-regression-normal",
+            "--base",
+            "35e1248c7da1ecdfccabbf064e1a2f3357ff9633",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-regression-normal-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0716,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B4_ADVERSARIAL_PROTOCOL",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/secondary-adversarial-normal/.git/\n",
+          "stderr": "",
+          "seconds": 0.0134
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0104
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0117
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) ff095e4] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0175
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163\n",
+          "stderr": "",
+          "seconds": 0.0101
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0114
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate d77f69f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0166
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d77f69f6bae86764266b8c2a7fe933ee310d94bd\n",
+          "stderr": "",
+          "seconds": 0.0101
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'main'\n",
+          "seconds": 0.0118
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0119
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main 50e3ed3] fixture\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0185
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "50e3ed353d2338cc3d3a6ffaabe6645a03f92ddd\n",
+          "stderr": "",
+          "seconds": 0.0101
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to branch 'candidate'\n",
+          "seconds": 0.0118
+        },
+        {
+          "argv": [
+            "git",
+            "merge",
+            "50e3ed353d2338cc3d3a6ffaabe6645a03f92ddd",
+            "--no-edit"
+          ],
+          "exit": 0,
+          "stdout": "Merge made by the 'ort' strategy.\n checks/secondary.py  |  8 ++++++++\n support/secondary.py |  1 +\n tasks/check.toml     | 11 +++++++++++\n 3 files changed, 20 insertions(+)\n create mode 100644 checks/secondary.py\n create mode 100644 support/secondary.py\n",
+          "stderr": "",
+          "seconds": 0.0216
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-adversarial-normal",
+            "--base",
+            "50e3ed353d2338cc3d3a6ffaabe6645a03f92ddd",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-adversarial-normal-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0715,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-adversarial-normal",
+            "--base",
+            "50e3ed353d2338cc3d3a6ffaabe6645a03f92ddd",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/secondary-adversarial-normal-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0718,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "V2_POSITIVE_CONTROL: valid protocol must be READY/SUPPORTED"
+    },
+    {
+      "id": "B4_BASELINE_IMPORT",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/baseline-import-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0157
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0136
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0155
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) ff095e4] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0282
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163\n",
+          "stderr": "",
+          "seconds": 0.0133
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0129
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate d77f69f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0164
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d77f69f6bae86764266b8c2a7fe933ee310d94bd\n",
+          "stderr": "",
+          "seconds": 0.0105
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-import-control",
+            "--base",
+            "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-import-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0732,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-import-control",
+            "--base",
+            "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-import-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0711,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_BASELINE_SETUP",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/baseline-setup-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0135
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0104
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) ff095e4] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0184
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163\n",
+          "stderr": "",
+          "seconds": 0.0103
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0115
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate d77f69f] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0175
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "d77f69f6bae86764266b8c2a7fe933ee310d94bd\n",
+          "stderr": "",
+          "seconds": 0.0105
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-setup-control",
+            "--base",
+            "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-setup-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0702,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-setup-control",
+            "--base",
+            "ff095e4fe0ba52f554ae71797eaa8fe6a3d2f163",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-setup-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0704,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_BASELINE_UNEXPECTED_FAILURE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/baseline-unexpected_base-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0132
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0102
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0122
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) be816df] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0176
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "be816df29113814e85746a91b886d62feb07a90b\n",
+          "stderr": "",
+          "seconds": 0.0103
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0111
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 4adf402] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0177
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "4adf4021a859efd2bdd25f124ddf8669528641cc\n",
+          "stderr": "",
+          "seconds": 0.0102
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-unexpected_base-control",
+            "--base",
+            "be816df29113814e85746a91b886d62feb07a90b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-unexpected_base-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0709,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-unexpected_base-control",
+            "--base",
+            "be816df29113814e85746a91b886d62feb07a90b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/baseline-unexpected_base-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0703,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_BASELINE_WRONG_EXPECTED_FAILURE",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/wrong-expected-control/.git/\n",
+          "stderr": "",
+          "seconds": 0.0135
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0102
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.012
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) be816df] fixture\n 4 files changed, 55 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0174
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "be816df29113814e85746a91b886d62feb07a90b\n",
+          "stderr": "",
+          "seconds": 0.0102
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0112
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0108
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 4adf402] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0167
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "4adf4021a859efd2bdd25f124ddf8669528641cc\n",
+          "stderr": "",
+          "seconds": 0.0102
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/wrong-expected-control",
+            "--base",
+            "be816df29113814e85746a91b886d62feb07a90b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/wrong-expected-control-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.0705,
+          "records": []
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/wrong-expected-control",
+            "--base",
+            "be816df29113814e85746a91b886d62feb07a90b",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/wrong-expected-control-candidate.jsonl"
+          ],
+          "exit": 3,
+          "stdout": "",
+          "stderr": "SPEC_ERROR  spec_version must be 1 (got 2)\n",
+          "seconds": 0.074,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "MEANINGFUL_RED: positive base must be READY; got 3"
+    },
+    {
+      "id": "B4_LEGACY_BASELINE_LABEL",
+      "processes": [
+        {
+          "argv": [
+            "git",
+            "init",
+            "-b",
+            "main"
+          ],
+          "exit": 0,
+          "stdout": "Initialized empty Git repository in /private/tmp/validity-v2-grader-28i6cpzc/legacy-baseline/.git/\n",
+          "stderr": "",
+          "seconds": 0.0146
+        },
+        {
+          "argv": [
+            "git",
+            "config",
+            "core.hooksPath",
+            "/dev/null"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0116
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0153
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[main (root-commit) e2b3176] fixture\n 4 files changed, 19 insertions(+)\n create mode 100644 app.txt\n create mode 100755 checks/check.py\n create mode 100644 support/helper.py\n create mode 100644 tasks/check.toml\n",
+          "stderr": "",
+          "seconds": 0.0205
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "e2b31765b0b05c9d60ed4d4bcf0130e8f3f18ba1\n",
+          "stderr": "",
+          "seconds": 0.0113
+        },
+        {
+          "argv": [
+            "git",
+            "switch",
+            "-c",
+            "candidate"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Switched to a new branch 'candidate'\n",
+          "seconds": 0.0128
+        },
+        {
+          "argv": [
+            "git",
+            "add",
+            "-A"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.0118
+        },
+        {
+          "argv": [
+            "git",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "[candidate 7304668] fixture\n 1 file changed, 1 insertion(+), 1 deletion(-)\n",
+          "stderr": "",
+          "seconds": 0.0182
+        },
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit": 0,
+          "stdout": "7304668f1e823131287df6468406f0670286e8a7\n",
+          "stderr": "",
+          "seconds": 0.011
+        },
+        {
+          "argv": [
+            "/opt/homebrew/opt/python@3.14/bin/python3.14",
+            "/private/tmp/verify-base-parent-9mq_qhc_/tree/verify.py",
+            "tasks/check.toml",
+            "--repo",
+            "/tmp/validity-v2-grader-28i6cpzc/legacy-baseline",
+            "--base",
+            "e2b31765b0b05c9d60ed4d4bcf0130e8f3f18ba1",
+            "--log",
+            "/tmp/validity-v2-grader-28i6cpzc/legacy-baseline-baseline.jsonl",
+            "--baseline"
+          ],
+          "exit": 0,
+          "stdout": "BASELINE_READY  validity-fixture  base=e2b31765b0b0\n  [accep] base:fail  desired observable\n",
+          "stderr": "",
+          "seconds": 0.1369,
+          "records": []
+        }
+      ],
+      "status": "fail",
+      "error": "LEGACY_BASELINE: visible assurance label missing or mechanical behavior changed"
+    }
+  ],
+  "counts": {
+    "pass": 0,
+    "fail": 12,
+    "unavailable": 0
+  },
+  "scope": "four frozen-v1 source-review rubric corrections; not new application findings or hostile-code sandbox"
+}

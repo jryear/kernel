@@ -1,0 +1,35 @@
+{
+  "route": "Existing authenticated Claude CLI; no provider/model fallback",
+  "argv": [
+    "/Users/jryear/.local/bin/claude",
+    "-p",
+    "--output-format",
+    "json",
+    "--tools",
+    "",
+    "--strict-mcp-config",
+    "--mcp-config",
+    "{\"mcpServers\":{}}",
+    "--setting-sources",
+    "",
+    "--settings",
+    "{\"disableAllHooks\":true}",
+    "--no-session-persistence",
+    "--permission-mode",
+    "plan"
+  ],
+  "rawExit": 0,
+  "timedOut": false,
+  "seconds": 72.343,
+  "promptSha256": "3aa66fe98359551a74763b600882c580e974d92ef9732bfada542589033a9644",
+  "completedAtUtc": "2026-10-05T22:32:46.624516+00:00",
+  "classification": "Additional source-only critique, not deterministic verification",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "tools": [],
+  "mcpServers": [],
+  "subtype": "success",
+  "isError": false,
+  "result": "# Independent source-only review: run_check timeout correction (3.0.0 \u2192 3.0.1)\n\nI used no tools, ran nothing, and wrote no plan file, as you instructed. Everything below comes from reading the supplied text.\n\n## Recommendation\n\n**The code change is correct and minimal. Approve the patch logic. Hold installation until the evidence-provenance issue (B1) is resolved.**\n\n## Patch correctness (source trace)\n\nAfter the patch, a `TimeoutExpired` sets `code = 99`. Tracing that through the source:\n- `passed` is `99 == expect_exit and 99 != 99`, so it is always False.\n- `harness_error` is True.\n- `expect_exit = 99` is still rejected by `validate_spec`, so no contract can make a timeout pass.\n- In `baseline_verdict`, the `harness_error` branch comes first, so a timeout on any kind gives NOT_READY.\n- In `main`, the timeout goes to `harness` and becomes `unverifiable`. It is excluded from `candidate_failures` by `not result[\"harness_error\"]`.\n\nI found no path where a timeout now yields `passed=True`, BASELINE_READY, or SUPPORTED. This holds when `TimeoutExpired` is actually raised. On POSIX, `subprocess.run` calls `kill()` and then `wait()` rather than `communicate()`, so the exception is raised even if a grandchild still holds the pipes. The original 10 failures map one-to-one onto the 10 timeout-dependent cases. The candidate passes 20/20, and the six selftests are byte-identical (`c3927862\u2026`) and pass on both versions.\n\n## Blocking for acceptance of the *evidence* (not the code)\n\n**B1. The paired receipts don't look like two independent raw runs.**\n- **Identical timestamps:** the original and candidate records share the same `at` values to the microsecond in three places:\n  - `cli_finite_red_to_green` `.553127`\n  - `cli_candidate_failure_regression` `.428070`\n  - `cli_actual_99` `.835305`\n  \n  Other pairs differ by only 1\u201310 \u00b5s. Earlier cases differ by about 50 ms in duration (1.385 vs 1.336, for example), so cumulative drift should make such alignment implausible.\n- **Identical durations:** many per-case and per-process durations are identical to the millisecond.\n- **Field shape doesn't match the frozen suite:** the suite writes `processes` with `argv`, but the receipts show `cliProcesses` without `argv`. Unit cases also carry an empty `cliProcesses`, which the suite never emits.\n\nSo what was supplied is at least a post-processed view, and possibly reconstructed. Before installing, you should:\n1. Inspect the raw `results/original-paired-boundary.json` and `results/candidate-paired-boundary.json`, and hash them.\n2. Confirm that applying `correction.diff` to `94b7a341\u2026` yields exactly `130e2fc8\u2026`. Nothing supplied binds the candidate SHA to the diff.\n3. Ideally, re-run both suites yourself, sequentially.\n\n## Non-blocking: test-oracle gaps\n\n1. **Base timeout in a full run isn't tested.** Base-timeout cases only use `--baseline`. The full run is correct by source (the `base:` harness entry plus `baseline_reasons` give unverifiable), but it is untested. Because `--baseline` writes no record, the `verifier_sha256` binding is also never asserted for those three cases.\n2. **Mixed precedence isn't tested.** A candidate timeout plus an ordinary failure, or plus a protected or out-of-scope change, gives CONTRADICTED. That matches the declared scope, but it is undocumented by tests.\n3. **Possible flakiness.** Finite controls also use `timeout = 1`. A slow interpreter start under load would produce a spurious harness result, which fails the test rather than falsely passing it, so it is a flake risk, not a false-pass risk.\n4. **Process cleanup is masked.** The `exec` single-child fixture deliberately hides grandchild survival (acknowledged in the fixture).\n\n## Scope and wording notes\n\n- **\"Isolated candidate timeout is UNVERIFIABLE\"** is accurate only for timeout-only cases. Any coexisting contradiction wins. Keep the \"timeout-only\" qualifier in any summary.\n- **Loss of record fidelity:** `exit: 99` now conflates a real exit 99 with a timeout. Only `output_tail` distinguishes them, and a check can print \"TIMEOUT after\" itself. Consumers of `claims.jsonl` lose the old `null` signal. A `timed_out` field would fix this, but it is a schema change for later.\n- **Semantic shift for in-flight contracts:**\n  - A base acceptance check that *hangs* used to count as RED. It now makes the contract NOT_READY, so those contracts must be re-frozen with a finite failing check.\n  - A genuinely hanging candidate can no longer be CONTRADICTED by timeout alone. The gate still fails closed (it is never SUPPORTED), so this is acceptable, but document it.\n\n## Adjacent pre-existing concerns (not blocking this patch)\n\n- **Orphaned descendants:** with `shell=True` and no `exec`, timeout kills only `sh`. Descendants can survive and mutate the tree during later checks, or after base worktree removal.\n- **Hanging readiness probe:** the `Service` readiness `subprocess.run(ready, \u2026)` has no timeout and can hang indefinitely.\n- **Partial output discarded:** output captured before the timeout is dropped (`error.stdout`/`error.stderr` are unused), which weakens the diagnostics.\n- **Mixed-failure precedence:** contradicted outranks harness errors and an unready baseline (declared out of scope)."
+}

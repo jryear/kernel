@@ -1,0 +1,16 @@
+{
+  "startedAtUtc": "2026-10-06T03:28:52.673350+00:00",
+  "endedAtUtc": "2026-10-06T03:29:47.688245+00:00",
+  "seconds": 55.015,
+  "timeout": true,
+  "exit": 99,
+  "promptSha256": "a7a968d79ec91672b618d9db3eeadee10ee8c2b26166d653d1b16722a174bab8",
+  "actualModels": [],
+  "toolsRequested": [],
+  "mcpServersRequested": [],
+  "critiqueReturned": false,
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "providerFallback": false,
+  "credentialOrConfigChanges": false
+}

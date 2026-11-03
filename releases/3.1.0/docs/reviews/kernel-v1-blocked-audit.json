@@ -1,0 +1,301 @@
+{
+  "schema": 1,
+  "reviewRevision": 2,
+  "status": "blocked-contract-v1-before-implementation",
+  "reviewedAtUtc": "2026-10-06T03:37:37.479460+00:00",
+  "sourceCommit": "1afbc6f64598239b31a560e8f15180e377e4082c",
+  "sourceRoot": "/Users/jryear/code/kernel-validity-review",
+  "reviewer": {
+    "assignedModel": "gpt-6-astra",
+    "assignedReasoning": "high",
+    "role": "independent consequential-tranche red-team auditor",
+    "toolsUsed": [
+      "functions.exec",
+      "exec_command (read-only git/cat/rg/nl/sed; write owned review JSON)",
+      "collaboration.send_message"
+    ],
+    "delegation": false
+  },
+  "ownedPaths": [
+    "docs/reviews/kernel-evidence-validity-001.json"
+  ],
+  "privateOutputRoot": "/Users/jryear/.local/state/kernel-evidence-validity/redteam",
+  "reviewedFiles": {
+    "AGENTS.md": "8422f7586e70fdc25ef24b6901db268cefd31781b52b9dd2cd4d8d176e21caf4",
+    "docs/SLICE_DECISIONS.md": "2fc915d21cd51551bcb4560a00ac6f7a14dbfaa036d06474892af83634386924",
+    "docs/independent-assessment-summary.json": "625cfb7c6f5897b2bc3eefec461dd0c9874c03074945c6c6ee5b4e931120071b",
+    "verify.py": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "task.template.toml": "cfc59f9ae9cb9e170aba018878caa35bb768ffd6a06b45ea6d202fc102218214"
+  },
+  "evidenceClass": "source audit and designed counterexamples only; no deterministic fixtures executed and no claim of gate passage",
+  "findings": [
+    {
+      "id": "EV-01",
+      "priority": "must-freeze",
+      "title": "Receipt freshness and exact execution identity",
+      "source": [
+        "verify.py:340-374",
+        "verify.py:429-445",
+        "docs/SLICE_DECISIONS.md:9"
+      ],
+      "counterexample": "A previous passing receipt survives in a fixed path, or a receipt from another check/tree is reused while the current assertion is skipped. Merely checking IDs and JSON shape accepts stale evidence.",
+      "requirement": "Allocate a new absent result path per check execution; validate a fresh invocation nonce and exact check/tree identity; require a regular non-symlink file. Validate complete unique assertion IDs, strict statuses/types, and exit/result consistency. Reject missing, malformed, duplicate, cross-check, cross-tree, stale, partial, or incompatible receipts as harness evidence.",
+      "fixtures": [
+        "zero exit with no receipt",
+        "stale nonce receipt",
+        "wrong check or tree",
+        "duplicate IDs and duplicate JSON keys",
+        "partial receipt",
+        "all pass plus exit 1",
+        "failure receipt plus exit 0",
+        "symlink result path"
+      ]
+    },
+    {
+      "id": "EV-02",
+      "priority": "must-freeze",
+      "title": "Baseline RED identifies only the declared unmet behavior",
+      "source": [
+        "verify.py:429-445",
+        "docs/SLICE_DECISIONS.md:9"
+      ],
+      "counterexample": "Expected assertion A fails but unrelated assertion B also fails, or a harness setup exception is converted by a broad catch into A=false. A subset-only expected-failure check still declares baseline ready.",
+      "requirement": "Specify exact expected baseline failure set per acceptance check, with all other declared assertions passing. Harness/setup outcomes never become assertion failure by default. The protocol cannot determine semantic intent inside a dishonestly or incorrectly authored frozen assertion; independent review must inspect the exception-to-result boundary.",
+      "fixtures": [
+        "desired behavior already true with missing import",
+        "unexpected failure only",
+        "expected plus unexpected failure",
+        "setup error plus plausible failure payload",
+        "actual intended RED and later GREEN"
+      ]
+    },
+    {
+      "id": "EV-03",
+      "priority": "must-freeze",
+      "title": "Frozen execution chain covers all check kinds and allowed setup paths",
+      "source": [
+        "verify.py:179-213",
+        "verify.py:376-401",
+        "verify.py:416-426",
+        "docs/SLICE_DECISIONS.md:10"
+      ],
+      "counterexample": "Acceptance entry is frozen but delegates to a mutable runner, package.json script, pytest configuration, runtime loader, or service startup wrapper. A regression runner can likewise fabricate success. A declared chain that omits a real helper remains incomplete.",
+      "requirement": "Protect entry and each declared repository dependency for every check kind. Disallow unsupported setup/service/shell indirections in schema 2 or give them equivalent explicit frozen-chain declarations. Require reviewer identification of actual command/config/import chain. Document that declaration completeness and external runtime/dependency correctness are assumptions, not properties inferred by the verifier.",
+      "fixtures": [
+        "changed declared runner",
+        "changed declared helper",
+        "changed declared package/config file",
+        "mutable regression runner",
+        "entry absent from chain",
+        "missing chain path",
+        "unsupported setup or service route"
+      ]
+    },
+    {
+      "id": "EV-04",
+      "priority": "must-freeze",
+      "title": "Entry and chain names cannot escape the immutable snapshot",
+      "source": [
+        "verify.py:78-82",
+        "verify.py:179",
+        "verify.py:383-386",
+        "docs/SLICE_DECISIONS.md:10"
+      ],
+      "counterexample": "A frozen entry is a symlink to mutable external code, a ../ path escapes the tree, an absolute argv entry ignores the snapshot, or interpreter -c/-m/shell flags execute unrelated code while an evidence path is merely decorative.",
+      "requirement": "Define accepted argv grammar and entry position; reject command-string interpreters and unsupported alternate entry forms. Canonicalize repository paths, reject traversal/absolute paths and symlink escapes (including directory ancestors). Reject or explicitly model submodules. State external executable/runtime identity as external input.",
+      "fixtures": [
+        "absolute entry",
+        "parent traversal",
+        "symlink entry",
+        "symlink parent directory",
+        "interpreter -c or -m with decorative entry",
+        "shell -c",
+        "submodule evidence"
+      ]
+    },
+    {
+      "id": "EV-05",
+      "priority": "must-freeze",
+      "title": "Resolved candidate identity stays fixed despite original checkout races",
+      "source": [
+        "verify.py:477-479",
+        "verify.py:527-534",
+        "verify.py:616-617",
+        "docs/SLICE_DECISIONS.md:11"
+      ],
+      "counterexample": "HEAD changes between capture, copying, diff computation and logging; an ignored local file affects the live run; or a concurrent edit after a cleanliness check is copied but reported as the earlier commit.",
+      "requirement": "Resolve candidate commit once before executing; validate input cleanliness and materialize source directly from that commit. Compute scope/protection diff between fixed base and candidate IDs. Log original resolved IDs and complete tracked-content binding, not post-run HEAD. Execute candidate checks from the isolated materialized tree; ignored inputs must be excluded unless explicitly linked and reported as external.",
+      "fixtures": [
+        "original checkout changes after snapshot begins",
+        "ignored source-influencing file is not copied",
+        "tracked dirty input",
+        "staged dirty input",
+        "untracked input",
+        "exact commit/tree/digest recomputation"
+      ]
+    },
+    {
+      "id": "EV-06",
+      "priority": "must-freeze",
+      "title": "Tracked integrity checks bind original content, not only status",
+      "source": [
+        "verify.py:527-534",
+        "verify.py:616-617",
+        "docs/SLICE_DECISIONS.md:11"
+      ],
+      "counterexample": "A check edits tracked source then commits it inside its snapshot. Post-run git status is clean, yet the executed artifact no longer matches the recorded candidate. Checking only the final tree misses mutation that affects later checks.",
+      "requirement": "Compare tracked paths, types/modes and bytes against the original resolved source manifest before and after each check and after setup where supported. Detect committed as well as uncommitted drift; require protected chain integrity before any later check. Explicitly distinguish observed persistent mutation detection from preventing all transient self-restoring writes, which requires a stronger execution boundary.",
+      "fixtures": [
+        "tracked content mutation",
+        "tracked deletion",
+        "tracked executable mode mutation",
+        "mutate then commit within snapshot",
+        "first check mutates second check",
+        "baseline snapshot mutation"
+      ]
+    },
+    {
+      "id": "EV-07",
+      "priority": "assurance-boundary",
+      "title": "Structured assertion reports are not unforgeable execution attestation",
+      "source": [
+        "docs/SLICE_DECISIONS.md:9-13",
+        "docs/independent-assessment-summary.json:1"
+      ],
+      "counterexample": "A frozen harness itself fabricates all declared statuses without performing the intended assertion, or imports mutable application code that writes the expected result. A nonce available to that process cannot establish independent execution.",
+      "requirement": "Phrase the guarantee as receipt completeness/freshness plus protected declared harness source. Independent evidence review must challenge fake receipts and broad exception catches. Add a documented bounded demonstration that an intentionally dishonest frozen reporter remains outside assurance; do not advertise schema 2 as proving arbitrary assertions executed.",
+      "fixtures": [
+        "review a no-op reporter emitting valid statuses as a negative assurance example"
+      ]
+    },
+    {
+      "id": "EV-08",
+      "priority": "must-freeze",
+      "title": "Legacy support remains visibly lower assurance in every reporting route",
+      "source": [
+        "verify.py:518-525",
+        "verify.py:603-655",
+        "docs/SLICE_DECISIONS.md:5"
+      ],
+      "counterexample": "Schema 1 completion receives a label in JSON but --baseline or stdout still looks identical to hardened schema 2; automation treats both as the same guarantee.",
+      "requirement": "Give schema 1 a clear visible and recorded legacy assurance marker for baseline and candidate routes; schema 2 gets a distinct protocol marker. Preserve historical fixtures byte for byte and do not rewrite existing product contracts in place. Guidance must identify explicit migration review and fresh frozen baseline.",
+      "fixtures": [
+        "schema 1 baseline label",
+        "schema 1 candidate label and receipt",
+        "schema 2 marker",
+        "legacy false-support examples retained and labeled"
+      ]
+    }
+  ],
+  "decision": {
+    "approval": false,
+    "verdict": "BLOCK",
+    "scope": "Immutable version1 contract/protocol/grader packet at 1afbc6f64598239b31a560e8f15180e377e4082c",
+    "reason": "Four material evidence gaps permit implementations that pass the frozen corpus while violating the named execution-chain or exact-source invariants. Correct before implementation, with an explicit version2 protocol/evidence change.",
+    "nextAction": "Preserve immutable version1 bytes and all historical fixtures/receipts; append the bounded new cases, document versioned corrections, run old+new together and supply the next immutable commit for review.",
+    "remainingProbesNotAdditionalFreezeBlockers": [
+      "duplicate JSON keys and result-file symlink treatment",
+      "runnable default template example",
+      "transient mutation wholly within a single check remains outside bounded detection guarantee"
+    ]
+  },
+  "unchangedBoundaries": [
+    "Installed /Users/jryear/code/_kernel untouched",
+    "BidZizi application and contracts untouched",
+    "No implementation/template/grader changes",
+    "No new agents",
+    "Service lifecycle and descendant cleanup remain outside this slice",
+    "Reviewer metadata is not enforced independent provenance",
+    "External runtime/dependency hermeticity and malicious-code sandboxing remain outside this slice"
+  ],
+  "reviewedPacketHashes": {
+    "tasks/kernel-evidence-validity-001.toml": "151a5088d83b644a8d1c56b21eb19a2ea15d0e2c97f53e6f4f98841032608fa3",
+    "docs/SCHEMA2_PROTOCOL.md": "3c5b1178b1126fb6309cf20cf330f11f89871ebd77acc738abe4fd083c3f514e",
+    "evidence/validity/grader.py": "b901e458d96c2d73ae0e76c81979cb9f2a8c3709325318ab67cc0e14d1eece00",
+    "evidence/validity/regressions.py": "50d1ed71af41e926be13c7372cdff3a28ad8ada43fe04377e240025bcd341cd8",
+    "docs/CONTRACT_PREPARATION.json": "b137af981cf70ca6376647344c46edd76960ab5765a344681bc50ada2a421698"
+  },
+  "finalContractBlockers": [
+    {
+      "id": "B1",
+      "priority": "material-before-implementation",
+      "title": "Inter-check source mutation can be restored before the only integrity inspection",
+      "citations": [
+        "docs/SCHEMA2_PROTOCOL.md:39",
+        "evidence/validity/grader.py:73-85",
+        "evidence/validity/grader.py:216-217"
+      ],
+      "counterexample": "Three frozen checks: first reads valid current behavior and alters a tracked input; second passes only using that altered input; third restores original bytes. Final clean HEAD/index/content matches, despite an assertion having tested source outside the claimed artifact. The current corpus always contains one check and cannot detect a tree-end-only implementation.",
+      "requiredCorrection": "Version protocol explicitly to verify tracked bytes/types/modes/index/HEAD before and after each check, including base. Append deterministic multi-check edit/use/restore fixture that fails an implementation inspecting only after the complete tree. Stop or invalidate subsequent evidence when mutation is observed. Limit assurance explicitly for transient edit-and-restore wholly within one check."
+    },
+    {
+      "id": "B2",
+      "priority": "material-before-implementation",
+      "title": "Entry membership in argv is not evidence that the interpreter executes that entry",
+      "citations": [
+        "docs/SCHEMA2_PROTOCOL.md:10-12",
+        "evidence/validity/grader.py:221-223"
+      ],
+      "counterexample": "argv=[python, mutable_runner.py, checks/check.py] contains the declared frozen entry, has neither -c nor -m, but executes mutable_runner.py. It can output valid statuses and skip the protected assertion. Current negatives exercise only entry absent and interpreter inline/module flags.",
+      "requiredCorrection": "Define a precise bounded executable/argv grammar and entry position, or replace ambiguous argv with explicit interpreter/entry/arguments fields. Reject positional runner indirection and command delimiters/flags that change which file is executed. Append wrong-position runner and delimiter tests, with valid direct execution controls."
+    },
+    {
+      "id": "B3",
+      "priority": "material-before-implementation",
+      "title": "Universal tracked-source manifest claim lacks byte-safe and filename/mode evidence",
+      "citations": [
+        "docs/SCHEMA2_PROTOCOL.md:37-39",
+        "evidence/validity/grader.py:60-67",
+        "evidence/validity/grader.py:103-112",
+        "evidence/validity/grader.py:125-139"
+      ],
+      "counterexample": "An implementation hashes text-normalized blob content or misparses quoted Git paths. All current UTF-8 source fixtures pass while PNG/binary content, CRLF bytes, space/non-ASCII paths or actual executable-mode drift are bound incorrectly. The independent expected-manifest helper itself decodes Git blobs through text=True and assumes ls-tree display paths are literal.",
+      "requiredCorrection": "Use raw bytes and NUL-delimited Git metadata in the independent oracle. Append binary and CRLF blobs, space/non-ASCII filenames and executable-mode mutation cases. Verify exact manifest and physical snapshot mode handling; include at least one mode case that a content-only/status-only check misses."
+    },
+    {
+      "id": "B4",
+      "priority": "material-before-implementation",
+      "title": "New assurance is not exercised for regression/adversarial checks or failure-only baseline route",
+      "citations": [
+        "docs/SCHEMA2_PROTOCOL.md:7-17",
+        "docs/SCHEMA2_PROTOCOL.md:29-31",
+        "docs/SCHEMA2_PROTOCOL.md:52-56",
+        "evidence/validity/grader.py:76",
+        "evidence/validity/grader.py:140-145",
+        "evidence/validity/grader.py:167-171"
+      ],
+      "counterexample": "A verifier applies schema2 protocol and chain protection only to acceptance checks, or performs strict checks only during completion while --baseline accepts setup/import failure. All current new fixtures use a single acceptance check and negatives call only completion. The tests cannot reject these materially incomplete implementations.",
+      "requiredCorrection": "Append bounded multi-kind positive controls and regression/adversarial missing/invalid receipt, baseline failure-set and changed-helper cases. Directly invoke --baseline for import/setup/unexpected-assertion failures and require NOT_READY. Test visible legacy baseline label while extending that route. Keep complete old corpus and new additions together."
+    }
+  ],
+  "positiveFindings": [
+    "Every negative fixture first requires genuine positive baseline READY and candidate SUPPORTED; an indiscriminate reject-all verifier cannot satisfy the suite.",
+    "The positive meaningful case also reruns a committed bad application and requires CONTRADICTED, checking actual candidate failure semantics.",
+    "The protocol distinguishes setup/import exceptions without valid terminal assertion results from intended baseline failures, and compares exact failure sets.",
+    "Fresh token, tree/check identity, complete unique assertion IDs and exit/status consistency are covered by substantive synthetic fixtures.",
+    "Explicit receipt-forgery, trusted-harness, incomplete dynamic-chain, external-input, review-provenance and lifecycle limits appropriately bound claims.",
+    "Historical six and twenty grader files are hash-pinned, and original schema1 false-support fixtures are preserved and intentionally labeled lower assurance.",
+    "Changed snapshots committed during a check are tested; the remaining source-integrity concern is the timing of inspections across multiple checks."
+  ],
+  "verificationPerformed": {
+    "immutableObjectsRead": 5,
+    "PythonAstParse": [
+      "evidence/validity/grader.py",
+      "evidence/validity/regressions.py"
+    ],
+    "tomlParsed": true,
+    "preparationHashesChecked": 4,
+    "preparationHashMismatches": 0,
+    "deterministicRuntimeFixturesExecutedByReviewer": 0,
+    "reportedAuthorFixtureCounts": {
+      "core": 5,
+      "negative": 41,
+      "total_new": 46,
+      "historical_false_supports": 2,
+      "legacy_selftests": 6,
+      "legacy_timeout_cases": 20
+    },
+    "reportedCountsIndependentlyRerun": false,
+    "rejectAllAssessment": "Source inspected: positive() is called before every negative test and requires exit0 READY/SUPPORTED. No runtime mutant executed."
+  }
+}

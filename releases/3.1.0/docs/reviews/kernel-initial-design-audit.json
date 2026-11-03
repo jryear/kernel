@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "reviewRevision": 1,
+  "status": "initial-design-audit-awaiting-immutable-contract",
+  "reviewedAtUtc": "2026-10-06T03:29:17.229376+00:00",
+  "sourceCommit": "015b17141d243da99509408b1978588c4c344a9c",
+  "sourceRoot": "/Users/jryear/code/kernel-validity-review",
+  "reviewer": {
+    "assignedModel": "gpt-6-astra",
+    "assignedReasoning": "high",
+    "role": "independent consequential-tranche red-team auditor",
+    "toolsUsed": [
+      "functions.exec",
+      "exec_command (read-only git/cat/rg/nl/sed; write owned review JSON)",
+      "collaboration.send_message"
+    ],
+    "delegation": false
+  },
+  "ownedPaths": [
+    "docs/reviews/kernel-evidence-validity-001.json"
+  ],
+  "privateOutputRoot": "/Users/jryear/.local/state/kernel-evidence-validity/redteam",
+  "reviewedFiles": {
+    "AGENTS.md": "8422f7586e70fdc25ef24b6901db268cefd31781b52b9dd2cd4d8d176e21caf4",
+    "docs/SLICE_DECISIONS.md": "2fc915d21cd51551bcb4560a00ac6f7a14dbfaa036d06474892af83634386924",
+    "docs/independent-assessment-summary.json": "625cfb7c6f5897b2bc3eefec461dd0c9874c03074945c6c6ee5b4e931120071b",
+    "verify.py": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+    "task.template.toml": "cfc59f9ae9cb9e170aba018878caa35bb768ffd6a06b45ea6d202fc102218214"
+  },
+  "evidenceClass": "source audit and designed counterexamples only; no deterministic fixtures executed and no claim of gate passage",
+  "findings": [
+    {
+      "id": "EV-01",
+      "priority": "must-freeze",
+      "title": "Receipt freshness and exact execution identity",
+      "source": [
+        "verify.py:340-374",
+        "verify.py:429-445",
+        "docs/SLICE_DECISIONS.md:9"
+      ],
+      "counterexample": "A previous passing receipt survives in a fixed path, or a receipt from another check/tree is reused while the current assertion is skipped. Merely checking IDs and JSON shape accepts stale evidence.",
+      "requirement": "Allocate a new absent result path per check execution; validate a fresh invocation nonce and exact check/tree identity; require a regular non-symlink file. Validate complete unique assertion IDs, strict statuses/types, and exit/result consistency. Reject missing, malformed, duplicate, cross-check, cross-tree, stale, partial, or incompatible receipts as harness evidence.",
+      "fixtures": [
+        "zero exit with no receipt",
+        "stale nonce receipt",
+        "wrong check or tree",
+        "duplicate IDs and duplicate JSON keys",
+        "partial receipt",
+        "all pass plus exit 1",
+        "failure receipt plus exit 0",
+        "symlink result path"
+      ]
+    },
+    {
+      "id": "EV-02",
+      "priority": "must-freeze",
+      "title": "Baseline RED identifies only the declared unmet behavior",
+      "source": [
+        "verify.py:429-445",
+        "docs/SLICE_DECISIONS.md:9"
+      ],
+      "counterexample": "Expected assertion A fails but unrelated assertion B also fails, or a harness setup exception is converted by a broad catch into A=false. A subset-only expected-failure check still declares baseline ready.",
+      "requirement": "Specify exact expected baseline failure set per acceptance check, with all other declared assertions passing. Harness/setup outcomes never become assertion failure by default. The protocol cannot determine semantic intent inside a dishonestly or incorrectly authored frozen assertion; independent review must inspect the exception-to-result boundary.",
+      "fixtures": [
+        "desired behavior already true with missing import",
+        "unexpected failure only",
+        "expected plus unexpected failure",
+        "setup error plus plausible failure payload",
+        "actual intended RED and later GREEN"
+      ]
+    },
+    {
+      "id": "EV-03",
+      "priority": "must-freeze",
+      "title": "Frozen execution chain covers all check kinds and allowed setup paths",
+      "source": [
+        "verify.py:179-213",
+        "verify.py:376-401",
+        "verify.py:416-426",
+        "docs/SLICE_DECISIONS.md:10"
+      ],
+      "counterexample": "Acceptance entry is frozen but delegates to a mutable runner, package.json script, pytest configuration, runtime loader, or service startup wrapper. A regression runner can likewise fabricate success. A declared chain that omits a real helper remains incomplete.",
+      "requirement": "Protect entry and each declared repository dependency for every check kind. Disallow unsupported setup/service/shell indirections in schema 2 or give them equivalent explicit frozen-chain declarations. Require reviewer identification of actual command/config/import chain. Document that declaration completeness and external runtime/dependency correctness are assumptions, not properties inferred by the verifier.",
+      "fixtures": [
+        "changed declared runner",
+        "changed declared helper",
+        "changed declared package/config file",
+        "mutable regression runner",
+        "entry absent from chain",
+        "missing chain path",
+        "unsupported setup or service route"
+      ]
+    },
+    {
+      "id": "EV-04",
+      "priority": "must-freeze",
+      "title": "Entry and chain names cannot escape the immutable snapshot",
+      "source": [
+        "verify.py:78-82",
+        "verify.py:179",
+        "verify.py:383-386",
+        "docs/SLICE_DECISIONS.md:10"
+      ],
+      "counterexample": "A frozen entry is a symlink to mutable external code, a ../ path escapes the tree, an absolute argv entry ignores the snapshot, or interpreter -c/-m/shell flags execute unrelated code while an evidence path is merely decorative.",
+      "requirement": "Define accepted argv grammar and entry position; reject command-string interpreters and unsupported alternate entry forms. Canonicalize repository paths, reject traversal/absolute paths and symlink escapes (including directory ancestors). Reject or explicitly model submodules. State external executable/runtime identity as external input.",
+      "fixtures": [
+        "absolute entry",
+        "parent traversal",
+        "symlink entry",
+        "symlink parent directory",
+        "interpreter -c or -m with decorative entry",
+        "shell -c",
+        "submodule evidence"
+      ]
+    },
+    {
+      "id": "EV-05",
+      "priority": "must-freeze",
+      "title": "Resolved candidate identity stays fixed despite original checkout races",
+      "source": [
+        "verify.py:477-479",
+        "verify.py:527-534",
+        "verify.py:616-617",
+        "docs/SLICE_DECISIONS.md:11"
+      ],
+      "counterexample": "HEAD changes between capture, copying, diff computation and logging; an ignored local file affects the live run; or a concurrent edit after a cleanliness check is copied but reported as the earlier commit.",
+      "requirement": "Resolve candidate commit once before executing; validate input cleanliness and materialize source directly from that commit. Compute scope/protection diff between fixed base and candidate IDs. Log original resolved IDs and complete tracked-content binding, not post-run HEAD. Execute candidate checks from the isolated materialized tree; ignored inputs must be excluded unless explicitly linked and reported as external.",
+      "fixtures": [
+        "original checkout changes after snapshot begins",
+        "ignored source-influencing file is not copied",
+        "tracked dirty input",
+        "staged dirty input",
+        "untracked input",
+        "exact commit/tree/digest recomputation"
+      ]
+    },
+    {
+      "id": "EV-06",
+      "priority": "must-freeze",
+      "title": "Tracked integrity checks bind original content, not only status",
+      "source": [
+        "verify.py:527-534",
+        "verify.py:616-617",
+        "docs/SLICE_DECISIONS.md:11"
+      ],
+      "counterexample": "A check edits tracked source then commits it inside its snapshot. Post-run git status is clean, yet the executed artifact no longer matches the recorded candidate. Checking only the final tree misses mutation that affects later checks.",
+      "requirement": "Compare tracked paths, types/modes and bytes against the original resolved source manifest before and after each check and after setup where supported. Detect committed as well as uncommitted drift; require protected chain integrity before any later check. Explicitly distinguish observed persistent mutation detection from preventing all transient self-restoring writes, which requires a stronger execution boundary.",
+      "fixtures": [
+        "tracked content mutation",
+        "tracked deletion",
+        "tracked executable mode mutation",
+        "mutate then commit within snapshot",
+        "first check mutates second check",
+        "baseline snapshot mutation"
+      ]
+    },
+    {
+      "id": "EV-07",
+      "priority": "assurance-boundary",
+      "title": "Structured assertion reports are not unforgeable execution attestation",
+      "source": [
+        "docs/SLICE_DECISIONS.md:9-13",
+        "docs/independent-assessment-summary.json:1"
+      ],
+      "counterexample": "A frozen harness itself fabricates all declared statuses without performing the intended assertion, or imports mutable application code that writes the expected result. A nonce available to that process cannot establish independent execution.",
+      "requirement": "Phrase the guarantee as receipt completeness/freshness plus protected declared harness source. Independent evidence review must challenge fake receipts and broad exception catches. Add a documented bounded demonstration that an intentionally dishonest frozen reporter remains outside assurance; do not advertise schema 2 as proving arbitrary assertions executed.",
+      "fixtures": [
+        "review a no-op reporter emitting valid statuses as a negative assurance example"
+      ]
+    },
+    {
+      "id": "EV-08",
+      "priority": "must-freeze",
+      "title": "Legacy support remains visibly lower assurance in every reporting route",
+      "source": [
+        "verify.py:518-525",
+        "verify.py:603-655",
+        "docs/SLICE_DECISIONS.md:5"
+      ],
+      "counterexample": "Schema 1 completion receives a label in JSON but --baseline or stdout still looks identical to hardened schema 2; automation treats both as the same guarantee.",
+      "requirement": "Give schema 1 a clear visible and recorded legacy assurance marker for baseline and candidate routes; schema 2 gets a distinct protocol marker. Preserve historical fixtures byte for byte and do not rewrite existing product contracts in place. Guidance must identify explicit migration review and fresh frozen baseline.",
+      "fixtures": [
+        "schema 1 baseline label",
+        "schema 1 candidate label and receipt",
+        "schema 2 marker",
+        "legacy false-support examples retained and labeled"
+      ]
+    }
+  ],
+  "decision": {
+    "approval": false,
+    "reason": "The implementation contract, schema 2 protocol and frozen grader are not yet supplied as an immutable revision. This is a design review, not a contract or implementation verdict.",
+    "nextAction": "Review immutable contract/protocol/grader commit supplied by parent; map each must-freeze item to assertions or explicitly bounded residual risk."
+  },
+  "unchangedBoundaries": [
+    "Installed /Users/jryear/code/_kernel untouched",
+    "BidZizi application and contracts untouched",
+    "No implementation/template/grader changes",
+    "No new agents",
+    "Service lifecycle and descendant cleanup remain outside this slice",
+    "Reviewer metadata is not enforced independent provenance",
+    "External runtime/dependency hermeticity and malicious-code sandboxing remain outside this slice"
+  ]
+}

@@ -1,0 +1,90 @@
+# Frozen implementation contract.
+#
+# Discovery happens BEFORE this file exists. Create/freeze a contract only once
+# the observable outcome is understood well enough to distinguish done from not-done.
+# Commit this file and its acceptance evidence to the trusted base BEFORE delegation.
+#
+# Baseline readiness:
+#   python ~/code/_kernel/verify.py tasks/<id>.toml --repo . --base main --baseline
+#
+# Completion:
+#   python ~/code/_kernel/verify.py tasks/<id>.toml --repo . --base main \
+#     --claim "<agent completion claim>" --implementer-model "<model/runtime>"
+#
+# Exit: 0 supported/ready, 1 contradicted, 2 unverifiable/not-ready, 3 spec error.
+
+spec_version = 1
+id = "project-area-001"
+project = "project"
+goal = "One sentence describing the observable operator outcome, not implementation activity."
+
+# RED-on-base → GREEN-on-candidate is an invariant of this kernel, not a configurable option.
+
+# Added skip/only/ignore patterns in mutable test files either fail or are only flagged.
+bypass_policy = "fail"
+
+[scope]
+# Implementation may change only these paths. Keep this broad enough to permit coherent
+# refactors; scope is a blast-radius boundary, not a file-by-file implementation plan.
+include = ["src/*", "tests/unit/*", "migrations/*"]
+exclude = ["*.env", "wrangler.toml"]
+
+# Extra immutable paths. The task spec, verifier, and every `evidence` path declared
+# below are protected automatically and do not need to be repeated here.
+protected = ["tests/acceptance/*"]
+
+# Used only to detect obvious test bypasses and to label agent-owned test changes as
+# non-independent evidence. These files may still change if scope permits it.
+test_files = ["*test*", "*spec*", "*__tests__*"]
+
+# Base executes in a detached clean worktree. Link large installed dependencies when
+# safe, or use setup for hermetic installation. The verifier does not treat linked
+# dependencies as evidence.
+[worktree]
+link = ["node_modules"]
+# setup = "npm ci"
+# setup_timeout = 600
+
+# Optional dev service, independently started for base and candidate.
+# Checks receive VERIFY_TREE=(base|candidate) and VERIFY_ROOT=<tree path>.
+# [service]
+# start = "npx wrangler dev --port 8787"
+# ready = "curl -sf http://localhost:8787/health"
+# ready_timeout = 60
+# stop = ""  # optional; process group is terminated regardless
+
+# acceptance: must FAIL on frozen base and PASS on candidate.
+# adversarial: must PASS on candidate; it may already pass on base.
+# regression: must PASS on both frozen base and candidate.
+#
+# Every acceptance/adversarial check MUST declare evidence. Evidence is a repo-relative
+# file or glob that exists at base and is automatically immutable during implementation.
+
+[[checks]]
+name = "unauthenticated session returns 401 JSON"
+kind = "acceptance"
+cmd = "bash tests/acceptance/staff_session_401.sh"
+evidence = ["tests/acceptance/staff_session_401.sh"]
+
+[[checks]]
+name = "revoked link cannot open the agreement"
+kind = "adversarial"
+cmd = "bash tests/acceptance/revoked_link.sh"
+evidence = ["tests/acceptance/revoked_link.sh"]
+
+[[checks]]
+name = "existing suite"
+kind = "regression"
+cmd = "npm test --silent"
+timeout = 300
+
+[[checks]]
+name = "typecheck"
+kind = "regression"
+cmd = "npx tsc --noEmit"
+timeout = 180
+
+[notes]
+# Human/model context only. Notes never affect the verifier verdict.
+out_of_scope = "What the implementer must not expand into, even if adjacent."
+context = "Pointers to durable decisions, known traps, or external constraints."

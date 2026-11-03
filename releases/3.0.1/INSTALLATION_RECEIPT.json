@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "installedAndVerifiedAtUtc": "2026-10-05T23:13:50.802120+00:00",
+  "authorization": "User explicitly approved install and freeze after reviewing patch and evidence in chat",
+  "installedEntryPoint": "/Users/jryear/code/_kernel/verify.py",
+  "version": "3.0.1",
+  "verifierSHA256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "releaseSnapshot": "/Users/jryear/code/_kernel/releases/3.0.1",
+  "predecessorPreserved": "/Users/jryear/code/_kernel/releases/3.0.1/predecessor",
+  "managedManifestVerified": {
+    "AGENTS.template.md": "5b4a935b474cc4cd6c3ef084cca521c6dc8df09b53990bd772092ce17eb0c1f5",
+    "FRONTIER.md": "049916777a053ff5cc72fdd0a63d38847fb3fef72bd6f1c3731f184f09639ca3",
+    "README.md": "f487218a50c2da84f9ae928ec55e06632a3edb0030fd4e74a2491c11638b0007",
+    "VERSION": "06e3fe4a7a1884d20d81cc7065ca8cfd4c394ec602c4d180ddc39bbd4f7da521",
+    "adopt.py": "28e61c7198e07c473228f3e140a56ab13b9c26efebb4dc5398bccf0590e737c7",
+    "review.template.json": "710e567c3276367a8b246ae6a37b8aa0a6df616f2fc7f24f9abd711b1b0de36b",
+    "selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "task.template.toml": "cfc59f9ae9cb9e170aba018878caa35bb768ffd6a06b45ea6d202fc102218214",
+    "verify.py": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be"
+  },
+  "codeChanges": "Exactly reviewed2lines; VERSION and MANIFEST metadata updated consistently",
+  "checks": {
+    "original": {
+      "existingSixPassed": 6,
+      "newBoundaryCounts": {
+        "pass": 10,
+        "fail": 10,
+        "unavailable": 0
+      },
+      "boundaryRawExit": 1,
+      "actualVerifierSHA256": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee"
+    },
+    "installed": {
+      "existingSixPassed": 6,
+      "newBoundaryCounts": {
+        "pass": 20,
+        "fail": 0,
+        "unavailable": 0
+      },
+      "boundaryRawExit": 0,
+      "actualVerifierSHA256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be"
+    }
+  },
+  "execution": "Sequential original6/original20/installed6/installed20; no overlapping processes, every embedded at in parent interval, no shared version timestamps",
+  "immutableTestSHA256": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217",
+  "review": "Independent gpt-6.1-sol/high plus source-only claude-opus-5-5 critiques preserved under reviews; actual code prepared by gpt-6.1-sol/medium",
+  "scope": "Check timeout classification only. No service/setup/descendant cleanup or mixed verdict precedence redesign. No BidZizi application/hosted gate claim.",
+  "pipelineIntegrity": "Earlier parallel timestamp coincidence remains unresolved and preserved in private review packet; installed acceptance uses fresh sequential executions",
+  "changedRootFiles": [
+    "verify.py",
+    "VERSION",
+    "MANIFEST.sha256"
+  ],
+  "productEffects": {
+    "appChanges": false,
+    "providerChanges": false,
+    "sharedDataWrites": false,
+    "push": false,
+    "merge": false,
+    "deploy": false
+  },
+  "freeze": "SHA manifest plus owner-read-only files and nonwritable version directory; no Git repository initialized for external trust anchor"
+}

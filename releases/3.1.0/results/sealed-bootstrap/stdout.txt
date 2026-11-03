@@ -1,0 +1,6 @@
+SUPPORTED  kernel-evidence-validity-001-v2  (11 files changed)
+  [accep] base:fail -> candidate:pass  meaningful RED GREEN, exact source binding, visible legacy assurance, schema2 adoption, version
+  [adver] base:fail -> candidate:pass  unusable assertions, setup failure, command-chain mutation and input mutation are rejected
+  [regre] base:pass -> candidate:pass  original six selftests and twenty timeout boundaries retain frozen bytes and behavior
+  [accep] base:fail -> candidate:pass  v2 per-check integrity, direct entry grammar, byte-safe manifest and all check kinds
+  logged -> /Users/jryear/.local/state/kernel-evidence-validity/implementation-manager/exact-bootstrap-1/claims.jsonl

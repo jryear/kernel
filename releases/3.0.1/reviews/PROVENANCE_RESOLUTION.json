@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "issue": "Claude B1 evidence provenance",
+  "initialReviewPreserved": "results/claude-review.json",
+  "earlierParallelRawReceiptsPreserved": true,
+  "initialParallelCoincidentTimestamps": "Confirmed; cause remains unexplained. Excluded from final acceptance evidence in favor of fresh sequential raw runs.",
+  "promptViewIssue": "First Claude prompt explicitly built a summarized view with cliProcesses; raw receipts retain processes/argv. Follow-up receives untouched raw JSON.",
+  "freshRun": "SEQUENTIAL_RUN.json: one parent process waits original6 -> original20 -> candidate6 -> candidate20; test bytes and patch unchanged",
+  "freshAudit": {
+    "countsOriginal": {
+      "pass": 10,
+      "fail": 10,
+      "unavailable": 0
+    },
+    "countsCandidate": {
+      "pass": 20,
+      "fail": 0,
+      "unavailable": 0
+    },
+    "suiteHashesEqual": true,
+    "rawReceiptsMatchParentCapturedHashes": true,
+    "allCliRecordAtWithinActualParentInterval": true,
+    "noSharedCliRecordTimestamps": true,
+    "priorQuestionedCases": [
+      {
+        "case": "cli_finite_red_to_green",
+        "originalAt": "2026-10-05T22:35:07.856504+00:00",
+        "candidateAt": "2026-10-05T22:35:26.140268+00:00"
+      },
+      {
+        "case": "cli_candidate_failure_regression",
+        "originalAt": "2026-10-05T22:35:09.643953+00:00",
+        "candidateAt": "2026-10-05T22:35:27.942899+00:00"
+      },
+      {
+        "case": "cli_actual_99",
+        "originalAt": "2026-10-05T22:35:10.033119+00:00",
+        "candidateAt": "2026-10-05T22:35:28.327465+00:00"
+      }
+    ]
+  },
+  "scope": "Local synthetic subprocess evidence; no installation/application/deployment claim"
+}

@@ -1,0 +1,126 @@
+{
+  "protocol": 1,
+  "slice": "kernel-evidence-validity-001",
+  "prepared_at_utc": "2026-10-06T03:33:13.390338+00:00",
+  "author": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "runtime": "Codex collaboration subagent",
+    "tools": [
+      "functions.exec",
+      "exec_command",
+      "write_stdin",
+      "Python standard library",
+      "Git",
+      "local filesystem"
+    ],
+    "delegation": false
+  },
+  "trusted_start_commit": "015b17141d243da99509408b1978588c4c344a9c",
+  "owned_paths": [
+    "tasks/kernel-evidence-validity-001.toml",
+    "evidence/validity/**",
+    "docs/SCHEMA2_PROTOCOL.md",
+    "docs/CONTRACT_PREPARATION.json"
+  ],
+  "target_version": "3.1.0",
+  "schema2_protocol_version": 1,
+  "installed_verifier_sha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "frozen_source_hashes": {
+    "tasks/kernel-evidence-validity-001.toml": "151a5088d83b644a8d1c56b21eb19a2ea15d0e2c97f53e6f4f98841032608fa3",
+    "docs/SCHEMA2_PROTOCOL.md": "3c5b1178b1126fb6309cf20cf330f11f89871ebd77acc738abe4fd083c3f514e",
+    "evidence/validity/grader.py": "b901e458d96c2d73ae0e76c81979cb9f2a8c3709325318ab67cc0e14d1eece00",
+    "evidence/validity/regressions.py": "50d1ed71af41e926be13c7372cdff3a28ad8ada43fe04377e240025bcd341cd8"
+  },
+  "case_counts": {
+    "core": 5,
+    "negative": 41,
+    "total_new": 46,
+    "historical_false_supports": 2,
+    "legacy_selftests": 6,
+    "legacy_timeout_cases": 20
+  },
+  "baseline": "new schema2 assurance unavailable on3.0.1; named invariant RED is expected; latest all receipt establishes zero unavailable",
+  "fixture_correction": {
+    "initial_historical_setup": "base behavior already new caused empty candidate commit setup failure; original private receipt retained",
+    "correction": "allow-empty Git fixture commits before contract freeze; no assertion weakened; final historical tests require same app content and both READY/SUPPORTED",
+    "original_receipt": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-counterexamples.json",
+    "original_sha256": "96b6703c574e58f7501837e2b083d5b885fddaa850516f51eecdb8c122608449"
+  },
+  "receipts": {
+    "predecessor-all-frozen-source.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-all-frozen-source.json",
+      "sha256": "fcc4e9b71ff0de4bf145a3beea97f2f977beb4d4247b5fc119eb6284c42f42cf"
+    },
+    "predecessor-all-immutable-author.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-all-immutable-author.json",
+      "sha256": "ffa98eafc73945fe50bc187c607bc7974e37718be43949ece60590fb957fd250"
+    },
+    "predecessor-core-final.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-core-final.json",
+      "sha256": "569d2c9896244313bc66362f2dd5b0b0257ee5abe73c8cd6da851fa4257516c4"
+    },
+    "predecessor-core.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-core.json",
+      "sha256": "66cfa65f5eea801e9f47840a2adedcbf3e5575ff68b22fd098e7a338089c621d"
+    },
+    "predecessor-counterexamples-final.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-counterexamples-final.json",
+      "sha256": "fedec4c20a17d6e7c9570187909458a5ecc12c7c76a7fa2fd77af6bc89ea4441"
+    },
+    "predecessor-counterexamples-immutable-author.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-counterexamples-immutable-author.json",
+      "sha256": "8737566809653a50cadb310ab770931a73303b4075aa63f745c5795eed728403"
+    },
+    "predecessor-counterexamples-v2.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-counterexamples-v2.json",
+      "sha256": "e4ca991e0a84a96831c6ff99ca58c07e5dc9fa622f7424bdfd90f21e7009c679"
+    },
+    "predecessor-counterexamples.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-counterexamples.json",
+      "sha256": "96b6703c574e58f7501837e2b083d5b885fddaa850516f51eecdb8c122608449"
+    },
+    "predecessor-negative-final.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-negative-final.json",
+      "sha256": "feda65aa70a372f26d601d667c58d95dadd06343ef2e73778db34e7a5e891c54"
+    },
+    "predecessor-negative.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-negative.json",
+      "sha256": "97f26a8716cd990f76de169e15cd1dcc5f8a272f39dd6245d5ad4fa73d3dee85"
+    },
+    "predecessor-regressions-final.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-regressions-final.json",
+      "sha256": "cebd45e723411b807ed40dec3f12354c34d62baa24c2f609c096f0cbb5a334d6"
+    },
+    "predecessor-regressions-frozen-source.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-regressions-frozen-source.json",
+      "sha256": "3499406db0c22a8acaad220aaa5ef0e6c7e2db8bd9c46991a5d6214affb4960c"
+    },
+    "predecessor-regressions.json": {
+      "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/predecessor-regressions.json",
+      "sha256": "dec11a43dff295196764b7f16c2a6be9e0d83020b00b6aeb6b7694d43e6b2a9f"
+    }
+  },
+  "limits": [
+    "trusted frozen harness/cooperative candidate, not receipt forgery security",
+    "declared chain protection, not exhaustive dependency proof",
+    "tracked committed source binding, not external runtime/provider inputs",
+    "legacy assurance preserved, no silent consumer migration",
+    "no installed kernel or BidZizi files changed",
+    "review metadata not attestation",
+    "no general lifecycle/descendant cleanup guarantee"
+  ],
+  "proposed_correction_policy": "Any genuine frozen rubric defect requires new explicit protocol/contract version, preserving old fixtures and full rerun.",
+  "latest_direct_receipts": {
+    "new_assertions": "predecessor-all-immutable-author.json",
+    "historical_reproduction": "predecessor-counterexamples-immutable-author.json",
+    "legacy_26": "predecessor-regressions-frozen-source.json"
+  },
+  "bootstrap_baseline_status": "pending after contract freeze; external receipt will record actual result without rewriting protected metadata",
+  "candidate_scope_additions": [
+    "MANIFEST.sha256",
+    "kernel_runtime.py",
+    "kernel_report.py",
+    "examples/schema2_check.py"
+  ]
+}

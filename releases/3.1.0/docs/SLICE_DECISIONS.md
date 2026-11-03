@@ -1,0 +1,17 @@
+# Kernel evidence validity 001 — proposed bounded tranche
+
+The independent review reproduced two synthetic false-support cases in 3.0.1. A mutable runner can skip a protected assertion. A missing import can supply baseline RED even when the desired application behavior already exists. The timeout correction remains installed and supported; these are additional limitations.
+
+The proposed release is 3.1.0. New contracts use an explicitly versioned schema 2. Historical schema 1 contracts keep their documented legacy behavior and receive a visible, recorded legacy assurance label; they must not be silently promoted to the new assurance level. Default templates and adoption guidance move to schema 2. Existing frozen product contracts remain historical records and require separate versioned migrations, never an in-place rewrite.
+
+For schema 2, the smallest useful outcome is:
+
+1. Checks identify frozen assertion IDs and the intended baseline failures. A valid terminal result reports the complete declared assertion set. Exit 1 without a valid assertion result, missing imports, setup errors, malformed or missing receipts, timeout, and reserved exit 99 cannot establish meaningful baseline RED. A genuine declared unmet assertion still can.
+2. The execution entry and declared repository command chain are protected from the trusted base. Structured argv avoids mutable package-script or shell-runner indirection. A command entry outside declared frozen evidence, a changed helper/runner, or a skipped assertion cannot produce hardened support. The contract author still has to identify the actual support chain; this is not automatic proof of all possible dynamic dependencies.
+3. Candidate verification requires a clean exact Git commit and executes a separate snapshot resolved before checks start. Receipts bind base/candidate commits, Git trees, and tracked source content; post-run tracked mutation invalidates support. Dirty or untracked candidate input is rejected rather than reported as reproducible. Linked dependencies and external services remain declared external inputs, not part of the source artifact assurance.
+
+The independent grader must retain and reproduce both 3.0.1 false-support cases, make the hardened candidate reject them, and also demonstrate positive meaningful RED-to-GREEN behavior. It must exercise skipped assertions, wrong/duplicate assertion IDs, malformed receipts, ordinary setup/import failure, explicit harness failure, timeout, protected command-chain changes, dirty/untracked input, source mutation during execution, and exact source binding. Old six plus old twenty checks remain frozen and run together with the new fixture corpus.
+
+The kernel upgrade is evaluated with sealed 3.0.1 plus the independent frozen grader. Running the candidate verifier on itself is an additional probe, never the sole trust source. Independent source review must challenge whether the grader can pass while a named invariant is false. Installation is a separate concrete release step after exact-commit verification; no installed file is changed during preparation.
+
+BidZizi workspace-entry-004 is independently frozen at dcab8274ccb253f3e6bb918a983cc9964e8024f1 but is NOT_READY because inherited harness failures remain unresolved. Its source and graders are not migration targets during this kernel slice. Workspace-led Event Studio and Design A remain the accepted product direction.

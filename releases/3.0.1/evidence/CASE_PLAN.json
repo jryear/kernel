@@ -1,0 +1,128 @@
+{
+  "status": "Independent evidence authored before candidate correction; awaiting parent review/hash/freeze",
+  "owner": {
+    "model": "gpt-6.1-sol",
+    "reasoningEffort": "high",
+    "implementationAuthority": "none"
+  },
+  "target": "Check-timeout classification in version3.0.0, supplied via --verifier; same frozen suite must run on candidate later",
+  "sourceInputs": {
+    "original/verify.py": "94b7a341cbb75d986a475cb2bf5b24d808441693cd73f563efee577629e675ee",
+    "original/selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "frozen/test_timeout_boundary.py": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217"
+  },
+  "caseCount": 20,
+  "cases": [
+    {
+      "name": "unit_timeout_acceptance",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "unit_timeout_adversarial",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "unit_timeout_regression",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "unit_finite_failure",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "unit_actual_99",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "unit_custom_expected_exit",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "unit_expected_99_forbidden",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_base_timeout_acceptance",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "cli_base_timeout_adversarial",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "cli_base_timeout_regression",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "cli_candidate_timeout_acceptance",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "cli_candidate_timeout_adversarial",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "cli_candidate_timeout_regression",
+      "boundary": "real subprocess sleep2 with timeout1 must become exit99/HARNESS and cannot validRED"
+    },
+    {
+      "name": "cli_finite_red_to_green",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_candidate_failure_acceptance",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_candidate_failure_adversarial",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_candidate_failure_regression",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_actual_99",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_custom_expected_exit",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    },
+    {
+      "name": "cli_expected_99_forbidden",
+      "boundary": "preserve finite/expected/reserved-exit behavior"
+    }
+  ],
+  "expectedOutcomes": {
+    "innerTimeout": {
+      "exit": 99,
+      "harness_error": true,
+      "passed": false
+    },
+    "baseTimeout": "BASELINE_NOT_READY exit2 for acceptance/adversarial/regression; HARNESS diagnostic",
+    "candidateTimeoutOnly": "UNVERIFIABLE exit2, reserved99 check record, no ordinary failed-candidate reason",
+    "finiteAcceptanceFailure": "actual exit1/non-harness => BASELINE_READY",
+    "finiteRedToGreen": "clean marker-only candidate => SUPPORTED exit0",
+    "ordinaryCandidateFailures": "actual exit1 acceptance/adversarial/regression => CONTRADICTED exit1",
+    "actual99": "harness; cannot BASELINE_READY; candidate UNVERIFIABLE exit2",
+    "customExpected7": "actual7 pass/non-harness; timeout still99; actual0 expected7 is finite baselineRED",
+    "expected99": "forbidden SpecError and CLI exit3"
+  },
+  "fixtureIsolation": {
+    "stdlibOnly": true,
+    "miniGit": "Fresh temporary local repository per CLI method; immutable task and checks/check.py committed at explicit base SHA; candidate changes and commits only app.txt",
+    "environment": "Explicit allowlist; disposable HOME; no inherited provider variables, global/system Git configs or credential configs/hooks; remote protocols disabled",
+    "storage": "Disposable local files/Git only, no DB/network/provider",
+    "sourceSelection": "--verifier absolute path; every CLI result log must bind supplied verifierSHA",
+    "timing": "Unit and check children sleep2, check timeout1; independent CLI deadline15; one exec-replaced Python check child; bounded20methods",
+    "cleanupScope": "Temporary mini-repos removed; shell exec avoids an extra check-shell child. No assertion or correction claim about arbitrary descendant/process-group cleanup."
+  },
+  "suiteExitContract": {
+    "pass": 0,
+    "assertionFailure": 1,
+    "unavailableSetup": 99
+  },
+  "retainedEvidence": "Receipt includes observed check exits/kinds/pass/harness flags, baseline/verdict reasons, exact CLI stdout/stderr, method/process durations and miniGit base/candidate/source hashes. Genuine3.0.0 failures retained, not waived.",
+  "notRun": "No installed-kernel selftest, app gate, database/browser/provider or candidate correction. Parent owns independent review/freeze and later same-suite candidate execution."
+}

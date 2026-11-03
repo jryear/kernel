@@ -1,0 +1,23 @@
+{
+  "atUtc": "2026-10-06T03:46:05.129057+00:00",
+  "endedAtUtc": "2026-10-06T03:46:37.894393+00:00",
+  "seconds": 32.765,
+  "argv": [
+    "/opt/homebrew/bin/python3",
+    "/Users/jryear/code/_kernel/verify.py",
+    "tasks/kernel-evidence-validity-001-v2.toml",
+    "--repo",
+    "/Users/jryear/code/kernel-evidence-validity",
+    "--base",
+    "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+    "--baseline"
+  ],
+  "exit": 0,
+  "base": "df25ed364630c4edc4c9f3e7ec6ee2f9a71e7716",
+  "kernelSha256": "130e2fc8e1ff1152a7667951c44e0894a122536428fe85259224afb50543b0be",
+  "contractSha256": "6ab8aca5496d46ae5b4c8b4966616ae4f8cd9092bc5997f05ab383e6e3e6deb5",
+  "stdoutSha256": "2edcc832b3720e4738f0359f1511b06d47655a5bbf1166c9e191f4034b077606",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "cleanAfter": true,
+  "scope": "Final integrated frozen baseline, sealed3.0.1 bootstrap; not implementation acceptance"
+}

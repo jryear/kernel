@@ -1,0 +1,5 @@
+BASELINE_READY  kernel-evidence-validity-001-v2  base=df25ed364630
+  [accep] base:fail  meaningful RED GREEN, exact source binding, visible legacy assurance, schema2 adoption, version
+  [adver] base:fail  unusable assertions, setup failure, command-chain mutation and input mutation are rejected
+  [regre] base:pass  original six selftests and twenty timeout boundaries retain frozen bytes and behavior
+  [accep] base:fail  v2 per-check integrity, direct entry grammar, byte-safe manifest and all check kinds

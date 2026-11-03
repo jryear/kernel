@@ -1,0 +1,9 @@
+{
+  "atUtc": "2026-10-06T04:08:54.160064+00:00",
+  "classification": "Release packaging permission failure; verification unaffected",
+  "failedOperation": "os.rename after preparation root was chmod0500",
+  "error": "PermissionError errno13 on macOS",
+  "correction": "Keep staging root0700 through rename, then seal published local release root0500; all source bytes and grader receipts remain unchanged",
+  "installedVerificationBeforeAndAfter": "84 frozen case groups passed, exact12managed source hashes matched",
+  "scriptSha256": "9c1dc3ac3b19e7d248bdc22955ec6a2b68e9fbedcd16cdda47fbfe595cdb4acf"
+}

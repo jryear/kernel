@@ -1,0 +1,49 @@
+{
+  "candidate": "b6217c81ff5c4762c9f7632a4d0252c584b93eaf",
+  "runs": [
+    {
+      "name": "v1-all",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/grader.py",
+        "--verifier",
+        "verify.py",
+        "--mode",
+        "all",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v1-all.json"
+      ],
+      "exit": 0,
+      "seconds": 95.37243341701105,
+      "receipt_sha256": "ab56c7cffc112f5bca338ba0964281ab193673af5251a1ec36ba2b3edddb73b5"
+    },
+    {
+      "name": "v2",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/v2/grader.py",
+        "--verifier",
+        "verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/v2.json"
+      ],
+      "exit": 0,
+      "seconds": 35.568954707996454,
+      "receipt_sha256": "0de1a332ae3f20edfa6ba4cfb5e1e9f721af49cd4157fe49a5fa9a2a6b76fccd"
+    },
+    {
+      "name": "original26",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/regressions.py",
+        "--verifier",
+        "verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/redteam/candidate-b6217/original26.json"
+      ],
+      "exit": 0,
+      "seconds": 17.937840041005984,
+      "receipt_sha256": "7a2834901438b6d93336b6be02e51a70f8003af1e18517b962098518430e3448"
+    }
+  ]
+}

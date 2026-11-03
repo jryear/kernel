@@ -1,0 +1,57 @@
+{
+  "runs": [
+    {
+      "name": "v1-all",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/grader.py",
+        "--verifier",
+        "/Users/jryear/code/_kernel/verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/installed-3.1.0/v1-all.json",
+        "--mode",
+        "all"
+      ],
+      "startedAtUtc": "2026-10-06T04:06:03.042739+00:00",
+      "endedAtUtc": "2026-10-06T04:07:29.808552+00:00",
+      "seconds": 86.766,
+      "exit": 0,
+      "timeout": false,
+      "receiptSha256": "ca45bd324e6211e89e38ca9e91638515a72414fe24d6106924d079ed18bc26e2"
+    },
+    {
+      "name": "v2",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/v2/grader.py",
+        "--verifier",
+        "/Users/jryear/code/_kernel/verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/installed-3.1.0/v2.json"
+      ],
+      "startedAtUtc": "2026-10-06T04:07:29.809196+00:00",
+      "endedAtUtc": "2026-10-06T04:08:03.157601+00:00",
+      "seconds": 33.348,
+      "exit": 0,
+      "timeout": false,
+      "receiptSha256": "a716c48748c93d8ecd4e1a5171c52a995240d9cc92fea7083daf5f6647f1c5ab"
+    },
+    {
+      "name": "original26",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "evidence/validity/regressions.py",
+        "--verifier",
+        "/Users/jryear/code/_kernel/verify.py",
+        "--receipt",
+        "/Users/jryear/.local/state/kernel-evidence-validity/installed-3.1.0/original26.json"
+      ],
+      "startedAtUtc": "2026-10-06T04:08:03.157956+00:00",
+      "endedAtUtc": "2026-10-06T04:08:20.867743+00:00",
+      "seconds": 17.71,
+      "exit": 0,
+      "timeout": false,
+      "receiptSha256": "7eb4c9d41327207329b9fbf3f0653edb74d05a5e3afa9fdf6bc286032edd615f"
+    }
+  ]
+}

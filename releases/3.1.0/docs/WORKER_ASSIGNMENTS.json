@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-06T03:30:40.442853+00:00",
+  "workers": [
+    {
+      "name": "baseline_diagnosis",
+      "model": "gpt-6.1-sol",
+      "reasoningEffort": "medium",
+      "worktree": "/Users/jryear/.codex/worktrees/bidzizi-baseline-diagnostics/bidzizi",
+      "base": "dcab8274ccb253f3e6bb918a983cc9964e8024f1",
+      "allowedTrackedWrites": [],
+      "allowedOutputRoot": "/Users/jryear/.local/state/bidzizi/kernel-timeout-correction-20261005T222324Z/next-workspace-slice/baseline-diagnosis-2",
+      "role": "Unchanged seven inherited checks and justified full baseline rerun, sequential private disposable PG/browser fixtures"
+    },
+    {
+      "name": "kernel_frozen_evidence",
+      "model": "gpt-6.1-sol",
+      "reasoningEffort": "high",
+      "worktree": "/Users/jryear/code/kernel-evidence-grader",
+      "base": "015b17141d243da99509408b1978588c4c344a9c",
+      "allowedTrackedWrites": [
+        "tasks/kernel-evidence-validity-001.toml",
+        "evidence/validity/**",
+        "docs/SCHEMA2_PROTOCOL.md",
+        "docs/CONTRACT_PREPARATION.json"
+      ],
+      "role": "Independent frozen contract/protocol/negative and positive fixtures; no implementation"
+    },
+    {
+      "name": "kernel_redteam",
+      "model": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "worktree": "/Users/jryear/code/kernel-validity-review",
+      "base": "015b17141d243da99509408b1978588c4c344a9c",
+      "allowedTrackedWrites": [
+        "docs/reviews/kernel-evidence-validity-001.json"
+      ],
+      "role": "Independent source/contract audit, later exact candidate verification separately recorded"
+    }
+  ],
+  "implementationStatus": "Not dispatched; blocked on frozen independent evidence and material review findings",
+  "toolsAuthorized": [
+    "functions.exec/exec_command",
+    "Python stdlib",
+    "Git local disposable repos/worktrees",
+    "read-only local source",
+    "existing Claude CLI source critique with tools and MCP disabled"
+  ],
+  "prohibited": [
+    "installed kernel writes before exact candidate acceptance",
+    "BidZizi app/evidence edits",
+    "shared staging writes",
+    "provider/credential/config changes",
+    "push/merge/deploy/publishing",
+    "paid fallback",
+    "further subagents"
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "rubric_version": 2,
+  "created_at_utc": "2026-10-06T03:41:58.057053+00:00",
+  "status": "frozen-corrected-contract-pending-independent-review",
+  "original_source_commit": "1afbc6f64598239b31a560e8f15180e377e4082c",
+  "author": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "runtime": "Codex collaboration subagent",
+    "tools": [
+      "functions.exec",
+      "exec_command",
+      "write_stdin",
+      "Git",
+      "Python standard library",
+      "local filesystem"
+    ],
+    "delegation": false
+  },
+  "blocked_review": {
+    "path": "/Users/jryear/code/kernel-evidence-validity/docs/reviews/kernel-v1-blocked-audit.json",
+    "sha256": "6e262d7a7f030949c094a775220f5bf4ab0426a279800c092ec421b3b6231828",
+    "root_evidence_commit": "36c10aa",
+    "reviewer_model": "gpt-6-astra",
+    "reasoning_effort": "high",
+    "evidence_class": "source audit and designed counterexamples only; no deterministic fixtures executed and no claim of gate passage",
+    "runtime_fixtures_executed_by_reviewer": 0
+  },
+  "corrections": [
+    {
+      "id": "B1",
+      "change": "before/after each check source identity; edit/use/restore multi-check case",
+      "limit": "transient write+restore within one check remains outside continuous monitoring assurance"
+    },
+    {
+      "id": "B2",
+      "change": "precise direct executable/interpreter entry position grammar and delimiter variants"
+    },
+    {
+      "id": "B3",
+      "change": "raw byte-safe NUL-delimited independent manifest oracle, binary/CRLF/space+nonASCII filename; mode drift with core.fileMode=false"
+    },
+    {
+      "id": "B4",
+      "change": "regression/adversarial positive, missing, invalid, helper and expected baseline-ID cases; actual baseline import/setup/unexpected failure calls and legacy baseline label"
+    }
+  ],
+  "case_counts": {
+    "preserved_v1_core": 5,
+    "preserved_v1_negative": 41,
+    "new_v2_named_cases": 12,
+    "preserved_original_selftests": 6,
+    "preserved_original_timeout_cases": 20,
+    "total_named_cases": 84,
+    "historical_false_supports_separate": 2
+  },
+  "frozen_v1_hashes": {
+    "tasks/kernel-evidence-validity-001.toml": "151a5088d83b644a8d1c56b21eb19a2ea15d0e2c97f53e6f4f98841032608fa3",
+    "docs/SCHEMA2_PROTOCOL.md": "3c5b1178b1126fb6309cf20cf330f11f89871ebd77acc738abe4fd083c3f514e",
+    "docs/CONTRACT_PREPARATION.json": "b137af981cf70ca6376647344c46edd76960ab5765a344681bc50ada2a421698",
+    "evidence/validity/grader.py": "b901e458d96c2d73ae0e76c81979cb9f2a8c3709325318ab67cc0e14d1eece00",
+    "evidence/validity/regressions.py": "50d1ed71af41e926be13c7372cdff3a28ad8ada43fe04377e240025bcd341cd8",
+    "selftest.py": "c39278627dd19b718060ad5f1c0c9cfa91e894af25d99d51e58cb1ff8b569a69",
+    "evidence/legacy/test_timeout_boundary.py": "799c464441b2499a1d09108bf847ee1223914204e18ecb209dd3a62e3828e217"
+  },
+  "v2_hashes": {
+    "tasks/kernel-evidence-validity-001-v2.toml": "6ab8aca5496d46ae5b4c8b4966616ae4f8cd9092bc5997f05ab383e6e3e6deb5",
+    "docs/SCHEMA2_PROTOCOL.v2.md": "4a6f2d662473470b42566fcab0ad8c5bfae57dd2d7f6505b5363ca4bc1a9dd8d",
+    "evidence/validity/v2/grader.py": "c573ac8988cf768a0f8246d61617cc12ee8887660cd1bf34ff8375c76043a717"
+  },
+  "direct_full_rerun": {
+    "path": "/Users/jryear/.local/state/kernel-evidence-validity/author/v2-full-rerun/SUMMARY.json",
+    "sha256": "ac8dfa4a0bf8887275d952e9b8a3d16c1110aee3dee6b5b13721226a196057ae",
+    "runs": [
+      {
+        "name": "v1-core",
+        "argv": [
+          "python3",
+          "evidence/validity/grader.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/author/v2-full-rerun/v1-core.json",
+          "--mode",
+          "core"
+        ],
+        "exit": 1,
+        "expected_exit": 1,
+        "seconds": 0.997,
+        "counts": {
+          "pass": 0,
+          "fail": 5,
+          "unavailable": 0
+        },
+        "sha256": "68d0177750abcd17e321ce81decc6b100dd22ad6839d442a067e8b5b27941828"
+      },
+      {
+        "name": "v1-negative",
+        "argv": [
+          "python3",
+          "evidence/validity/grader.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/author/v2-full-rerun/v1-negative.json",
+          "--mode",
+          "negative"
+        ],
+        "exit": 1,
+        "expected_exit": 1,
+        "seconds": 11.107,
+        "counts": {
+          "pass": 0,
+          "fail": 41,
+          "unavailable": 0
+        },
+        "sha256": "82ed716f3445b8881d10b600d336bd079e2103329d02a94b839983385a8449aa"
+      },
+      {
+        "name": "original26",
+        "argv": [
+          "python3",
+          "evidence/validity/regressions.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/author/v2-full-rerun/original26.json"
+        ],
+        "exit": 0,
+        "expected_exit": 0,
+        "seconds": 17.032,
+        "counts": null,
+        "sha256": "e265854a332e8a0cc1712476b58b2fc74b63b1fb508b478fdf9cdb9d94cd8d08"
+      },
+      {
+        "name": "v2-additions",
+        "argv": [
+          "python3",
+          "evidence/validity/v2/grader.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/author/v2-full-rerun/v2-additions.json"
+        ],
+        "exit": 1,
+        "expected_exit": 1,
+        "seconds": 3.644,
+        "counts": {
+          "pass": 0,
+          "fail": 12,
+          "unavailable": 0
+        },
+        "sha256": "250ccbc48635c63684ac81eed13e521e9f10e09d8f7507d8fde50b1fb834b73c"
+      },
+      {
+        "name": "historical",
+        "argv": [
+          "python3",
+          "evidence/validity/grader.py",
+          "--verifier",
+          "/Users/jryear/code/_kernel/verify.py",
+          "--receipt",
+          "/Users/jryear/.local/state/kernel-evidence-validity/author/v2-full-rerun/historical.json",
+          "--mode",
+          "historical"
+        ],
+        "exit": 0,
+        "expected_exit": 0,
+        "seconds": 1.312,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "unavailable": 0
+        },
+        "sha256": "607211dedc9bf683a867fa118dc3b5aaa47bf912a160b6fe643546e4f10967f3"
+      }
+    ],
+    "interpretation": "sealed3.0.1 has46v1+12v2 named intended failures withzero unavailable; unchanged original26 pass; both historical false supports reproduced"
+  },
+  "target_kernel_version": "3.1.0",
+  "json_protocol": 1,
+  "toml_schema": 2,
+  "no_changes": [
+    "installed kernel",
+    "BidZizi",
+    "v1 frozen source/spec/protocol/preparation",
+    "historical26 grader bytes"
+  ],
+  "assessment": "Version1 independent rubric was blocked by source review; these are rubric corrections, not kernel/application runtime findings.",
+  "bootstrap_baseline_status": "pending after freeze; exact-commit private receipt will report actual result without rewriting frozen metadata"
+}
