@@ -2,20 +2,20 @@
 name = "kernel"
 outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
 main = "main"
-instruction_version = 3
+instruction_version = 4
 # Release rule: the installed release judges the next one.
-# - 3.2.0 is built in a separate worktree. ~/code/_kernel stays on the installed 3.1.0, read-only.
-# - Each item's tests are frozen first and must FAIL against 3.1.0 and PASS on the candidate.
-#   The six existing self-tests are a regression baseline, not evidence for new guarantees.
-# - The judge, its contracts, fixtures and result logs stay outside the candidate's write authority.
-# Verdict rule (from review, 2026-11-03): a denial shows an attempted operation, not intent.
-# - contradicted: a deterministic violation the contract or kernel policy forbids (protected paths changed).
-# - unverifiable: environment failures (missing dependency, undeclared network) and any ambiguous or missing evidence.
-# - Missing evidence is never promoted to contradicted or supported.
-# - Hashes of protected paths establish integrity (a lasting change), nothing more. They cannot show
-#   that no write was attempted, that a write was undone, or that a read was blocked. If evidence cannot
-#   tell tampering from another sandbox failure, the verdict is unverifiable.
-# - Judge invocations use `python3 -B` (the 2026-11-03 run wrote bytecode caches into the judge's directory).
+# - 3.2.0 is built in a separate worktree. ~/code/_kernel stays on installed 3.1.0, read-only until release gates pass.
+# - Freeze each item's complete tests/fixtures first; named new assertions must FAIL against 3.1.0 and PASS on the candidate.
+# - The six existing self-tests are regressions, not evidence for new guarantees. Setup/CLI errors are not RED.
+# - Judge, frozen contracts/fixtures, final logs, expected digest and pinned sandbox bundle stay outside candidate write authority.
+# - Judge invocations use python3 -B and nested Python uses PYTHONDONTWRITEBYTECODE=1; inventory the judge directory before/after.
+# Verdict rule: docs/SANDBOX_DECISION.md is the sandbox acceptance boundary.
+# - contradicted: reliably measured deterministic forbidden effect or complete failed behavioral assertion; denial is not intent.
+# - unverifiable: environment failures, survivors, incomplete execution/cleanup, enabled collector failure/loss, ambiguous/missing evidence.
+# - Aggregate precedence is unverifiable, then contradicted, then supported; retain deterministic change facts even when overridden.
+# - Hashes prove lasting differences at observed boundaries only, never no attempts, no restored writes, or read denial.
+# - Logs are diagnostic and incomplete. Intentional logging-disabled mode is distinct from collector failure; no silent fallback.
+# - Supported is bounded contract evidence, not proof of no attempts or hostile-process containment.
 
 [[item]]
 id = "self-check"
@@ -48,24 +48,28 @@ acceptance = [["python3", "tests/self_check.py"], ["python3", "tests/cleanup.py"
 
 [[item]]
 id = "sandbox"
-title = "--sandbox (opt-in): checks run confined, verifier outside; protected paths hashed before and after each check"
-mandate = "Zack, 2026-11-03: make 'agents can't edit the rules' true while code runs, not only in the diff."
+title = "Opt-in sandbox: pinned embedded srt under a trusted supervisor; exact write/localhost policy, external receipts and typed integrity evidence"
+mandate = "Zack, 2026-11-03; architecture in docs/SANDBOX_DECISION.md. Freeze the full tamper matrix before implementation. Pin srt 0.0.81, transitive lock and qualified Node artifact outside candidate authority. Preserve integrated self-check/cleanup. Prove exact ports and path confinement; unsupported policy fails closed. Logs cannot prove intent or completeness."
 depends = ["integrate-1", "sandbox-spike"]
-acceptance = [["python3", "tests/tamper_suite.py"]]
-# Bad candidates: rewrite the log, edit the verifier, edit the contract, write .git, read ~/.ssh, call the network,
-# write a cache. Each must get its specified verdict; tamper verdicts must hold with violation logging disabled.
+acceptance = [["python3", "-B", "tests/tamper_suite.py"]]
+# Test observed denials -> unverifiable; reliable lasting protected changes -> contradicted unless independent evidence is unavailable.
+# Repeat with logging disabled; clean bounded controls may be supported. Never claim detection of swallowed invisible attempts.
+# Prove effects independently of nested verdicts, including reads, direct/proxy network, aliases, cache, receipts, bundle and judge integrity.
+# Enabled collector loss/failure and all incomplete cleanup remain unverifiable. No unconstrained fallback or runtime installation.
 
 [[item]]
 id = "flake"
-title = "Repeat policy fixed before measuring: seeds, repetition count and timeout handling declared in the contract; quarantine is unverifiable, never supported"
-mandate = "Zack, 2026-11-03: flaky-test policy. The S 35/36 case is why one green rerun is not enough."
-acceptance = [["python3", "tests/flake_policy.py"]]
+title = "Frozen repetition schedule over fresh sandbox invocations; all required repetitions must pass to certify"
+mandate = "Zack, 2026-11-03. Freeze seeds, count and timeout handling before measurement. Record every repetition and fresh-state/cleanup evidence. Unavailable or quarantined repetitions and mixed pass/fail outcomes are unverifiable; a later green never erases prior evidence."
+depends = ["sandbox"]
+acceptance = [["python3", "-B", "tests/flake_policy.py"]]
 
 [[item]]
 id = "mutants"
-title = "Contracts declare known-wrong implementations; a kill counts only when the named assertion fails, not a crash or setup error"
-mandate = "Zack, 2026-11-03: contract work. Receipts record mutant identity, expected failing assertion and the observed one. Killed mutants show those failures are caught, not that the contract is complete."
-acceptance = [["python3", "tests/mutants.py"]]
+title = "Known-wrong implementations run under the same sandbox and repeat policy; only the named assertion failure counts as a kill"
+mandate = "Zack, 2026-11-03. Bind mutant source/identity, expected and observed failed assertions, policy and every repetition. Cache/network denial, setup failure, crash, timeout, missing receipt, collector failure and process survivors never count as kills. Kills do not prove contract completeness."
+depends = ["sandbox", "flake"]
+acceptance = [["python3", "-B", "tests/mutants.py"]]
 
 [[item]]
 id = "red-team"
@@ -76,21 +80,23 @@ acceptance = [["python3", "tests/red_team_freeze.py"]]
 
 [[item]]
 id = "default-on"
-title = "Sandbox on by default once BidZizi's real contracts (preview-001, photos-001) return supported with it"
-mandate = "Zack, 2026-11-03: opt-in first, default once real contracts pass."
+title = "Enable sandbox by default only after preview-001 and photos-001 are supported on the exact combined candidate with declared outputs/ports"
+mandate = "Zack, 2026-11-03. Preserve real assertions and narrow authority. Version and refreeze any required contract migration; no in-place edits. Require complete repetitions and cleanup, record backend/policy/bundle identity, and leave opt-in until both real contracts pass. Unsupported backends never run unsandboxed implicitly."
 depends = ["sandbox", "flake"]
-acceptance = [["python3", "tests/real_contracts_sandboxed.py"]]
+acceptance = [["python3", "-B", "tests/tamper_suite.py"], ["python3", "-B", "tests/flake_policy.py"], ["python3", "-B", "tests/real_contracts_sandboxed.py"]]
 
 [[item]]
 id = "bidzizi-gate"
-title = "BidZizi's real invocation updated and exercised with the pinned 3.2.0 digest before anything switches to 3.2.0"
-mandate = "Zack, 2026-11-03 review: the required digest breaks every current invocation; this is a release gate, not a docs note."
+title = "Exercise BidZizi's actual invocation against authenticated final 3.2.0 package and caller-held digest before installation switches"
+mandate = "Zack, 2026-11-03. Prove actual successful calls plus missing/wrong digest refusal and missing sandbox dependency failure. Use python3 -B; bind exact package/bundle/policy/contract identities. No locally derived untrusted expected digest or implicit fallback. Any later package change invalidates this proof until rerun."
 depends = ["default-on"]
-acceptance = [["python3", "tests/bidzizi_invocation.py"]]
+acceptance = [["python3", "-B", "tests/bidzizi_invocation.py"]]
 
 [[item]]
 id = "release"
-title = "Release 3.2.0: install receipt, manifest, release digest published as a tag, limits list rewritten, SWE-bench comparison written"
-mandate = "Zack, 2026-11-03: production suite."
+title = "Release 3.2.0 only from final combined evidence: external judge, real caller proof, manifest/bundle digest, tag and install receipt"
+mandate = "Zack, 2026-11-03. Rejudge all frozen new-feature contracts with installed 3.1.0 using python3 -B; retain exact RED/GREEN and regression evidence. Recheck real caller proof against final bytes. Publish external dependency and platform qualification, accurate log/hash/cleanup limits, release digest and SWE-bench comparison before the authorized installation switch."
 depends = ["bidzizi-gate", "red-team"]
-acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "selftest.py"]]
+acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "-B", "tests/self_check.py"], ["python3", "-B", "tests/cleanup.py"], ["python3", "-B", "tests/tamper_suite.py"], ["python3", "-B", "tests/flake_policy.py"], ["python3", "-B", "tests/mutants.py"], ["python3", "-B", "tests/red_team_freeze.py"], ["python3", "-B", "tests/real_contracts_sandboxed.py"], ["python3", "-B", "tests/bidzizi_invocation.py"], ["python3", "-B", "selftest.py"]]
+# Acceptance commands supplement, never replace, the external 3.1.0 frozen-contract receipts.
+# Release/bundle authentication uses caller-held trusted digests; regenerate manifest from final contents before final proof.
