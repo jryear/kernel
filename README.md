@@ -70,3 +70,21 @@ CONTRADICTED, exit2 UNVERIFIABLE/BASELINE_NOT_READY, exit3 SPEC_ERROR. Review
 metadata is recorded as a declaration and does not prove independent review.
 Local checks, contract support, UI judgment, provider evidence and release
 acceptance remain distinct. Installation or publication requires separate authority.
+
+Startup release integrity requires a trusted SHA-256 of MANIFEST.sha256 from
+outside the candidate: --release-sha256 HEX or VERIFY_RELEASE_SHA256. Missing
+digests or changed release bytes refuse with exit 3 before judging or importing
+runtime modules. Publish/hold that digest separately; calculating it from an
+untrusted candidate is not authentication. The caller must authenticate verify.py
+itself externally: replacing the entire guard remains outside self-check assurance.
+For local development only, an operator can compute a digest of their reviewed
+package and export it before running the six legacy regression tests.
+
+Schema1 and schema2 checks now start in a separate POSIX session/process group. The receipt
+records group cleanup, observed descendants, escaped survivors, timeout and OS
+kill/observation failures. Survivors and missing cleanup/assertion evidence make
+the verdict unverifiable. Escaped descendants are named even when best-effort
+remediation subsequently kills them. Detection uses ps sampling plus an inherited
+invocation marker; hostile children can erase it and escape between observations.
+This is observed cleanup evidence, not exhaustive containment or sandboxing.
+Legacy schema1 services (as distinct from checks) remain outside this guarantee.

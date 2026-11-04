@@ -71,10 +71,9 @@ def run_check(root, check, phase):
                 if not check.get('_runtime_executable'):
                     raise FileNotFoundError('declared runtime unavailable')
                 argv[0] = check['_runtime_executable']
-            result = subprocess.run(argv, shell=False, cwd=root, env=env,
-                                    capture_output=True, timeout=check['timeout'])
-            code = result.returncode
-            output = (result.stdout + result.stderr).decode('utf-8', 'replace')
+            from kernel_process import execute
+            code, output, cleanup = execute(argv, root, env, check['timeout'])
+            row['cleanup'] = cleanup
         except subprocess.TimeoutExpired as error:
             code, output = 99, f'TIMEOUT after {error.timeout}s'
         except OSError as error:
@@ -85,6 +84,9 @@ def run_check(root, check, phase):
             receipt, failed = read_result(path, check, phase, token, code)
             row.update(assertion_result=receipt, failed_assertions=failed,
                        passed=not failed, harness_error=False)
+            if not row.get('cleanup', {}).get('complete', False):
+                row.update(passed=False, harness_error=True,
+                           result_protocol_error='cleanup evidence incomplete; see cleanup receipt')
         except (OSError, ValueError, TypeError, UnicodeError) as error:
             row['result_protocol_error'] = str(error)
     return row

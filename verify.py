@@ -349,28 +349,23 @@ class Service:
 
 def run_check(root: Path, check: dict, env: dict) -> dict:
     start = time.monotonic()
+    from kernel_process import execute
+    cleanup = None
     try:
-        result = subprocess.run(
-            check["cmd"],
-            shell=True,
-            cwd=root,
-            env=env,
-            text=True,
-            capture_output=True,
-            timeout=check["timeout"],
-        )
-        code, output = result.returncode, result.stdout + result.stderr
-    except subprocess.TimeoutExpired as error:
-        code, output = HARNESS_EXIT, f"TIMEOUT after {error.timeout}s"
+        code, output, cleanup = execute(['/bin/sh', '-c', check['cmd']], root, env, check['timeout'])
+    except OSError as error:
+        code, output = HARNESS_EXIT, 'check executable unavailable: ' + str(error)
+    complete = cleanup is not None and cleanup['complete']
     return {
         "name": check["name"],
         "kind": check["kind"],
         "exit": code,
         "expected_exit": check["expect_exit"],
-        "passed": code == check["expect_exit"] and code != HARNESS_EXIT,
-        "harness_error": code == HARNESS_EXIT,
+        "passed": code == check["expect_exit"] and code != HARNESS_EXIT and complete,
+        "harness_error": code == HARNESS_EXIT or not complete,
         "seconds": round(time.monotonic() - start, 2),
         "output_tail": output[-1500:],
+        "cleanup": cleanup,
     }
 
 
@@ -461,9 +456,50 @@ def print_results(prefix: str, results: list[dict]) -> None:
         print(f"  [{result['kind'][:5]}] {prefix}:{state}  {result['name']}")
 
 
+def check_release(expected: str | None) -> None:
+    """Authenticate the manifest with a caller-held digest before loading helpers.
+
+    The caller must also trust this entrypoint: self-authentication cannot defend
+    against replacement of the guard itself. No candidate-local trust fallback.
+    """
+    try:
+        if not expected or not re.fullmatch(r"[0-9a-fA-F]{64}", expected):
+            raise ValueError("caller must supply --release-sha256 or VERIFY_RELEASE_SHA256")
+        root = Path(__file__).resolve().parent
+        manifest = root / "MANIFEST.sha256"
+        if manifest.is_symlink():
+            raise ValueError("manifest must not be a symlink")
+        raw = manifest.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != expected.lower():
+            raise ValueError("manifest does not match caller-held digest")
+        seen = set()
+        for line in raw.decode("utf-8").splitlines():
+            match = re.fullmatch(r"([0-9a-f]{64})  ([^\r\n]+)", line)
+            if not match:
+                raise ValueError("malformed release manifest")
+            digest, name = match.groups()
+            parts = name.split("/")
+            if any(part in ("", ".", "..") for part in parts) or name.startswith("/") or name in seen:
+                raise ValueError("unsafe or duplicate manifest path")
+            seen.add(name)
+            path = root
+            for part in parts:
+                path = path / part
+                if path.is_symlink():
+                    raise ValueError("symlink in release path: " + name)
+            if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                raise ValueError("release file changed: " + name)
+        if not {"verify.py", "kernel_runtime.py", "kernel_report.py"}.issubset(seen):
+            raise ValueError("manifest omits a verifier component")
+    except (OSError, UnicodeError, ValueError) as error:
+        raise SpecError("release integrity: " + str(error)) from error
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Mechanical completion gate for frozen agent contracts.")
-    parser.add_argument("spec", type=Path)
+    parser.add_argument("spec", type=Path, nargs="?")
+    parser.add_argument("--release-sha256", default=os.environ.get("VERIFY_RELEASE_SHA256"),
+                        help="trusted SHA-256 of release manifest, held outside candidate")
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--base", default=os.environ.get("VERIFY_BASE", DEFAULT_BASE),
                         help=f"trusted base ref (default: VERIFY_BASE or {DEFAULT_BASE!r})")
@@ -480,10 +516,16 @@ def main() -> int:
     parser.add_argument("--verifier-inspection-reported", choices=("yes", "no", "unknown"), default="unknown")
     parser.add_argument("--log", type=Path, help="claim log (default: <repo>/.claims/claims.jsonl)")
     parser.add_argument("--keep-worktree", action="store_true")
-    parser.add_argument("--version", action="version", version=VERIFIER_VERSION)
+    parser.add_argument("--version", action="store_true")
     args = parser.parse_args()
 
     try:
+        check_release(args.release_sha256)
+        if args.version:
+            print(VERIFIER_VERSION)
+            return 0
+        if args.spec is None:
+            raise SpecError("task spec is required")
         repo = Path(git(args.repo.resolve(), "rev-parse", "--show-toplevel"))
         args._resolved_candidate = git(repo, "rev-parse", "HEAD")
         resolved_base = git(repo, "rev-parse", f"{args.base}^{{commit}}")
@@ -614,7 +656,7 @@ def main() -> int:
             + ", ".join(mutable_test_changes[:8])
         )
 
-    verdict = "contradicted" if contradicted else "unverifiable" if unverifiable else "supported"
+    verdict = "unverifiable" if unverifiable else "contradicted" if contradicted else "supported"
     if not files and verdict == "supported":
         warnings.append("no implementation files changed")
 
