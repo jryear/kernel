@@ -1,0 +1,35 @@
+spec_version = 2
+id = "integrate-1-v1"
+project = "kernel"
+goal = "Combined self-check and process cleanup satisfy both unchanged frozen evidence suites"
+bypass_policy = "fail"
+
+[scope]
+include = ["verify.py", "kernel_report.py", "kernel_runtime.py", "kernel_process.py", "MANIFEST.sha256", "README.md", "FRONTIER.md", "CHECKPOINT-tranche-1.md"]
+protected = ["tests/*", "tasks/*"]
+
+[[checks]]
+name = "release integrity refusal"
+kind = "acceptance"
+timeout = 120
+argv = ["python3", "tests/self_check.py"]
+entry = "tests/self_check.py"
+chain = ["tests/self_check.py", "selftest.py"]
+evidence = ["tests/self_check.py", "selftest.py"]
+assertions = ["ALTERED_VERIFIER", "ALTERED_MANIFEST", "ALTERED_RUNTIME", "ALTERED_REPORT", "MISSING_DIGEST"]
+baseline_failures = ["ALTERED_VERIFIER", "ALTERED_MANIFEST", "ALTERED_RUNTIME", "ALTERED_REPORT", "MISSING_DIGEST"]
+
+[[checks]]
+name = "process cleanup evidence"
+kind = "acceptance"
+timeout = 120
+argv = ["python3", "tests/cleanup.py"]
+entry = "tests/cleanup.py"
+chain = ["tests/cleanup.py"]
+evidence = ["tests/cleanup.py"]
+assertions = ["GROUP_KILLED", "ESCAPE_UNVERIFIABLE", "TIMEOUT_UNVERIFIABLE", "KILL_FAILURE_UNVERIFIABLE", "MISSING_UNVERIFIABLE"]
+baseline_failures = ["GROUP_KILLED", "ESCAPE_UNVERIFIABLE", "TIMEOUT_UNVERIFIABLE", "KILL_FAILURE_UNVERIFIABLE"]
+
+[notes]
+assumptions = "Trusted external installed 3.1.0 judge, reviewed frozen evidence and external Python/Git/ps. Caller-held package digest supplied outside the checked tree."
+out_of_scope = "Sandbox confinement, exhaustive hostile descendant detection, complete intent/attempt logging, production/release approval. The unchanged six self-tests run separately through desk acceptance because selftest.py emits no schema2 receipt. All nine intended RED IDs are the original five self-check failures and four cleanup failures; missing-receipt classification already passes on base."
