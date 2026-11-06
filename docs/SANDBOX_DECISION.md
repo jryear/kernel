@@ -452,3 +452,325 @@ acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "-B"
 # Acceptance commands supplement, never replace, the external 3.1.0 frozen-contract receipts.
 # Release/bundle authentication uses caller-held trusted digests; regenerate manifest from final contents before final proof.
 ```
+
+## Amendment 2026-11-06: exact loopback ports via pinned srt patch
+
+Authority: Zack, 2026-11-06, **"patch srt"**. Decision: retain embedded srt
+0.0.81 under the trusted Node supervisor, with a reviewed, versioned distribution
+patch for exact TCP ports. Patch the installed **dist JS during bundle assembly**;
+do not rewrite generated profiles in the supervisor. This amendment authorizes
+that design, not an implementation, provisioned bundle, qualification or release.
+Earlier sections remain as historical decisions. Where they conflict, this
+amendment supersedes their loopback-only binding claim and unmodified-backend
+restriction. Plan v6 at `origin/next`
+`bf9ed3d66a7dd74a08d103269e412da76bb3a073` is the current plan, including its
+separate off-machine egress gate; the earlier plan-v3/v4 references are historical.
+
+### Evidence and scope of the decision
+
+Read the "Sandbox v2 implementation" checkpoint at
+`origin/kernel/sandbox-v2`, `39a419c97b1271ab1ba08b9dfab948e7665456da`
+(partial implementation source `8ac441052002709f25d17504ced5fbc979cf9a85`).
+Both remote heads above were checked on this date. The checkpoint correctly
+stopped: the unmodified backend probe's `allowLocalBinding=false` denied declared
+and undeclared direct TCP and wildcard bind; `true` allowed all three. Its
+`allowedDomains` setting did not restrict direct sockets.
+
+The local evidence is under `~/.local/state/kernel/`:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `sandbox-v2-backend-policy-probe.json` | `5002c74962a202e38170eed7195b9162827efadab36cfe0732e01fa1a39238db` |
+| `sandbox-v2-backend-policy-probe.mjs` | `25b8bf6d571ef1030f2dcd9f60fc061b405740f4388ca8ed7c4de052298cca84` |
+| `sandbox-v2-backend-policy-probe.txt` | `db428c8022c43b82d548330c43a10ec39b04ff0e667e8efbc0c08a5f592c3ded` |
+| `dev-bundle/node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/macos-sandbox-utils.js` | `7f297d6acb08a44adc9198876a38ce49ffa59e3a7aa09692933b3e008b446a32` |
+
+In that source, lines 951–954 emit wildcard bind/inbound and all-port localhost
+outbound; lines 982–992 demonstrate exact-port profile generation for proxies.
+The comment beginning at line 931 explains the mapped-address compatibility
+problem and why a local-address filter must not authorize outbound connections.
+These are source facts, not proof of identical behavior on every OS build.
+
+### Patch specification and smaller trusted surface
+
+Name the first patch revision `kernel-srt-0.0.81-exact-tcp-v1`. Add a private,
+validated `kernelLocalhostPorts` array to the embedded configuration path and
+thread it to the existing macOS profile generator. Only the trusted supervisor
+constructs that input from the validated contract's `localhost_ports`: unique
+integers 1..65535, sorted, default empty. No candidate-supplied srt flags, profile
+text, environment variables or imports may provide it. Reject the legacy
+`allowLocalBinding=true` path in the kernel bundle; it must never coexist with,
+override or serve as fallback for the finite-port path. Always require network
+restriction, including for an empty list. Other platforms remain unqualified.
+
+For **each declared port P**, emit exactly these three grants, substituting only
+the validated decimal integer for `P`:
+
+```scheme
+(allow network-bind (local tcp "*:P"))
+(allow network-inbound (local tcp "*:P"))
+(allow network-outbound (remote tcp "localhost:P"))
+```
+
+Use **`tcp`, not `ip`**, in all three rules. The latter also grants UDP at that
+port, demonstrated below, and would violate `UDP_DENIED_WITH_DECLARED_TCP_PORT`.
+Keep srt's default-deny profile. There is no `*:*`, `localhost:*`, outbound
+`remote tcp "*:P"`, or outbound rule using a **local** address predicate.
+An empty declaration emits none of these three grants.
+
+The wildcard host on bind/inbound admits native IPv4, IPv6 and IPv4-mapped
+bindings at the declared port, without depending on `localhost` matching the
+mapped local address. Outbound retains the remote `localhost:P` predicate.
+Native AF_INET `127.0.0.1` and AF_INET6 `::1` must work. On this host, AF_INET6
+`::ffff:127.0.0.1` also worked with this outbound predicate; the source comment
+warns that it may not on other systems. Do not broaden outbound to `*` to repair
+a mapped-address failure. Qualification must record that result for the exact
+OS/runtime: applications may use native AF_INET for IPv4, while a contract
+requiring a mapped connection on a host that cannot enforce it is unavailable
+and must be refused before launch. No universal mapped-outbound claim is made.
+
+Runtime proxies are separate trusted IPC, never fake declarations. Let `R` be
+the distinct actual HTTP/SOCKS listener ports owned by this check's trusted
+supervisor. For each `R`, the candidate needs only:
+
+```scheme
+(allow network-outbound (remote tcp "localhost:R"))
+```
+
+As part of the same patch, replace srt's proxy `ip` grants with this TCP-only
+outbound grant; remove candidate bind/inbound grants for those proxy ports.
+The proxy listeners run outside the candidate sandbox. Allocate proxy ports
+disjoint from the declared ports, verify ownership/readiness, and hold them
+through candidate cleanup. Record them separately. No other candidate IP
+network grants or Unix-socket escape is permitted; any required non-IP IPC must
+be explicitly enumerated and reviewed, including the existing fixed AF_SYSTEM
+protocol-2 allowance. The authenticated supervisor's HTTP/CONNECT/SOCKS policy
+must allow only declared canonical loopback destination/port pairs, validate
+resolved addresses, and deny undeclared destinations, alternate addresses,
+arbitrary DNS forwarding and UDP. Merely checking an HTTP hostname string is
+insufficient. A proxy path that cannot enforce this is unavailable, not a reason
+to enlarge the Seatbelt grants. Full direct and proxy qualification remains due.
+
+A bounded dist patch keeps emission in srt's existing generator. Its review
+covers the configuration validation/plumbing, three per-port rules, proxy rules,
+and removal/refusal of broad paths. Runtime profile post-processing would add a
+second policy-changing stage, replacement-order assumptions and another possible
+bypass after generation. Choose the smaller **policy-changing** trusted surface:
+build-time patch plus a read-only runtime validator. The supervisor validates
+and either launches the exact generated bytes or refuses; it does not repair them.
+
+### Application, pinning and authentication
+
+Apply the reviewed patch once to a clean installation of exactly srt 0.0.81 and
+the frozen transitive lock during operator-controlled bundle assembly. Retain the
+upstream lock (SHA-256
+`53908b1e23845bd0d452463f81a3df0f9b92bce76aa8c69c8f75c51a22600ec9`),
+upstream package integrity, patch revision and patch bytes. Require authenticated
+preimage hashes for **every** changed file, exact hunk matches with no fuzz or
+offset, and reviewed postimage hashes. Refuse wrong version, changed preimage,
+partial/already-applied patch, unexpected changed files or wrong postimage.
+Do not mutate the existing scratch dev-bundle or a live installed bundle in place.
+Publish a newly assembled immutable bundle outside candidate authority.
+
+The complete bundle digest covers patched distribution bytes, patch file,
+pre/postimage manifest, lock, supervisor/validator and qualified runtime under
+the existing bundle rules. The caller-held operator receipt must additionally
+name `srt_version=0.0.81`, `patch_id=kernel-srt-0.0.81-exact-tcp-v1`, the patch
+file's **own `patch_sha256`**, pre/postimage identities, and bundle digest.
+Authenticate the release binding and receipt from the external trusted expected
+digest before importing or launching any bundle code; recomputing a hash from
+untrusted local bytes does not authenticate it. Bind patch and bundle identities
+into each check receipt. No fetch, npm install, patch application or profile
+repair occurs during verification. No patch file or patch SHA-256 is manufactured
+in this decision-only run; those concrete bytes and hashes are required outputs
+of the later implementation review before any patched bundle can be accepted.
+
+### Exact-profile check and failure classification
+
+Before every candidate launch, independently derive the expected rule set from
+the authenticated policy and actual trusted proxy identities: three rules per
+sorted declared port, one outbound rule per distinct proxy port, and only the
+fixed reviewed non-IP socket rules. Inspect the **complete** generated profile,
+not just a marker-delimited network section or substring count. The restricted
+validator must recognize all rule expressions affecting networking and default
+policy, reject unknown syntax, includes/macros or broad operation wildcards,
+and compare rule structure, predicates, ports and multiplicity exactly. It must
+verify default deny and absence of any other grant that can reopen networking.
+Approved non-network rules remain bound to the pinned generator/template; an
+unrecognized profile fails rather than being treated as harmless text.
+
+Reject missing, additional, duplicate, malformed or broadened network rules;
+`ip` instead of `tcp`; a wildcard port; a local outbound predicate; unaccounted
+proxy/Unix-socket authority; unexpected defaults; or a failed/unavailable profile
+inspection. Do not merely verify that the expected clauses are present.
+Retain the inspected bytes and their SHA-256 outside candidate write authority,
+launch those same bytes without a writable-file or regeneration race, and record
+the effective rules plus validator version/result in the parent receipt.
+
+- Invalid contract or failed release/bundle/patch authentication: **exit 3,
+  no verdict**, before loading untrusted code or launching the candidate.
+- Authenticated backend generates an unexpected profile, cannot validate it,
+  fails required preflight, or cannot enforce a valid policy: **unverifiable,
+  exit 2, `lifecycle.launched=false`**. Preserve the precise mismatch and profile
+  identity. An unavailable baseline is BASELINE_NOT_READY, not RED.
+- Neither class permits a broad-switch retry, profile rewrite, alternate backend
+  or unsandboxed execution. Existing verdict precedence remains unchanged.
+
+### Limits required in README and operator/check receipts
+
+The implementation must publish these limits in README and both receipt types,
+with machine-readable effective rules and explicit exception/assurance fields:
+
+1. **Declared-port binding is address-wildcard TCP binding.** A candidate can
+   bind `0.0.0.0`, `::` or an available non-loopback/alternate local address at a
+   declared port. A listener there may accept non-loopback inbound connections
+   and exchange data on accepted connections. The rules do not distinguish the
+   remote peer, ownership or purpose of that listener. This is a real inbound
+   exposure and possible communication route; restricted outbound `connect()`
+   is not a claim of complete network isolation. Empty declarations confer no
+   such bind/inbound authority. Other ports remain denied.
+2. Seatbelt's `localhost` predicate is an OS address class, not a literal-address
+   spelling check. On this host, `0.0.0.0:P` connected to the local service, and
+   mapped IPv4 worked. The raw-socket policy cannot claim to distinguish every
+   spelling/alias of the same endpoint. Record the tested native/mapped behavior
+   and alias limitation. The proxy still validates canonical destinations.
+3. Exact ports do not identify services or processes and do not authenticate a
+   server. Any reachable service on an allowed port can receive candidate TCP;
+   such a service may itself relay traffic. Isolated fixtures/caller-reviewed
+   services remain required. OS permissions, port occupancy and races can make
+   an allowed operation unavailable; allowance does not guarantee availability.
+4. TCP-only per-port authority, denied undeclared direct connections, and bounded
+   proxy routing are the claims to qualify. No UDP grant, all-port localhost
+   access, universal mapped-address compatibility, external-egress qualification,
+   complete denial log, invisible-attempt detection or hostile-host containment
+   follows from this amendment. Existing integrity/log/cleanup limits remain.
+
+Accordingly, the earlier paragraphs saying "loopback binding only", "No wildcard
+binding", and all non-loopback binds are forbidden are superseded **at declared
+ports only**. Do not continue printing those claims in receipts or README.
+
+### Frozen matrix: operations stand; receipt semantics require a new version
+
+The reviewer's reading is correct about **operation outcomes**: none of the 16
+network rows requires a different allowed/denied result. Native IPv4/IPv6 declared
+connect and bind succeed; wrong port, empty-policy alternate loopback,
+empty-policy non-loopback bind, UDP with or without a declaration, and undeclared
+proxy traffic remain denied. No frozen case requires denial of non-loopback bind
+**at a declared port**, or requires mapped outbound success on every OS.
+
+However, the reading that **no frozen evidence specification changes** is too
+strong. At `39a419c`, `tests/sandbox_fixtures/harness.py:582–588` describes
+`localhost_endpoints` as effective authority and asserts exact equality to only
+`127.0.0.1`/`::1` TCP tuples, with a comment forbidding wildcard/alternate binding
+authority. The matrix repeats "policy contains only declared exact loopback
+tuples", and its README lines 110–114 reinforces that ceiling. Reporting only
+those tuples while actually granting `*:P` would pass the equality check by
+omission. Calling the field a declaration after the fact silently changes the
+frozen evidence meaning. Do not do that.
+
+Specify the following **sandbox-v3** refreeze, not an in-place edit to sandbox-v2:
+
+- Preserve sandbox-v2 and its immutable base/evidence. Create a new contract ID
+  `sandbox-v3` with an explicitly recorded immutable base and new fixture hashes.
+  Retain all case IDs, groups, operations, expected verdicts, logging variants,
+  effect controls, protections and timeouts. The refreezer must obtain fresh
+  genuine baseline RED; this decision does not supply one or change `.desk`.
+- Version the parent sandbox receipt from `schema=1` to **`schema=2`**. Define
+  `policy.localhost_endpoints` explicitly as canonical **declared application
+  destinations**, still exactly the two native loopback TCP tuples per declared
+  integer. It is no longer an exhaustive effective-authority field.
+- Add required `policy.network_semantics="srt-0.0.81-exact-tcp-v1"`,
+  `policy.effective_network_rules`, `policy.profile_sha256`, and
+  `policy.profile_validation` (validator identity and exact-match result).
+  `effective_network_rules` enumerates operation, local/remote selector,
+  transport, host token and port for every IP grant. Trusted proxy ports/rules
+  remain separately identified in `internal_ipc`, and the exact rule comparison
+  includes them. Require patch identity/digest in `bundle`.
+- Replace the shared network receipt predicate for all 16 rows with **both**
+  checks: canonical declared tuples equal the contract, and effective grants
+  equal precisely the triples/proxy grants specified above. Require explicit
+  `policy.exceptions` entries for address-wildcard declared-port bind/inbound,
+  localhost alias matching and qualified mapped behavior; include false
+  `assurance.loopback_only_binding` and false `assurance.literal_address_only`.
+  For an empty declaration, require an empty application bind/inbound set.
+- Replace "policy contains only declared exact loopback tuples" in the network
+  evidence specification with "declared destinations are exact canonical TCP
+  tuples; effective bind/inbound/outbound and internal-proxy grants match the
+  versioned profile specification, with residual limits explicitly receipted".
+  Keep successful bind observations at the requested native loopback address.
+  Update the fixture README's receipt semantics accordingly; no denial assertion
+  or operation control is weakened, removed or reclassified.
+
+This is an evidence-interface correction, not an unsatisfiable behavioral case
+or permission to claim sandbox-v2 GREEN against altered fixtures. New profile
+validation and patch-authentication rejection paths also need reviewed fault
+coverage before the new version is frozen. All other sandbox cases remain due.
+
+### Throwaway Seatbelt evidence, not patched-srt acceptance
+
+Ran local probes only under `~/.local/state/kernel/astra-probe/`, using
+`/usr/bin/sandbox-exec`, Python 3.15.0 on macOS 27.0 build 26A5421a, arm64.
+No repository implementation or installed bundle was changed. Synthetic TCP
+listeners were bound only to loopback; wildcard-bind probes immediately closed
+without listening. No off-machine endpoint or network configuration was used.
+
+`exact_ports.py` tested a network-denying profile with other operations allowed;
+`exact_ports_deny_default.py` repeated it with default deny and explicit process,
+read, sysctl, Mach-lookup and signal permissions. Both produced the same socket
+outcomes. `inbound.py` separately used default-deny profiles, sandboxed native
+and mapped loopback listeners and an unsandboxed client; each accepted and echoed
+five synthetic bytes. These are deliberately small network experiments, not a
+standalone product backend or full filesystem/proxy/runtime qualification.
+
+| Operation | Unsandboxed control | Exact TCP profile |
+| --- | --- | --- |
+| Declared TCP connect to `127.0.0.1`, `::1`, `::ffff:127.0.0.1` | Each reached listener and echoed nonce | Each succeeded; listener journal retained |
+| Other-port TCP connect, same three forms | Each succeeded | Each EPERM |
+| Declared TCP bind, same three forms | Each succeeded | Each succeeded |
+| Other-port TCP bind, same three forms | Each succeeded | Each EPERM |
+| UDP sendto at declared TCP port, same three forms | Each syscall succeeded | Each EPERM; `ip` comparison profile allowed each sendto |
+| `0.0.0.0` and `::` bind at declared port | Each succeeded | Each succeeded; no listen |
+| Same wildcard binds at other port | Each succeeded | Each EPERM |
+| No declared ports | Controls above reachable | All tested connects/binds/UDP returned EPERM |
+| `0.0.0.0` connect at declared port | Reached local listener | Reached local listener; alias limit confirmed |
+| `127.0.0.2` connect/bind | Connect timed out; bind EADDRNOTAVAIL | Connect EPERM; declared bind EADDRNOTAVAIL; other bind EPERM |
+| Sandboxed inbound listener, native v4/v6 and mapped v4 | Parent connected to each | Each accepted and echoed; exit 0 |
+
+The alternate-loopback positive control was unavailable on this host, so **no
+alternate-loopback qualification is claimed** from that row. The full frozen
+case requires a reachable separate listener and remains due. UDP controls here
+establish syscall allowance only, not receiver-observed delivery; the full
+matrix still requires its receiver evidence. A comparison profile using
+`localhost` for bind/inbound also admitted mapped binds on this OS, unlike the
+upstream comment's compatibility warning. Retain the warning and explicit
+wildcard-bind semantics rather than generalizing one OS result to all platforms.
+
+Reproduce each script with `PYTHONDONTWRITEBYTECODE=1 python3 -B` and its absolute
+path. JSON includes generated profile bytes, selected ports, per-operation
+results and listener evidence; adjacent `.txt` files retain console output.
+
+| Probe artifact under `~/.local/state/kernel/astra-probe/` | SHA-256 |
+| --- | --- |
+| `exact_ports.py` | `b66f2dbf3b65ab44586687cf562c1082c90ef9715d8763b7e63bc3150f5893cd` |
+| `exact_ports.json` | `a7e07cfb7805706a3fe9307b3b7fb5b4e59fcaeb63d40d9c93e2fe65e1bf2d15` |
+| `exact_ports_deny_default.py` | `9dd64200ec80a90290f5bff4d44123e7483590f3539903d815bb55368297f3d0` |
+| `exact_ports_deny_default.json` | `bcdbda89c0be6e613512f20ce316ff12c591a7df2d9c1e6f277a40c87ba19025` |
+| `inbound.py` | `c509418399f52014e1f6264d1d66faa25fab2750ccd60814942825b0f8b36b69` |
+| `inbound.json` | `898e61c2d1a0c14d28028ae2b3cc72d58cd5fe8baf8377ac398771fc933993e2` |
+
+### Upgrade and stop boundary
+
+Any srt, patch, supervisor/validator, transitive dependency, Node or supported
+OS change requires renewed review of the exact emission path and patch, fresh
+bundle/receipt hashes, these address/protocol probes, and the **full applicable
+frozen matrix with logging enabled and disabled** on the exact combined package.
+Do not automatically carry a patch forward or accept an upstream option with
+similar naming. Prefer upstreaming a finite TCP-port option with explicit
+bind/inbound limits; replacing the patch with that option still requires review
+and full qualification. Off-machine egress stays under plan v6's separate
+endpoint authorization and release/default-on gate.
+
+Only this dated amendment is delivered here. No agents, implementation, fixture
+edits, patch file, provisioning, installed-judge invocation or acceptance claim.
+Commit/push only `kernel/sandbox-decision-2`, mark that workspace in-review, and
+stop for review before implementation begins.
