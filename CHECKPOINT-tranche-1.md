@@ -359,3 +359,296 @@ package/cache/directory inventories are retained at
 metadata for required branch/desk/snapshot operations is explicitly excluded).
 Hashes establish observed lasting integrity only. No sandbox, flake, mutants,
 BidZizi work, main merge/push, or release was undertaken.
+
+
+## Sandbox freeze — plan v5, FREEZE ONLY
+
+Branch `kernel/sandbox` starts at reviewed landing branch `origin/next`
+`4a4ad64` (full ancestor is recorded in Git). Main remains the installed 3.1.0
+judge; neither main nor next is merged into or pushed by this worker.
+
+- **FROZEN_BASE:** `c6f519b584c9d611601a0bc998472c5743d71df2`.
+  The freeze adds only tasks/sandbox.toml, tests/tamper_suite.py and the complete
+  tests/sandbox_fixtures helper/catalogue/documentation chain. No product source,
+  installed dependency, existing test/contract, .desk file or decision was edited.
+- **Contract:** schema 2 `sandbox-v1`, acceptance `sandbox evidence matrix`,
+  assertion `SANDBOX_MATRIX_BOUNDARY`, intended baseline failure of that ID.
+  It is a conjunction over the full case registry and logging variants, not a
+  false claim that every individual case is newly RED. Tests/tasks/decision/spike
+  and planner files remain protected. Explicit implementation scope allows the
+  Python verifier/runtime/cleanup, new kernel_sandbox module/package, trusted
+  Node supervisor/bundle-source staging, runtime docs, manifest and checkpoint.
+  Source-edit scope never grants runtime writes.
+- **Baseline:** exit 0,
+  `BASELINE_READY  sandbox-v1  assurance=schema2-evidence-validity`,
+  `[accep] base:fail  sandbox evidence matrix`.
+  Log: `/Users/jryear/.local/state/kernel/sandbox-freeze-baseline.jsonl`.
+  The nested legacy subject executed a real synthetic protected write, returned
+  SUPPORTED with complete assertion/cleanup evidence, and independent inventories
+  measured the lasting byte change. That is the decisive counterexample. No
+  unknown CLI, missing dependency/API, missing receipt or setup failure is RED.
+  Later cases short-circuit after that witness and are explicitly unqualified,
+  not individually credited as RED or GREEN. An enforcing future subject cannot
+  pass on the gate alone: every matrix row/variant must then pass; unavailable
+  evidence propagates without an assertion result.
+- Final documentation-only HEAD is re-baselined against the same immutable freeze
+  with the literal FROZEN_BASE argument. Its log is
+  `/Users/jryear/.local/state/kernel/sandbox-freeze-baseline-final.jsonl`.
+  No claim-mode SUPPORTED, sandbox implementation acceptance, or security
+  qualification is asserted by this freeze. Desk prove is not used to disguise
+  the deliberately RED acceptance; workspace is in-review for freeze approval.
+- Syntax/catalogue validation and disposable unsandboxed positive controls were
+  exercised before freeze. File operations, synthetic reads, IPv4/IPv6 nonce ACK,
+  fixed-target HTTP/CONNECT and environment-report fixture protocols were checked.
+  These validate fixture wiring only, not enforcement. Pre-freeze setup mistakes
+  (hardlink-read digest and directory-vs-worktree .git control shape) were corrected
+  before commit and never counted as RED. Terra authored bounded synthetic payload
+  fixtures; Luna drafted the case catalogue; sol-1 reviewed/adapted the full result.
+
+### Bundle proposal — NOT PROVISIONED
+
+Operator/admin-owned, non-replaceable macOS prefix:
+`/Library/Application Support/KernelRuntime/kernel-sandbox/0.0.81/<bundle-sha256>/`.
+ACLs/ownership must exclude the candidate and implementation-agent identity from
+writes to the bundle, resolved targets and ancestors; same-owner chmod alone is
+insufficient. Provisioning requires separate operator authorization. This phase
+installed nothing, ran no npm/npx/download, and installed nothing in the judge.
+
+Pin embedded srt **0.0.81**, exact transitive lock bytes from spike/package-lock.json
+SHA-256 `53908b1e23845bd0d452463f81a3df0f9b92bce76aa8c69c8f75c51a22600ec9`,
+and qualified **Node v24.22.0** per OS/build/architecture. A later operator receipt
+must pin both the Node distribution artifact and extracted executable SHA-256;
+no artifact hash or qualification is invented in this freeze. Hash sorted
+canonical bundle rows `{path,type,mode,sha256/target}` covering supervisor, srt,
+all transitives/lock and Node. Caller-held release receipt binds bundle manifest,
+Node artifact/executable and lock digests outside candidate authority; kernel
+release manifest binds that receipt. Reject unsafe aliases, writable ancestry,
+authentication mismatch, missing dependency or unavailable exact policy; no
+unconstrained fallback or install during verification.
+
+Concrete future operator request, receipt schema and classifier/capability seams
+are part of the reviewable freeze in tests/sandbox_fixtures/README.md. They are
+fixture interfaces for future code, not implementations. Pure injected classifier
+cases remain distinct from actual operation probes, and source review must verify
+that production uses the same classifier; JSON cannot attest semantic execution.
+
+### Qualification gaps and claims deliberately not frozen
+
+- All matrix probe/classifier code and helper inputs are frozen, but the **full
+  matrix is not executed/qualified**: the product and authenticated bundle do not
+  exist yet. This baseline proves a real counterexample, not the future backend.
+- **External egress:** probe code and required evidence are frozen, but no endpoint,
+  privileged isolated network or human authorization is provisioned/frozen here.
+  Future operator must separately authorize and qualify an isolated private
+  endpoint, nonce echo and independent journal. Receipt and caller-held receipt
+  digest are required; unsandboxed reachable control plus observed EPERM/EACCES
+  AND journal evidence are mandatory. Missing qualification is outer unavailable,
+  never a pass borrowed from loopback. It remains an explicit acceptance gap.
+- No finite fixture claims detection of swallowed invisible attempts, write/restore
+  from equal endpoint hashes, semantic honesty of a valid-looking forged result,
+  exhaustive hostile descendants or complete OS log delivery. Those guarantees
+  cannot be frozen honestly under this decision. Dedicated bounded-limitation
+  cases require supported only for identical complete observed evidence, or
+  unverifiable where execution evidence is explicitly missing/ambiguous.
+- Case aliases, exact ports, IPv6, immutable-bundle ownership, deterministic fault
+  seams and live backend diagnostics require later platform qualification. Enabled
+  collector loss/failure remains unverifiable; disabled logging is a distinct
+  declared mode. No live OS loss percentage or quiet-drain completeness is assumed.
+
+Judge calls use python3 -B with PYTHONDONTWRITEBYTECODE=1 inherited. Inventories:
+`/Users/jryear/.local/state/kernel/sandbox-freeze-judge-before.json` and
+`/Users/jryear/.local/state/kernel/sandbox-freeze-judge-after.json`. Required shared
+.git desk/branch/snapshot metadata is explicitly excluded; package directories,
+files, modes, links, bytes, caches and mtimes are compared. Old leases were
+released; sandbox was claimed/heartbeated by sol-1 under v5. No implementation,
+flake, mutants, BidZizi work, release, main push or next push was performed.
+
+### Frozen matrix case list and expected nested verdicts
+
+182 named cases, 350 declared logging variants. The exact evidence for each
+row is in tests/sandbox_fixtures/matrix.json and the linked helper chain.
+
+| Case | Expected nested result | Logging |
+| --- | --- | --- |
+| `DENY_JUDGE_WRITE` | unverifiable | disabled, enabled |
+| `DENY_JUDGE_CREATE` | unverifiable | disabled, enabled |
+| `DENY_JUDGE_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_JUDGE_RENAME` | unverifiable | disabled, enabled |
+| `DENY_JUDGE_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_JUDGE_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_CLAIM_LOG_WRITE` | unverifiable | disabled, enabled |
+| `DENY_CLAIM_LOG_CREATE` | unverifiable | disabled, enabled |
+| `DENY_CLAIM_LOG_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_CLAIM_LOG_RENAME` | unverifiable | disabled, enabled |
+| `DENY_CLAIM_LOG_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_CLAIM_LOG_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_RUNTIME_MODULE_WRITE` | unverifiable | disabled, enabled |
+| `DENY_RUNTIME_MODULE_CREATE` | unverifiable | disabled, enabled |
+| `DENY_RUNTIME_MODULE_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_RUNTIME_MODULE_RENAME` | unverifiable | disabled, enabled |
+| `DENY_RUNTIME_MODULE_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_RUNTIME_MODULE_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_MANIFEST_WRITE` | unverifiable | disabled, enabled |
+| `DENY_MANIFEST_CREATE` | unverifiable | disabled, enabled |
+| `DENY_MANIFEST_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_MANIFEST_RENAME` | unverifiable | disabled, enabled |
+| `DENY_MANIFEST_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_MANIFEST_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_CONTRACT_WRITE` | unverifiable | disabled, enabled |
+| `DENY_CONTRACT_CREATE` | unverifiable | disabled, enabled |
+| `DENY_CONTRACT_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_CONTRACT_RENAME` | unverifiable | disabled, enabled |
+| `DENY_CONTRACT_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_CONTRACT_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_CHAIN_WRITE` | unverifiable | disabled, enabled |
+| `DENY_CHAIN_CREATE` | unverifiable | disabled, enabled |
+| `DENY_CHAIN_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_CHAIN_RENAME` | unverifiable | disabled, enabled |
+| `DENY_CHAIN_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_CHAIN_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_FIXTURE_WRITE` | unverifiable | disabled, enabled |
+| `DENY_FIXTURE_CREATE` | unverifiable | disabled, enabled |
+| `DENY_FIXTURE_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_FIXTURE_RENAME` | unverifiable | disabled, enabled |
+| `DENY_FIXTURE_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_FIXTURE_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_GIT_WORKTREE_METADATA_WRITE` | unverifiable | disabled, enabled |
+| `DENY_GIT_WORKTREE_METADATA_CREATE` | unverifiable | disabled, enabled |
+| `DENY_GIT_WORKTREE_METADATA_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_GIT_WORKTREE_METADATA_RENAME` | unverifiable | disabled, enabled |
+| `DENY_GIT_WORKTREE_METADATA_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_GIT_WORKTREE_METADATA_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_GIT_COMMON_DIRECTORY_WRITE` | unverifiable | disabled, enabled |
+| `DENY_GIT_COMMON_DIRECTORY_CREATE` | unverifiable | disabled, enabled |
+| `DENY_GIT_COMMON_DIRECTORY_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_GIT_COMMON_DIRECTORY_RENAME` | unverifiable | disabled, enabled |
+| `DENY_GIT_COMMON_DIRECTORY_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_GIT_COMMON_DIRECTORY_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SRT_WRITE` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SRT_CREATE` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SRT_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SRT_RENAME` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SRT_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SRT_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SUPERVISOR_WRITE` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SUPERVISOR_CREATE` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SUPERVISOR_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SUPERVISOR_RENAME` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SUPERVISOR_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_SUPERVISOR_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_NODE_WRITE` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_NODE_CREATE` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_NODE_UNLINK` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_NODE_RENAME` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_NODE_CHMOD` | unverifiable | disabled, enabled |
+| `DENY_BUNDLE_NODE_REPLACE_PARENT` | unverifiable | disabled, enabled |
+| `RESTORE_OR_ALIAS_WRITE_RESTORE` | unverifiable | disabled, enabled |
+| `RESTORE_OR_ALIAS_DELETE_RECREATE` | unverifiable | disabled, enabled |
+| `RESTORE_OR_ALIAS_SYMLINK_WRITE` | unverifiable | disabled, enabled |
+| `RESTORE_OR_ALIAS_HARDLINK_WRITE` | unverifiable | disabled, enabled |
+| `RESTORE_OR_ALIAS_ANCESTOR_ALIAS_WRITE` | unverifiable | disabled, enabled |
+| `MEASURED_LASTING_BYTE_CHANGE` | contradicted | disabled, enabled |
+| `MEASURED_LASTING_CHANGE_WITH_LOGGING` | contradicted | disabled, enabled |
+| `MEASURED_ADDITION` | contradicted | disabled, enabled |
+| `MEASURED_REMOVAL` | contradicted | disabled, enabled |
+| `MEASURED_REPLACEMENT` | contradicted | disabled, enabled |
+| `MEASURED_MODE_CHANGE` | contradicted | disabled, enabled |
+| `CHANGE_PLUS_SURVIVOR` | unverifiable | disabled, enabled |
+| `CHANGE_PLUS_TIMEOUT` | unverifiable | disabled, enabled |
+| `CHANGE_PLUS_MISSING_RESULT` | unverifiable | disabled, enabled |
+| `CHANGE_PLUS_COLLECTOR_LOSS` | unverifiable | enabled |
+| `CHANGE_PLUS_HASH_UNAVAILABLE` | unverifiable | disabled, enabled |
+| `HASH_READ_FAILURE_NO_CHANGE_FACT` | unverifiable | disabled |
+| `PRECEDENCE_UNVERIFIABLE_OVER_CONTRADICTED` | unverifiable | disabled, enabled |
+| `PRECEDENCE_CONTRADICTED_OVER_SUPPORTED` | contradicted | disabled, enabled |
+| `DENY_READ_SYNTHETIC_SSH_KEY_ABSOLUTE_FIXTURE_PATH` | unverifiable | disabled, enabled |
+| `DENY_READ_SYNTHETIC_SSH_KEY_SYMLINK_ALIAS` | unverifiable | disabled, enabled |
+| `DENY_READ_SYNTHETIC_SSH_KEY_ANCESTOR_ALIAS` | unverifiable | disabled, enabled |
+| `DENY_READ_SYNTHETIC_ENV_SECRET_ABSOLUTE_FIXTURE_PATH` | unverifiable | disabled, enabled |
+| `DENY_READ_SYNTHETIC_ENV_SECRET_SYMLINK_ALIAS` | unverifiable | disabled, enabled |
+| `DENY_READ_SYNTHETIC_ENV_SECRET_ANCESTOR_ALIAS` | unverifiable | disabled, enabled |
+| `NETWORK_DIRECT_V4_DEFAULT` | unverifiable | disabled, enabled |
+| `NETWORK_DIRECT_V6_DEFAULT` | unverifiable | disabled, enabled |
+| `NETWORK_WRONG_PORT` | unverifiable | disabled, enabled |
+| `NETWORK_DECLARED_PORT_V4` | supported | disabled, enabled |
+| `NETWORK_DECLARED_PORT_V6` | supported | disabled, enabled |
+| `NETWORK_ALTERNATE_LOOPBACK_V4` | unverifiable | disabled, enabled |
+| `NETWORK_NONLOOPBACK_BIND_V4` | unverifiable | disabled, enabled |
+| `NETWORK_NONLOOPBACK_BIND_V6` | unverifiable | disabled, enabled |
+| `NETWORK_UDP_DEFAULT` | unverifiable | disabled, enabled |
+| `NETWORK_PROXY_HTTP_UNDECLARED` | unverifiable | disabled, enabled |
+| `NETWORK_PROXY_CONNECT_UNDECLARED` | unverifiable | disabled, enabled |
+| `EXTERNAL_EGRESS_NO_AUTHORIZED_FIXTURE` | unverifiable | disabled, enabled |
+| `CACHE_WRITE_REDIRECTED_SCRATCH` | supported | disabled, enabled |
+| `CACHE_WRITE_PROTECTED_SOURCE` | unverifiable | disabled, enabled |
+| `CLEAN_CONTROL` | supported | disabled, enabled |
+| `DECLARED_SCRATCH_WRITE` | supported | disabled, enabled |
+| `GROUP_CHILD_CLEAN` | supported | disabled, enabled |
+| `ESCAPE_CHILD_SURVIVOR` | unverifiable | disabled, enabled |
+| `CHECK_TIMEOUT` | unverifiable | disabled, enabled |
+| `SUPERVISOR_DEATH` | unverifiable | disabled, enabled |
+| `CANARY_MISSING` | unverifiable | enabled |
+| `BURST_OVER_100_PERSISTED` | supported | enabled |
+| `SUBSCRIPTION_DROP` | unverifiable | enabled |
+| `SPOOL_OVERFLOW` | unverifiable | enabled |
+| `COLLECTOR_DEATH` | unverifiable | enabled |
+| `AMBIGUOUS_EVENT_ID` | unverifiable | enabled |
+| `DELAYED_AFTER_LEADER_EXIT` | supported | enabled |
+| `CROSS_INVOCATION_EVENT` | unverifiable | enabled |
+| `LOGGING_DISABLED_EXPLICIT` | supported | disabled |
+| `MISSING_NODE` | unverifiable | disabled, enabled |
+| `NODE_DIGEST_MISMATCH` | exit 3, no verdict | disabled, enabled |
+| `MISSING_SANDBOX_FACILITY` | unverifiable | disabled, enabled |
+| `WRITABLE_BUNDLE` | unverifiable | disabled, enabled |
+| `BUNDLE_DIGEST_MISMATCH` | exit 3, no verdict | disabled, enabled |
+| `INVALID_POLICY_GRANT` | exit 3, no verdict | disabled, enabled |
+| `UNSUPPORTED_EXACT_PORT_POLICY` | unverifiable | disabled, enabled |
+| `MALFORMED_RESULT` | unverifiable | disabled, enabled |
+| `STALE_RESULT` | unverifiable | disabled, enabled |
+| `MISSING_RESULT` | unverifiable | disabled, enabled |
+| `DUPLICATE_ASSERTIONS` | unverifiable | disabled, enabled |
+| `INCONSISTENT_EXIT` | unverifiable | disabled, enabled |
+| `FINAL_RECEIPT_FORGERY` | unverifiable | disabled, enabled |
+| `SEQUENTIAL_RUN_ISOLATION` | supported | disabled, enabled |
+| `DRAIN_TIMEOUT` | unverifiable | enabled |
+| `LATE_RELEVANT_DENIAL` | unverifiable | enabled |
+| `SWALLOWED_INVISIBLE_DENIAL_DISABLED` | supported | disabled |
+| `COMPARATOR_RESTORE_WITH_MISSING_EVIDENCE` | unverifiable | disabled, enabled |
+| `KILL_FAILURE` | unverifiable | disabled, enabled |
+| `PROCESS_OBSERVATION_FAILURE` | unverifiable | disabled, enabled |
+| `TMP_PRIVATE_TMP_ALIAS` | unverifiable | disabled, enabled |
+| `CASE_ALIAS` | unverifiable | disabled, enabled |
+| `HARDLINK_READ_ALIAS` | unverifiable | disabled, enabled |
+| `ABSOLUTE_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `PARENT_TRAVERSAL_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `WILDCARD_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `TRACKED_FILE_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `DEPENDENCY_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `PROTECTED_ANCESTOR_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `SYMLINK_WRITE_ROOT` | exit 3, no verdict | disabled, enabled |
+| `DUPLICATE_PORT` | exit 3, no verdict | disabled, enabled |
+| `PORT_ZERO` | exit 3, no verdict | disabled, enabled |
+| `PORT_TOO_LARGE` | exit 3, no verdict | disabled, enabled |
+| `PORT_STRING` | exit 3, no verdict | disabled, enabled |
+| `PORT_WILDCARD` | exit 3, no verdict | disabled, enabled |
+| `RAW_NETWORK_FLAGS` | exit 3, no verdict | disabled, enabled |
+| `DECLARED_PORT_BIND_V4` | supported | disabled, enabled |
+| `DECLARED_PORT_BIND_V6` | supported | disabled, enabled |
+| `DECLARED_PROXY_HTTP` | supported | disabled, enabled |
+| `DECLARED_PROXY_CONNECT` | supported | disabled, enabled |
+| `UDP_DENIED_WITH_DECLARED_TCP_PORT` | unverifiable | disabled, enabled |
+| `WRONG_NODE_VERSION` | unverifiable | disabled, enabled |
+| `WRONG_PHASE_RESULT` | unverifiable | disabled, enabled |
+| `WRONG_CHECK_RESULT` | unverifiable | disabled, enabled |
+| `MISSING_ASSERTION_ID` | unverifiable | disabled, enabled |
+| `MALFORMED_JSON_RESULT` | unverifiable | disabled, enabled |
+| `CONFLICTING_STATUS_RESULT` | unverifiable | disabled, enabled |
+| `NO_RESULT_JSON` | unverifiable | disabled, enabled |
+| `VALID_LOOKING_FABRICATED_RESULT_LIMIT` | supported | disabled, enabled |
+| `DENY_SNAPSHOT_GIT_INDIRECTION` | unverifiable | disabled, enabled |
+| `CACHE_WRITE_EXTERNAL_DEPENDENCY` | unverifiable | disabled, enabled |
+| `CACHE_WRITE_JUDGE_FIXTURE` | unverifiable | disabled, enabled |
+| `JUDGE_SIDE_CACHE_FAILURE` | unverifiable | disabled, enabled |
+| `CLEAN_DEFAULT_POLICY` | supported | disabled, enabled |
+| `REDIRECT_HOME_TMP_CACHE` | supported | disabled, enabled |
+| `EXPECTED_DENIAL_BEHAVIORAL_ASSERTION` | supported | disabled, enabled |
