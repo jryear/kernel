@@ -1,7 +1,7 @@
 {
   "patch_id": "kernel-srt-0.0.81-exact-tcp-v1",
   "srt_version": "0.0.81",
-  "patch_sha256": "361badaf1608a8eca139ce3a17fe69722d70e85c31078e90dca2fbb6dfb212ce",
+  "patch_sha256": "9116e04677a6a058947b7e24d2b71372d86dfd6c756f25f126f512a73ac7beb2",
   "preimages": [
     {
       "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/macos-sandbox-utils.js",
@@ -19,7 +19,7 @@
   "postimages": [
     {
       "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/macos-sandbox-utils.js",
-      "sha256": "2b4d539624dde6067982722c9fe234ff7ba15b04ddb86ce5141c69ef40de2e5a"
+      "sha256": "9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400"
     },
     {
       "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-config.js",

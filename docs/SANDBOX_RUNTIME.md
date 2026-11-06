@@ -7,6 +7,17 @@ lock, the assembly patch `kernel-srt-0.0.81-exact-tcp-v1`, the trusted superviso
 and the read-only profile validator. Checks do not download, install, patch, or
 resolve dependencies.
 
+The build-time patch also frames the embedded diagnostic collector's UTF-8
+stream across pipe chunks and processes each denial with its own command tag.
+It bounds partial lines at 65,536 characters and reports malformed, orphaned,
+oversized or truncated framing as ambiguous evidence. The supervisor persists
+subscription events through observed collector close and records arrivals after
+the drain deadline as unavailable evidence. These repairs do not establish
+complete OS delivery: an enabled invocation with a missing canary event, known
+loss, ambiguous attribution or incomplete shutdown remains unverifiable. Exact
+patch bytes and changed module postimages are authenticated in each new bundle;
+the TCP policy emission remains unchanged by the diagnostic framing repair.
+
 ## Development bundle
 
 Use an explicit trusted-caller opt-in (`KERNEL_SANDBOX_DEV=1`) only with the

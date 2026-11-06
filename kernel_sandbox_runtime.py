@@ -155,6 +155,11 @@ def run_check(root, check, phase, context):
         protected_paths += [bundle['root'], Path(operator['bundle_receipt']).resolve()]
     profile_hash = None; inspected = ''
     try:
+        # The declaration names usable output directory roots. Materialize only
+        # the already validated, ignored, disjoint roots before observing the
+        # protected inventory; this is trusted setup, not candidate authority.
+        for path in writes:
+            Path(path).mkdir(mode=0o700, parents=True, exist_ok=True)
         before = snapshot(protected_paths, excluded)
         if context.get('unavailable'): raise DependencyUnavailable(context['unavailable'])
         if not backend_supports_policy(declaration): raise DependencyUnavailable('backend cannot enforce the requested policy')

@@ -70,9 +70,14 @@ function unwrap(w){if(!Array.isArray(w.argv)||w.argv.length!==3||w.argv[1]!=='-c
 // observer sees only losses exposed in received chunks, not upstream omissions.
 let monitorProcess, monitorCount=0, stoppingMonitor=false, collectorFault=null;
 const monitor={pid:null,started:false,exit:null,closed:false,errors:[]};
-let dropped=0, drainTimedOut=false, finishing=false, attribution='original_invocation';
+let dropped=0, drainTimedOut=false, finishing=false, attribution='original_invocation', drainDeadline=null;
 let commandId, expectedEncodedCommand, lateEvent=null;
 const failCollector = message => {if (!collectorFault) collectorFault=message;};
+function afterDrainDeadline() {
+  if (drainDeadline!==null && performance.now()>=drainDeadline) {
+    drainTimedOut=true;failCollector('collector data arrived after drain deadline');
+  }
+}
 const originalSpawn=childProcess.spawn;
 childProcess.spawn=function(file,args,options) {
   const child=originalSpawn.apply(this,arguments);
@@ -85,8 +90,7 @@ childProcess.spawn=function(file,args,options) {
     child.on('close',()=>{monitor.closed=true;});
     child.stderr?.on('data',data=>{if(data.length){if(monitor.errors.length<16)monitor.errors.push(String(data).slice(0,2048));failCollector('sandbox log collector stderr');}});
     child.stdout?.on('data',data=>{
-      const matches=String(data).split('\n').filter(line=>line.includes('Sandbox:')&&line.includes('deny')).length;
-      if(matches>1){dropped+=matches-1;failCollector('sandbox log collector omitted events in a received chunk');}
+      if(data.length) afterDrainDeadline();
     });
   }
   return child;
@@ -95,11 +99,20 @@ syncBuiltinESMExports();
 let manager, unsubscribe, events=[], spoolFd, persisted=0, received=0, supervisorError=null;
 const spoolPath=cfg.spool_path || path.join(path.dirname(cfg.result_path),'diagnostic-events.jsonl');
 const spoolHash=createHash('sha256');
+const canaryPath=path.join(path.dirname(cfg.result_path),'canary-protected');
+function knownBenignDenial(event) {
+  const match=/^.*\(\d+\) deny\(\d+\) (\S+) (.+)$/.exec(String(event.line || ''));
+  if(!match)return false;
+  const [,operation,resource]=match;
+  return (operation==='sysctl-read' && resource==='kern.iossupportversion') ||
+    (operation==='system-info' && resource==='vfs.disk-space') ||
+    ((operation==='file-write-create' || operation==='file-write-data') && resource===canaryPath);
+}
 function saveEvent(event) {
+  afterDrainDeadline();
   if (events.length>=10000) {dropped++;failCollector('diagnostic spool capacity exceeded');return;}
   if (event.encodedCommand!==expectedEncodedCommand) attribution='ambiguous';
-  if (finishing && !String(event.line || '').includes('canary-protected') &&
-      !/sysctl-read|file-read-metadata/.test(String(event.line || ''))) lateEvent='relevant_denial';
+  if (finishing && !knownBenignDenial(event)) lateEvent='relevant_denial';
   const bytes=Buffer.from(JSON.stringify(event)+'\n');
   try {
     let offset=0;
@@ -108,6 +121,11 @@ function saveEvent(event) {
   } catch(error) {dropped++;failCollector('diagnostic spool write failed: '+String(error));}
 }
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function within(promise,ms) {
+  let timer;
+  try {return await Promise.race([promise.then(()=>true),new Promise(resolve=>{timer=setTimeout(()=>resolve(false),ms);})]);}
+  finally {clearTimeout(timer);}
+}
 try {
   spoolFd=fs.openSync(spoolPath,'wx',0o600);
   await listen(web); await listen(socks);
@@ -122,7 +140,7 @@ try {
   commandId=randomUUID(); expectedEncodedCommand=Buffer.from(commandId).toString('base64');
   const ref=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',{network:{kernelLocalhostPorts:[]}},undefined,cfg.cwd,{commandId}));
   const actual=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',undefined,undefined,cfg.cwd,{commandId}));
-  const prepared={profile:actual.profile,argv:actual.argv,env:cfg.env,command_index:actual.command_index,proxies,template_context:{reference_profile:ref.profile,localhost_ports:cfg.localhost_ports,proxies,generator_sha256:'2b4d539624dde6067982722c9fe234ff7ba15b04ddb86ce5141c69ef40de2e5a'}};
+  const prepared={profile:actual.profile,argv:actual.argv,env:cfg.env,command_index:actual.command_index,proxies,template_context:{reference_profile:ref.profile,localhost_ports:cfg.localhost_ports,proxies,generator_sha256:'9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400'}};
   fs.writeFileSync(cfg.prepared_path,JSON.stringify(prepared),{mode:0o600,flag:'wx'});
   if(cfg.diagnostics==='enabled' && (!monitor.started || monitorCount!==1 || monitor.exit)) failCollector('sandbox log collector unavailable');
   await once(process.stdin,'data');
@@ -133,23 +151,24 @@ finally {
   // and outgoing sockets before waiting for server close callbacks.
   for(const socket of sockets) socket.destroy();
   const closing=Promise.all([web,socks].map(server=>server.listening ? new Promise(resolve=>server.close(resolve)) : Promise.resolve()));
-  if(await Promise.race([closing.then(()=>false),delay(1000).then(()=>true)])) {drainTimedOut=true;failCollector('proxy shutdown timed out');}
+  if(!await within(closing,1000)) {drainTimedOut=true;failCollector('proxy shutdown timed out');}
   if(cfg.diagnostics==='enabled') {
     if(!monitorProcess || monitor.exit!==null || !monitor.started) failCollector('sandbox log collector not alive through finish');
+    drainDeadline=performance.now()+2000;
     await delay(2000);
   }
-  if(unsubscribe)unsubscribe();
   stoppingMonitor=true;
   try {if(manager)await manager.reset();} catch(error) {failCollector('sandbox manager reset failed: '+String(error));process.exitCode=1;}
   if(cfg.diagnostics==='enabled' && monitorProcess && !monitor.closed) {
-    await Promise.race([once(monitorProcess,'close').catch(()=>{}),delay(1000)]);
+    await within(once(monitorProcess,'close').catch(()=>{}),1000);
     if(!monitor.closed){
       drainTimedOut=true;failCollector('sandbox log collector shutdown timed out');
       try {monitorProcess.kill('SIGKILL');} catch(error) {monitor.errors.push(String(error).slice(0,2048));}
-      await Promise.race([once(monitorProcess,'close').catch(()=>{}),delay(500)]);
+      await within(once(monitorProcess,'close').catch(()=>{}),500);
       if(!monitor.closed) process.exitCode=1;
     }
   }
+  if(unsubscribe)unsubscribe();
   if(spoolFd!==undefined) {
     try {fs.fsyncSync(spoolFd);fs.closeSync(spoolFd);} catch(error) {failCollector('diagnostic spool finalization failed: '+String(error));}
   }

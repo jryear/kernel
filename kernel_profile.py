@@ -10,7 +10,7 @@ import hashlib
 import re
 
 VALIDATOR_ID = 'kernel-srt-profile-validator-v1'
-GENERATOR_SHA256 = '2b4d539624dde6067982722c9fe234ff7ba15b04ddb86ce5141c69ef40de2e5a'
+GENERATOR_SHA256 = '9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400'
 _RULE = re.compile(r'^\(allow (network-bind|network-inbound|network-outbound) \((local|remote) tcp "(\*|localhost):([1-9][0-9]*)"\)\)$')
 
 def _expressions(source):

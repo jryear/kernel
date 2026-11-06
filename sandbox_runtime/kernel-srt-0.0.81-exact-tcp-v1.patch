@@ -1,7 +1,14 @@
 diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
---- orig/sandbox/macos-sandbox-utils.js	2026-11-06 12:06:01
-+++ new/sandbox/macos-sandbox-utils.js	2026-11-06 12:09:22
-@@ -750,7 +750,7 @@
+--- orig/sandbox/macos-sandbox-utils.js	2026-11-06 13:31:22
++++ new/sandbox/macos-sandbox-utils.js	2026-11-06 13:31:48
+@@ -1,5 +1,6 @@
+ import { quote } from '../utils/shell-quote.js';
+ import { spawn } from 'child_process';
++import { StringDecoder } from 'node:string_decoder';
+ import * as path from 'path';
+ import { logForDebugging } from '../utils/debug.js';
+ import { whichSync } from '../utils/which.js';
+@@ -750,7 +751,7 @@
  /**
   * Generate complete sandbox profile
   */
@@ -10,7 +17,7 @@ diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
      const profile = [
          '(version 1)',
          `(deny default (with message "${logTag}"))`,
-@@ -922,10 +922,14 @@
+@@ -922,10 +923,14 @@
          ')',
          '',
      ];
@@ -27,7 +34,7 @@ diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
      }
      else {
          // Allow local binding if requested.
-@@ -948,10 +952,10 @@
+@@ -948,10 +953,10 @@
          // "localhost:*") matches connect() to 127.0.0.1 and ::1 but not
          // ::ffff:127.0.0.1; runtimes that connect to loopback via dual-stack
          // sockets need to use AF_INET (see JAVA_TOOL_OPTIONS injection below).
@@ -42,7 +49,7 @@ diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
          }
          // Unix domain sockets for local IPC (SSH agent, Docker, Gradle, etc.)
          // Three separate operations must be allowed:
-@@ -979,17 +983,13 @@
+@@ -979,17 +984,13 @@
          // If both allowAllUnixSockets and allowUnixSockets are false/undefined/empty, Unix sockets are blocked by default
          // Allow localhost TCP operations for the HTTP proxy
          if (httpProxyPort !== undefined) {
@@ -62,7 +69,7 @@ diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
          }
      }
      profile.push('');
-@@ -1044,7 +1044,7 @@
+@@ -1044,7 +1045,7 @@
   * Wrap command with macOS sandbox
   */
  export function wrapCommandWithSandboxMacOS(params) {
@@ -71,7 +78,7 @@ diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
      // SBPL cannot redirect a read to different bytes, so whole-file masking
      // degrades to read-deny on macOS: the sandboxed process gets EPERM
      // instead of the sentinel. The DYLD interposer (a later step) lifts
-@@ -1096,6 +1096,7 @@
+@@ -1096,6 +1097,7 @@
          allowUnixSockets,
          allowAllUnixSockets,
          allowLocalBinding,
@@ -79,9 +86,129 @@ diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
          allowMachLookup,
          allowPty,
          allowGitConfig,
+@@ -1215,51 +1217,93 @@
+         '--style',
+         'compact',
+     ]);
+-    logProcess.stdout?.on('data', (data) => {
+-        const lines = data.toString().split('\n');
+-        // Get violation and command lines
+-        const violationLine = lines.find(line => line.includes('Sandbox:') && line.includes('deny'));
+-        const commandLine = lines.find(line => line.startsWith('CMD64_'));
+-        if (!violationLine)
+-            return;
+-        // Extract violation details
+-        const sandboxMatch = violationLine.match(sandboxExtractRegex);
+-        if (!sandboxMatch?.[1])
+-            return;
+-        const violationDetails = sandboxMatch[1];
+-        // Try to get command
++    // Stream framing is independent of data-chunk boundaries: one complete
++    // Sandbox line is followed by its own CMD64 tag line. Never assign a tag
++    // to a different denial, and surface malformed/truncated input as ambiguous.
++    const decoder = new StringDecoder('utf8');
++    const maxLine = 65536;
++    let buffered = '';
++    let pendingViolation;
++    let ended = false;
++    function ambiguous(reason) {
++        callback({ line: `kernel collector framing unavailable: ${reason}`, timestamp: new Date() });
++    }
++    function emitViolation(violationDetails, commandLine) {
+         let command;
+         let encodedCommand;
+         if (commandLine) {
+-            const cmdMatch = commandLine.match(cmdExtractRegex);
+-            encodedCommand = cmdMatch?.[1];
++            const match = commandLine.match(cmdExtractRegex);
++            encodedCommand = match?.[1];
+             if (encodedCommand) {
+                 try {
+                     command = resolveCommandText(decodeSandboxedCommand(encodedCommand));
+                 }
+                 catch {
+-                    // Failed to decode, continue without command
++                    encodedCommand = undefined;
+                 }
+             }
+         }
+-        // Always filter out noisey violations
+         if (violationDetails.includes('mDNSResponder') ||
+             violationDetails.includes('mach-lookup com.apple.diagnosticd') ||
+             violationDetails.includes('mach-lookup com.apple.analyticsd')) {
+             return;
+         }
+-        // Check if we should ignore this violation
+         if (shouldIgnoreViolation(violationDetails, command, ignoreViolations)) {
+             return;
+         }
+-        // Not ignored - report the violation
+-        callback({
+-            line: violationDetails,
+-            command,
+-            encodedCommand,
+-            timestamp: new Date(), // We could parse the timestamp from the log but this feels more reliable
+-        });
+-    });
++        callback({ line: violationDetails, command, encodedCommand, timestamp: new Date() });
++    }
++    function acceptLine(line) {
++        if (line.endsWith('\r')) line = line.slice(0, -1);
++        const violation = line.includes('Sandbox:') && line.includes('deny')
++            ? line.match(sandboxExtractRegex)?.[1] : undefined;
++        if (violation) {
++            if (pendingViolation !== undefined) emitViolation(pendingViolation, undefined);
++            pendingViolation = violation;
++            return;
++        }
++        if (line.startsWith('CMD64_')) {
++            const valid = /^CMD64_[A-Za-z0-9+/]+={0,2}_END_/.test(line) &&
++                line.endsWith(`_END_${sessionSuffix}`);
++            if (pendingViolation !== undefined) {
++                emitViolation(pendingViolation, valid ? line : undefined);
++                pendingViolation = undefined;
++            }
++            else {
++                ambiguous('orphaned command tag');
++            }
++            return;
++        }
++        if (pendingViolation !== undefined) {
++            emitViolation(pendingViolation, undefined);
++            pendingViolation = undefined;
++        }
++    }
++    function consume(text) {
++        buffered += text;
++        let newline;
++        while ((newline = buffered.indexOf('\n')) !== -1) {
++            const line = buffered.slice(0, newline);
++            buffered = buffered.slice(newline + 1);
++            if (line.length > maxLine) { ambiguous('line exceeds limit'); pendingViolation = undefined; }
++            else acceptLine(line);
++        }
++        if (buffered.length > maxLine) {
++            buffered = '';
++            pendingViolation = undefined;
++            ambiguous('partial line exceeds limit');
++        }
++    }
++    function finishStream() {
++        if (ended) return;
++        ended = true;
++        consume(decoder.end());
++        if (pendingViolation !== undefined) emitViolation(pendingViolation, undefined);
++        if (buffered) ambiguous('incomplete final line');
++    }
++    logProcess.stdout?.on('data', data => consume(decoder.write(data)));
++    logProcess.stdout?.on('end', finishStream);
++    logProcess.on('close', finishStream);
+     logProcess.stderr?.on('data', (data) => {
+         logForDebugging(`[Sandbox Monitor] Log stream stderr: ${data.toString()}`);
+     });
 diff -ruN orig/sandbox/sandbox-config.js new/sandbox/sandbox-config.js
---- orig/sandbox/sandbox-config.js	2026-11-06 12:06:01
-+++ new/sandbox/sandbox-config.js	2026-11-06 12:09:22
+--- orig/sandbox/sandbox-config.js	2026-11-06 13:31:22
++++ new/sandbox/sandbox-config.js	2026-11-06 13:31:22
 @@ -616,21 +616,10 @@
          .boolean()
          .optional()
@@ -109,8 +236,8 @@ diff -ruN orig/sandbox/sandbox-config.js new/sandbox/sandbox-config.js
          .array(z.string().refine(val => {
          const prefix = val.endsWith('*') ? val.slice(0, -1) : val;
 diff -ruN orig/sandbox/sandbox-manager.js new/sandbox/sandbox-manager.js
---- orig/sandbox/sandbox-manager.js	2026-11-06 12:06:01
-+++ new/sandbox/sandbox-manager.js	2026-11-06 12:09:22
+--- orig/sandbox/sandbox-manager.js	2026-11-06 13:31:22
++++ new/sandbox/sandbox-manager.js	2026-11-06 13:31:22
 @@ -1992,6 +1992,7 @@
                  allowUnixSockets: getAllowUnixSockets(),
                  allowAllUnixSockets: getAllowAllUnixSockets(),
