@@ -1,0 +1,57 @@
+spec_version = 2
+id = "sandbox-v4"
+project = "kernel"
+goal = "Qualify the frozen on-machine sandbox matrix using independent effects, complete receipts and conservative classification in separately budgeted checks"
+bypass_policy = "fail"
+
+[scope]
+include = ["verify.py", "kernel_*.py", "kernel_sandbox/*", "sandbox_supervisor.mjs", "sandbox_runtime/*", "sandbox.package.json", "sandbox.package-lock.json", "VERSION", "MANIFEST.sha256", "README.md", "FRONTIER.md", "AGENTS.template.md", "docs/SANDBOX_RUNTIME.md", "CHECKPOINT-tranche-1.md"]
+protected = ["tests/*", "tasks/*", "docs/SANDBOX_DECISION.md", "spike/*", ".desk/*"]
+
+[[checks]]
+name = "sandbox effect-classifier"
+kind = "acceptance"
+timeout = 3660
+argv = ["python3", "tests/tamper_suite.py", "effect-classifier"]
+entry = "tests/tamper_suite.py"
+chain = ["tests/tamper_suite.py", "tests/sandbox_fixtures/harness.py", "tests/sandbox_fixtures/subject_driver.py", "tests/sandbox_fixtures/profile_faults.py", "tests/sandbox_fixtures/payload.py", "tests/sandbox_fixtures/matrix.json"]
+evidence = ["tests/tamper_suite.py", "tests/sandbox_fixtures/*", "docs/SANDBOX_DECISION.md", "spike/package-lock.json"]
+assertions = ["SANDBOX_EFFECT_CLASSIFIER_BOUNDARY"]
+baseline_failures = ["SANDBOX_EFFECT_CLASSIFIER_BOUNDARY"]
+
+[[checks]]
+name = "sandbox protocol"
+kind = "acceptance"
+timeout = 600
+argv = ["python3", "tests/tamper_suite.py", "protocol"]
+entry = "tests/tamper_suite.py"
+chain = ["tests/tamper_suite.py", "tests/sandbox_fixtures/harness.py", "tests/sandbox_fixtures/subject_driver.py", "tests/sandbox_fixtures/profile_faults.py", "tests/sandbox_fixtures/payload.py", "tests/sandbox_fixtures/matrix.json"]
+evidence = ["tests/tamper_suite.py", "tests/sandbox_fixtures/*", "docs/SANDBOX_DECISION.md", "spike/package-lock.json"]
+assertions = ["SANDBOX_PROTOCOL_BOUNDARY"]
+baseline_failures = ["SANDBOX_PROTOCOL_BOUNDARY"]
+
+[[checks]]
+name = "sandbox policy-dependency"
+kind = "acceptance"
+timeout = 1860
+argv = ["python3", "tests/tamper_suite.py", "policy-dependency"]
+entry = "tests/tamper_suite.py"
+chain = ["tests/tamper_suite.py", "tests/sandbox_fixtures/harness.py", "tests/sandbox_fixtures/subject_driver.py", "tests/sandbox_fixtures/profile_faults.py", "tests/sandbox_fixtures/payload.py", "tests/sandbox_fixtures/matrix.json"]
+evidence = ["tests/tamper_suite.py", "tests/sandbox_fixtures/*", "docs/SANDBOX_DECISION.md", "spike/package-lock.json"]
+assertions = ["SANDBOX_POLICY_DEPENDENCY_BOUNDARY"]
+baseline_failures = ["SANDBOX_POLICY_DEPENDENCY_BOUNDARY"]
+
+[[checks]]
+name = "sandbox isolation"
+kind = "acceptance"
+timeout = 600
+argv = ["python3", "tests/tamper_suite.py", "isolation"]
+entry = "tests/tamper_suite.py"
+chain = ["tests/tamper_suite.py", "tests/sandbox_fixtures/harness.py", "tests/sandbox_fixtures/subject_driver.py", "tests/sandbox_fixtures/profile_faults.py", "tests/sandbox_fixtures/payload.py", "tests/sandbox_fixtures/matrix.json"]
+evidence = ["tests/tamper_suite.py", "tests/sandbox_fixtures/*", "docs/SANDBOX_DECISION.md", "spike/package-lock.json"]
+assertions = ["SANDBOX_ISOLATION_BOUNDARY"]
+baseline_failures = ["SANDBOX_ISOLATION_BOUNDARY"]
+
+[notes]
+assumptions = "External installed 3.1.0 judge; frozen reviewed synthetic effects; trusted Python/Git/ps/OS. Future qualification requires operator-provisioned authenticated immutable srt 0.0.81 and qualified Node bundle outside candidate authority; checks never provision it."
+out_of_scope = "Freeze only. Each check conjoins the real protected-write boundary witness with every assigned matrix row/variant. A successful forbidden write with complete nested SUPPORTED is the decisive baseline counterexample; missing API/CLI/runtime/evidence is never RED. Classifier folds into effect and dependency into policy because 3.1.0 requires nonempty acceptance baseline_failures. Parent sandbox receipt schema 2 records declared destinations separately from effective exact-TCP rules, patched bundle identity, complete profile validation and residual address-wildcard/alias limits. Full GREEN needs every assigned row; unavailable propagates without assertion output. Off-machine egress moved to separate plan item egress. No invisible-attempt, transient-write, complete-log, semantic-attestation or exhaustive-cleanup claim. selftest.py regressions remain separate in desk/release. Source scope grants no runtime write authority."
