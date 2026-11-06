@@ -1174,3 +1174,201 @@ old-subject lineage, obtain meaningful baseline RED, then port implementation an
 run full qualifying evidence. No v4 freeze, main/next push, sudo, network
 configuration by Sol, operator provisioning, installation or desk prove occurred.
 Branch is pushed in-review and this run stops for proposal review.
+
+
+## Sandbox v4 — DEV incomplete: installed-judge canary evidence unavailable
+
+Sol-4 checkpoint, 2026-11-06. **The requested DEV-complete gate was not achieved.**
+The single freeze, genuine legacy baseline, implementation port, both complete
+388-variant direct sweeps and regressions are complete. The full installed-judge
+claim returned **UNVERIFIABLE, exit 2**, with isolation assertion evidence
+unavailable. No unchanged retry, fixture edit/refreeze, Desk proof, provisioning,
+main/next push, installation or production qualification occurred.
+
+### Immutable freeze and baseline
+
+- Branch: `kernel/sandbox-v4`. **FROZEN_BASE:
+  `d626138b2e53a29e0cff9b6b5d4dc06503b67b0d`**. Its parent is exactly
+  `f9a0c82ebef62184208a3493be84df365f5c83a5` (`origin/next` at setup).
+- The freeze contains only nine files under `tests/` and `tasks/`, byte-identical
+  to reviewed prefreeze WIP `87d1f21b29eb18f551cb584677c8a73d12f6c874`.
+  All 201 case IDs, operations, expected verdicts, 388 logging variants and four
+  budgets are preserved. The sole matrix parameter change is the approved
+  `INVALID_POLICY_GRANT` key fix. Tests/tasks remain immutable after this freeze.
+- Installed 3.1.0 baseline: **BASELINE_READY, exit 0**. All four checks fail exactly
+  `SANDBOX_EFFECT_CLASSIFIER_BOUNDARY`, `SANDBOX_PROTOCOL_BOUNDARY`,
+  `SANDBOX_POLICY_DEPENDENCY_BOUNDARY`, and `SANDBOX_ISOLATION_BOUNDARY` respectively,
+  with `harness_error=false`. Each decisive witness is a successful 31-byte
+  forbidden candidate write, an independently measured lasting protected change,
+  and a complete nested SUPPORTED result with complete cleanup. No setup failure
+  was credited as RED. The same four genuine REDs recur in the full claim.
+- Baseline: `~/.local/state/kernel/sol4-v4-baseline.jsonl` and `.txt`.
+  Freeze/file hashes: `sol4-freeze-receipt.json`; baseline witness extraction:
+  `sol4-baseline-evidence-receipt-r2.json` under the same external directory.
+
+### Implementation and full direct sweeps
+
+Implementation port: `99003b80cf2e5e4323232cb218700d0d875e3325`, directly above
+freeze, from donor `5a3f8ee53d94b746106a06ec64be0fb2ba12ead9`. All 20 changed paths
+are in scope; tests/tasks/.desk/spike/decision remain unchanged. The implementation
+package is byte-identical to the reviewed donor; no new implementation repair
+was made in this continuation. Terra checked the draft lifecycle controls and
+bundle/source identities; Luna checked metadata and extracted evidence; Sol
+reviewed, integrated, froze and ran the authoritative baseline/claim.
+
+Before freeze, the WIP HERE/payload/adapter were exercised against donor ROOT;
+after freeze, the unchanged final fixtures were exercised against committed v4
+implementation HEAD `99003b8`. These are distinct complete runs, both all-pass:
+
+| Group | Cases | Variants | Prefreeze direct | Postfreeze direct | Installed-judge claim |
+| --- | ---: | ---: | --- | --- | --- |
+| effect-classifier | 124 | 234 | 234 pass | 234 pass | PASS; 234 observations, no failures |
+| protocol | 13 | 26 | 26 pass | 26 pass | PASS; 26 observations, no failures |
+| policy-dependency | 57 | 114 | 114 pass | 114 pass | PASS; 114 observations, no failures |
+| isolation | 7 | 14 | 14 pass | 14 pass | UNAVAILABLE; complete group receipt absent |
+| Total | 201 | 388 | 388 pass | 388 pass | UNVERIFIABLE; four-check GREEN unmet |
+
+Both direct runs recorded zero mismatches and zero Unavailable outcomes,
+`valid_evidence=true`, exact unique manifest coverage, clean unchanged source
+HEADs, unchanged fixture hashes, and unchanged installed judge inventory (206
+entries, shared `.git` excluded). Full raw rows, commands and guard receipts:
+
+- Prefreeze: `~/.local/state/kernel/sweep/sol4-prefreeze-20261106T2227Z/`.
+- Postfreeze: `~/.local/state/kernel/sweep/sol4-v4-direct-20261106T2236Z/`.
+- Extracted postfreeze guards/witnesses: `sol4-v4-direct-evidence-summary.json`.
+
+Both complete sweeps establish that all eight strengthened variants reach their
+named conditions:
+
+- TMP_PRIVATE_TMP_ALIAS: a fresh directory created via literal `/tmp` resolves
+  beneath `/private/tmp`; actual symlink/same-file checks hold. Independent
+  control write through `/tmp/...` succeeds, candidate write is denied with EPERM.
+- SUPERVISOR_DEATH: payload nonce is written after the actual `group_child` check
+  and child start. Host observes live PID/PGID/start identities before supervisor
+  kill; kill precedes barrier release. Independent host cleanup verifies no live
+  owned group remains.
+- KILL_FAILURE / PROCESS_OBSERVATION_FAILURE: matrix operation stays `timeout`.
+  Host observes nonce progress before fault arming; actual timeout is true and
+  subject cleanup remains incomplete. Separate host cleanup binds launch
+  PID/PGID/start identity, remediates the kill-failure group where needed, and
+  verifies all owned groups gone. This remediation does not erase subject facts.
+
+The initial prefreeze diagnostic revealed observation injection before timeout;
+that draft was corrected before freeze and exercised in both modes and both full
+sweeps. The raw first diagnostic remains under `sweep/sol4-controls-20261106/`;
+revised controls are under `sweep/sol4-controls-20261106-r2/`. An auxiliary external
+summarizer field-shape rejection was corrected outside the repo and retained at
+`sol4-evidence-summary-initial-rejection.json`; it was not a fixture failure.
+
+### Full installed-judge claim: retained UNVERIFIABLE
+
+Exact effective argv/environment is in `sol4-v4-claim-command.json`. Invocation:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 KERNEL_SANDBOX_DEV=1 KERNEL_SANDBOX_BUNDLE_RECEIPT="$HOME/.local/state/kernel/dev-bundle-v3-sweep-r3.receipt.json" VERIFY_RELEASE_SHA256=3031d1ae45ea1037a94fed16f6fdc10333a1222539724e6c347057ff36d0651c python3 -B ~/code/_kernel/verify.py tasks/sandbox.toml --repo . --base d626138b2e53a29e0cff9b6b5d4dc06503b67b0d --claim "DEV-ONLY sandbox-v4: bounded on-machine 201-case / 388-variant sandbox matrix passes on the exact v4 freeze and authenticated development bundle; no production qualification or external-egress claim" --implementer-model "gpt-6.1-sol medium (+terra/luna)" --log "$HOME/.local/state/kernel/sol4-v4-claim.jsonl"
+```
+
+The expected manifest digest came from external `sol4-v4-release.json`, not a
+candidate-local trusted default. Outer VERIFY_SANDBOX was absent; the nested
+frozen harness owns opt-in. This claim was tested at source HEAD `99003b8`.
+
+Result: **UNVERIFIABLE, exit 2**. Three candidate checks PASS with no harness
+errors; isolation has `harness_error=true`, exit 1, no assertion result. Reason:
+`candidate assertion evidence unavailable: sandbox isolation`. The traceback is
+`Unavailable: SEQUENTIAL_RUN_ISOLATION: enabled diagnostic canary positive control
+unavailable` at frozen harness.py receipt_check. Candidate check durations:
+1063.86 / 142.39 / 425.32 / 65.77 seconds respectively.
+
+The traceback establishes a nested enabled diagnostic record with denied canary
+write, successful scratch write and `event_received=false`. It does **not** identify
+which nested phase/repetition failed, prove absence from the raw OS stream, or
+identify OS, collector/parser, or unreadable supervisor evidence as the cause.
+The failed nested receipt and raw spool were inside TemporaryDirectory teardown;
+they are absent after the claim. Isolation's completed row count is therefore
+not credited from inference. The outer JSONL and complete 1653-byte traceback are
+retained. Scope/protected/mutable/bypass lists and warnings are empty; source was
+clean. Source review found no concrete defect supporting a repair. Historical
+raw canary misses are preserved separately and do not establish this run's cause.
+No unchanged rerun was used to replace this result with GREEN.
+
+### Manifest, bundle and regressions
+
+`MANIFEST.sha256` was regenerated after the claim, byte-identical across all 26
+members, and checked successfully. Its externally held digest remains:
+`3031d1ae45ea1037a94fed16f6fdc10333a1222539724e6c347057ff36d0651c`.
+Caller receipt: `~/.local/state/kernel/sol4-v4-release.json`.
+
+With that external digest, manifest check, all six self-tests, tests/self_check.py
+and tests/cleanup.py each exited 0. Source HEAD/status and recursive frozen
+path/hash/mode inventories stayed unchanged. Results and command streams:
+`~/.local/state/kernel/sol4-v4-regressions-final/summary.json` and adjacent files.
+These regressions do not repair or override the failed claim.
+
+DEV bundle receipt: `~/.local/state/kernel/dev-bundle-v3-sweep-r3.receipt.json`;
+bundle digest `4b3c5cf4af4cbcf2d4b3d8eaa41114f028340cc851c747f40c931c4c7cca2cef`.
+The existing 912-file bundle and six bundled source inputs match the port exactly;
+receipt SHA-256 `1390c998cedbe5d0fbf5eaac0cf32b934adb4156deca728fc60ec90c075a5ed6`.
+Pinned patch `sandbox_runtime/kernel-srt-0.0.81-exact-tcp-v1.patch` SHA-256:
+`9116e04677a6a058947b7e24d2b71372d86dfd6c756f25f126f512a73ac7beb2`.
+This bundle carries UNQUALIFIED_LOCAL_EXECUTABLE Node provenance and is DEV-only.
+Integration audit: `~/.local/state/kernel/sol4-v4-integration-audit.md`.
+
+### Zack-only provisioning command — not run
+
+From the reviewed checkout, after independently authenticating the official
+archive checksum and preparing root-owned, non-writable, symlink-free receipt
+ancestry, Zack's arm64 command is:
+
+```sh
+sudo ./sandbox_runtime/provision.sh --node-archive "$HOME/Downloads/node-v24.22.0-darwin-arm64.tar.gz" --node-archive-sha256 "$KERNEL_NODE_ARTIFACT_SHA256" --receipt "/Library/Application Support/KernelRuntime/receipts/kernel-sandbox-v4.json"
+```
+
+Use the darwin-x64 archive on Intel. The checksum is an authenticated operator
+input, not one derived from an untrusted download. No sudo or provisioning was
+performed, and this incomplete checkpoint does not request it.
+
+### Remaining gate, known gaps and exact continuation
+
+Keep this freeze and all original failed evidence. A full four-check SUPPORTED
+DEV claim is still required; three passing groups and direct 388/388 sweeps do
+not satisfy it. Diagnose the missing canary with independently retained nested
+receipts/raw collector data before selecting a repair; there is no proven cause
+in the retained claim. Any fixture defect/retention-interface change discovered
+after freeze goes to the reviewer: STOP/report, never edit/refreeze autonomously.
+If evidence establishes an in-scope implementation defect, repair source only;
+for bundled changes assemble a fresh DEV bundle and caller receipt, regenerate
+manifest/external digest, rerun all 388 direct variants and the full four-check
+installed claim. Do not silently retry, increase authority, soften canary loss,
+or treat a later passing result as erasing this run.
+
+Even a later DEV pass cannot qualify Zack's separate immutable operator bundle
+or official Node archive, off-machine egress, flake repetition, mutants, default-on
+or release. Diagnostic streams remain incomplete; invisible attempts, transient
+write/restore, semantic attestation, exhaustive escaped-descendant cleanup and
+hostile-host containment remain unproved. Declared TCP ports permit wildcard
+bind/inbound and accepted-connection exchange; localhost is an OS address class,
+ports authenticate no service, and mapped behavior is not universally portable.
+
+This is a review checkpoint on kernel/sandbox-v4, not "Sandbox v4 — DEV complete".
+No Desk prove or merge to main/next is authorized by these results.
+
+### External evidence SHA-256
+
+All names below are relative to `~/.local/state/kernel/`. Hashes bind the exact
+retained evidence, including the unsuccessful installed-judge claim.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `sol4-freeze-receipt.json` | `92d3fdc96f1ddd2c163237c46188606b6554e32e3041bec9d19e8861ed968946` |
+| `sol4-v4-baseline.jsonl` | `27f921bbbd8b63ad2377199280d6a627d8837373568c140ac082db724c5535ae` |
+| `sol4-v4-baseline.txt` | `c9092f337b2556d2657258c15ebeb0839d7fcd48911027297ba570eb77081873` |
+| `sol4-baseline-evidence-receipt-r2.json` | `2444f2e0d3e3417775801d91723789f4ab607be0d097eedb5ba60370e3010404` |
+| `sweep/sol4-prefreeze-20261106T2227Z/summary.json` | `3ad13188b26df04502a00b4404757472d4d2bcb5beaee445b015b72fb86f1eee` |
+| `sweep/sol4-v4-direct-20261106T2236Z/summary.json` | `90c1063245375aae86b10fa9db89ba78b7578b1e4617016500854bc34be87540` |
+| `sol4-v4-direct-evidence-summary.json` | `d8697abf8dc17bc15fbaedea2c16255c27029bd559689598e7a2648484af4ad9` |
+| `sol4-v4-claim-command.json` | `929897568729f39f93035556b544e70ae5ee661532f1a44a790a8b287ac551dc` |
+| `sol4-v4-claim.jsonl` | `6f60cd92a44d1b2e1c10d20994d6c1ced398e237d88882ab5b5a9c93a7a69d7a` |
+| `sol4-v4-claim.txt` | `a79e62cf666efc5d1bad08afc821bb9ec5ac1f628ed63cdb9d9f1f7b1d7f223f` |
+| `sol4-v4-regressions-final/summary.json` | `ba78059dfc7d5f22a0c021e53d17bc2aab2dca711a16f1a72c6f319ed2602108` |
+| `sol4-v4-release.json` | `483d58e42abbcc9cd9d6edc0337943e20d89e956a475862dc3c6aa8a61eb87c2` |
+| `sol4-v4-integration-audit.md` | `d717f8bc8d4f48821c55a265c9cc45ee079cc46ee774a8b002dbda402223d5c2` |
