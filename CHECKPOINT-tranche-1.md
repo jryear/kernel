@@ -505,3 +505,151 @@ qualified here. Full matrix execution and GREEN require that later authorized
 implementation/environment. Off-machine egress remains a separate default-on
 and release gate under plan v6. Logs remain diagnostic/incomplete; no invisible
 attempt, restored-write, semantic-attestation or exhaustive-cleanup claim is added.
+
+
+## Sandbox v2 implementation — BLOCKED at exact-policy architecture gate
+
+**Source HEAD:** `8ac441052002709f25d17504ced5fbc979cf9a85` on
+`kernel/sandbox-v2`, committed and pushed before this checkpoint. This is partial
+implementation and a blocker report, not sandbox acceptance or completion.
+Approved immutable FROZEN_BASE remains
+`4fa15c4b0afeb9adb5afe5caea31e864775b8580`. Tests/tasks, the decision, spike and
+Desk plan are unchanged. Main/next are neither merged into nor pushed.
+
+### Why four DEV-ONLY GREEN checks cannot be claimed
+
+The decision at docs/SANDBOX_DECISION.md lines 109–114 prohibits a standalone
+Seatbelt backend and requires fail-closed behavior plus architecture review when
+the pinned backend cannot express/prove the required policy. Its exact-port gate
+at line 269 also requires declared direct TCP ports to succeed and forbidden
+routes/binds to remain denied. These are binding together.
+
+An embedded, unmodified srt 0.0.81 probe used two disposable reachable IPv4
+loopback listeners. One port was the nominal declaration, included in
+allowedDomains as 127.0.0.1:<port> with strictAllowlist=true; the other was
+undeclared. The payload also attempted a non-loopback 0.0.0.0 bind, without
+listening or sending off-machine traffic. Both srt configurations executed the
+payload successfully (exit 0), giving these actual operation results:
+
+| Pinned public configuration | Declared direct TCP | Undeclared direct TCP | Non-loopback bind |
+| --- | --- | --- | --- |
+| allowLocalBinding=false | EPERM | EPERM | EPERM |
+| allowLocalBinding=true | succeeds | succeeds | succeeds |
+
+This is DEV-ONLY backend evidence, not qualification. Pinned NetworkConfigSchema
+contains no exact local-port list. Source macos-sandbox-utils.js generates
+wildcard bind/inbound plus localhost:* outbound for allowLocalBinding=true;
+false permits only runtime proxy ports. allowedDomains controls proxy requests,
+not direct socket grants. Enabling the broad switch cannot satisfy the frozen
+policy. Declaring arbitrary services to be internal proxy ports, patching the
+frozen library, or compiling a separate Seatbelt policy would change the accepted
+architecture rather than implement its public configuration. None was done.
+
+External source, output and result artifacts (no repo test changes):
+`~/.local/state/kernel/sandbox-v2-backend-policy-probe.mjs`,
+`~/.local/state/kernel/sandbox-v2-backend-policy-probe.py`,
+`~/.local/state/kernel/sandbox-v2-backend-policy-probe.txt`,
+`~/.local/state/kernel/sandbox-v2-backend-policy-probe.json`.
+Reproduce with `PYTHONDONTWRITEBYTECODE=1 python3 -B
+ ~/.local/state/kernel/sandbox-v2-backend-policy-probe.py` on one shell line.
+It requires the exact external scratch dependency graph; it does not provision
+or contact an external endpoint. No conclusion is borrowed from a nested verdict.
+
+### Work retained and validation
+
+Terra authored kernel_sandbox.py: the shared typed-evidence classifier, literal
+policy declaration validation, ignored-output-root validation and a conservative
+backend capability seam. The seam returns false until a complete enforcement
+backend is qualified. The classifier retains measured protected changes under
+unverifiable precedence and preserves judge-change attribution. Parent integration
+adds a minimal architecture-stop path in verify.py **after release authentication**:
+VERIFY_SANDBOX=1 returns UNVERIFIABLE with lifecycle.launched=false and never
+launches the check. That production refusal calls the same classifier the frozen
+harness calls. There is no enforced execution path yet, and this does not certify
+future production classifier wiring for successful checks.
+
+Luna staged sandbox.package.json and sandbox.package-lock.json byte-identically
+from spike; exact lock SHA-256 is
+`53908b1e23845bd0d452463f81a3df0f9b92bce76aa8c69c8f75c51a22600ec9`.
+An authorized npm ci ran only in ~/.local/state/kernel/dev-bundle, outside repo
+and installed judge. It contains srt 0.0.81 dependencies; local Node is v24.22.0.
+No complete dev bundle or dev receipt exists because no supervisor exists.
+Luna prepared the operator script and runtime documentation; parent reviewed
+receipt ownership/ancestry and exact-lock validation. No provisioning was run.
+
+Observed validation on the final package bytes:
+
+- 41/41 classifier/logging variants through frozen classifier_case passed:
+  `~/.local/state/kernel/sandbox-v2-classifier-dev.txt` (DEV-ONLY component proof).
+- Independent disposable protected-write fixture with opt-in returned exit 2,
+  UNVERIFIABLE, launched=false, no operation and no protected changes:
+  `~/.local/state/kernel/sandbox-v2-failclosed-dev.txt`. An initial missing json
+  import caused a setup error; it was fixed and rerun. The failed attempt remains
+  in sandbox-v2-failclosed-dev-initial-error.txt and was not counted as RED.
+- All six unchanged selftest.py regressions passed with the manifest digest
+  supplied from an external receipt:
+  `~/.local/state/kernel/sandbox-v2-blocker-regressions-final.txt`.
+- All five self-check refusal assertions passed:
+  `~/.local/state/kernel/sandbox-v2-self-check-regression.txt`.
+- All five cleanup assertions passed:
+  `~/.local/state/kernel/sandbox-v2-cleanup-regression.txt`.
+- bash -n of provision.sh, source syntax, whitespace and immutable-path checks
+  passed. The operator script has not been executed or validated with admin
+  ownership/ACL operations; it remains a blocked draft.
+- Installed judge package/cache inventory matches the approved freeze inventory
+  across 206 entries, excluding shared .git metadata only:
+  `~/.local/state/kernel/sandbox-v2-implementation-judge-comparison.json`.
+  No installed-judge claim invocation occurred in this phase.
+
+| Frozen acceptance check | DEV bundle result | Log / reason |
+| --- | --- | --- |
+| effect-classifier | NOT RUN; blocked | No complete supervisor/bundle; component classifier results above are not this check |
+| protocol | NOT RUN; blocked | No complete supervisor/bundle |
+| policy-dependency | BLOCKED; no GREEN | Exact local-port policy unsupported; backend probe artifacts above |
+| isolation | NOT RUN; blocked | No complete supervisor/bundle or enforcement lifecycle |
+
+MANIFEST.sha256 regenerated from the retained final package contents. External
+expected-digest receipt:
+`~/.local/state/kernel/sandbox-v2-implementation-release.json`, digest
+`0d2c82dc140eb49b3fbe69ed7e2cf8c22fffcc78801c6c3d8eb6a3aeb7a4c147`.
+This is a development/blocker receipt, not a release authentication approval.
+The checkpoint is outside the package manifest, so this documentation-only commit
+does not change that package digest.
+
+### Operator command — FUTURE ONLY, DO NOT RUN IN THIS BLOCKED STATE
+
+The one operator script is sandbox_runtime/provision.sh. It requires root,
+verifies the exact transitive lock and authenticated official Node archive
+checksum, stages regular bundle files, computes the bundle digest, sets root
+ownership/non-writable ancestry and deny-write ACLs, and writes a root-owned
+caller-held receipt with a printed SHA-256. It refuses to overwrite an existing
+digest directory or receipt. It preflights missing supervisor source before
+creating any /Library bundle directory. No supervisor is currently staged.
+
+After architecture resolution, implementation review, authenticated archive
+acquisition, and creation of a protected root-owned receipt parent, Zack's future
+arm64 command is:
+
+```sh
+sudo ./sandbox_runtime/provision.sh --node-archive "$HOME/Downloads/node-v24.22.0-darwin-arm64.tar.gz" --node-archive-sha256 "$KERNEL_NODE_ARTIFACT_SHA256" --receipt "/Library/Application Support/KernelRuntime/receipts/sandbox-0.0.81.json"
+```
+
+KERNEL_NODE_ARTIFACT_SHA256 must be set to the independently authenticated
+checksum for that exact archive, not computed from an untrusted download and
+assumed trusted. No archive hash is invented here. Docs/SANDBOX_RUNTIME.md records
+the x64 substitution and remaining operator prerequisites. The command has not
+been run, and this checkpoint does not ask Zack to provision a broken bundle.
+
+### Known gaps and stop
+
+Exact direct localhost-port enforcement needs a separately approved architecture
+resolution. Trusted Node supervisor, complete runtime receipts, canary/collector
+and proxy lifecycle, bundle authentication and real-effect confinement are not
+implemented. Writable-root validation/classification alone enforce no OS boundary.
+No four-check GREEN, DEV-bundle acceptance, qualified claim or release is asserted.
+No standalone Seatbelt compiler, runtime library patch, broad network fallback,
+fixture relaxation, egress, flake, mutants or BidZizi work was introduced.
+
+Desk sandbox remained claimed/heartbeated as sol-2. No desk prove. Workspace is
+in-review and implementation stops at the decision's architecture gate. Next step
+is an architecture decision from Zack/reviewer; it is not admin provisioning.
