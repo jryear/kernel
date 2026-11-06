@@ -1291,6 +1291,15 @@ clean. Source review found no concrete defect supporting a repair. Historical
 raw canary misses are preserved separately and do not establish this run's cause.
 No unchanged rerun was used to replace this result with GREEN.
 
+Final installed-judge inventory after claim and regressions remains unchanged:
+206 entries, no changed/added/removed paths, shared `.git` excluded. The final
+comparison uses the same inventory schema as the postfreeze direct sweep before
+claim, including hashes, modes, sizes and mtimes; the earlier Luna-format claim
+comparison separately matches its original baseline inventory. Final evidence:
+`sol4-judge-final.json` and `sol4-judge-final-comparison.json`. Failure extraction
+and exact traceback: `sol4-v4-claim-failure-receipt.json` and
+`sol4-v4-claim-isolation-traceback.txt`.
+
 ### Manifest, bundle and regressions
 
 `MANIFEST.sha256` was regenerated after the claim, byte-identical across all 26
@@ -1372,3 +1381,6 @@ retained evidence, including the unsuccessful installed-judge claim.
 | `sol4-v4-regressions-final/summary.json` | `ba78059dfc7d5f22a0c021e53d17bc2aab2dca711a16f1a72c6f319ed2602108` |
 | `sol4-v4-release.json` | `483d58e42abbcc9cd9d6edc0337943e20d89e956a475862dc3c6aa8a61eb87c2` |
 | `sol4-v4-integration-audit.md` | `d717f8bc8d4f48821c55a265c9cc45ee079cc46ee774a8b002dbda402223d5c2` |
+| `sol4-v4-claim-failure-receipt.json` | `354d1bd82759dca6fbb4f618032e10a3eaae4988a91d5429adc982e1649ecda2` |
+| `sol4-v4-claim-isolation-traceback.txt` | `b4bef3ede914e668ef48bba894dae8364dc5b7f2b46d1f2b8963931c5463d6e5` |
+| `sol4-judge-final-comparison.json` | `2081905e173b07287f4511025760d1da5d2a32a276ec07700f51581798b4ab73` |
