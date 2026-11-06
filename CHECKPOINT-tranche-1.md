@@ -829,6 +829,12 @@ PYTHONDONTWRITEBYTECODE=1 KERNEL_SANDBOX_DEV=1 KERNEL_SANDBOX_BUNDLE_RECEIPT="$H
    immutable bundle. No desk prove before that qualifying run.
 
 
+Desk sandbox remains sol-2 on kernel/sandbox-v3 with heartbeat. Both bounded
+workers have completed and own no pending writes. Workspace is set in-review;
+this run stops for context recovery with acceptance incomplete. No egress,
+flake, mutants, BidZizi work, installation, merge or main/next push occurred.
+
+
 ## Sandbox v3 implementation — DEV blocked at immutable fixture
 
 Continuation authorized 2026-11-06. Sol-3 acquired the expired sol-2 lease at
@@ -979,7 +985,192 @@ Branch is delivered for review of this blocked continuation. No push to main or
 next, installation, provisioning, sudo, fixture edit or desk prove occurred.
 Qualifying acceptance still requires Zack's separately provisioned bundle.
 
-Desk sandbox remains sol-2 on kernel/sandbox-v3 with heartbeat. Both bounded
-workers have completed and own no pending writes. Workspace is set in-review;
-this run stops for context recovery with acceptance incomplete. No egress,
-flake, mutants, BidZizi work, installation, merge or main/next push occurred.
+
+## Full sweep
+
+Reviewer authorized exhaustive direct diagnostics, implementation repairs and a
+v4 proposal on 2026-11-06. **Latest source HEAD is
+`47aab9a6de4c998d0105086c01f82277befac697`**, kernel/sandbox-v3. Sol-3 retained the
+instruction_version 6 lease and heartbeats. Terra implemented collector repairs;
+Luna built external runners/bundles and ran sweeps/regressions; Sol integrated,
+reviewed source and raw evidence, classified failures and prepared the proposal.
+
+This is complete **DEV diagnostic coverage**, not all-four installed-judge GREEN,
+a v4 freeze, production qualification or permission to provision. Every frozen
+case and logging variant ran; the runners continued after every failure.
+All tests/tasks/spike/.desk/decision files remain byte-identical to FROZEN_BASE
+`f86aadec2564160d062b7c4ab3da8d2f7cd4938e`.
+
+### Sweep table and immutable evidence
+
+Counts below are raw pass / Mismatch / Unavailable, never reclassified as passes.
+“Pass” means unchanged harness.run_case returned after its predicates passed.
+
+| Group | Cases / variants | Initial af1b42e | R2 7356317 | R3 47aab9a |
+| --- | ---: | ---: | ---: | ---: |
+| effect-classifier | 124 / 234 | 221 / 11 / 2 | 232 / 0 / 2 | 232 / 0 / 2 |
+| protocol | 13 / 26 | 26 / 0 / 0 | 26 / 0 / 0 | 26 / 0 / 0 |
+| policy-dependency | 57 / 114 | 110 / 0 / 4 | 112 / 0 / 2 | 110 / 1 / 3 |
+| isolation | 7 / 14 | 14 / 0 / 0 | 13 / 1 / 0 | 13 / 1 / 0 |
+| Total | 201 / 388 | 371 / 11 / 6 | 383 / 1 / 4 | 381 / 2 / 5 |
+
+External evidence roots (all under ~/.local/state/kernel/sweep/):
+
+- Initial: sol3-full-20261106T2102Z/, source af1b42e, r1 bundle.
+- R2: sol3-final-20261106T2225Z/, source 7356317, r2 bundle.
+- R3: sol3-final-r3-20261106T2250Z/, source 47aab9a, r3 bundle.
+
+Each has summary.json, input identities, per-variant JSONL, retained system-temp
+fixture paths and classified-nonpass-index.json. R2/R3 also retain per-variant
+command argv/cwd/stdout/stderr/exit logs (no environment dumps). Each final sweep
+has 388 unique variants, unchanged HEAD, clean caller source, unchanged frozen
+fixture digest and installed-judge inventory equality across 206 entries.
+R2/R3 valid_evidence=true means complete coherent capture, NOT all cases passed.
+
+External runners: sweep/run.py (initial) and sweep/run-balanced.py (R2/R3).
+The latter distributes variants over four independent workers and requires an
+explicit source HEAD and external expected release digest. Runner hashes and
+exact argv are recorded in each run. A failed intermediate runner launch,
+sol3-final-20261106T2210Z/, executed zero variants because of a command-capture
+import error; it is retained separately and is not a matrix outcome. No failure
+was erased by a retry. All later attempts used new run IDs and bundle paths.
+
+### Every non-pass and its classification
+
+(a) FIXTURE defects, both modes in all complete sweeps (four final variants):
+
+- INVALID_POLICY_GRANT: matrix params.policy="unsafe_grant" is not the key read
+  by harness.py:682; the unmapped case ID raises Unavailable at line 692 before
+  subject invocation. Proposed fix uses invalid_declaration, retaining the unsafe
+  dot grant and the refusal expectation.
+- CACHE_WRITE_EXTERNAL_DEPENDENCY: Probe.prepare writes /dependency/ to
+  .gitignore, but creates dependency as a symlink. Git records mode 120000, while
+  the contract also declares that path as an external worktree link. A correct
+  verifier must refuse this tracked/link overlap before executing the cache
+  operation. The independent disposable reproduction exited 3 with SPEC_ERROR
+  external link overlaps tracked source/evidence, no receipt. Proof:
+  sweep/external-dependency-fixture-proof.json. Proposed fix removes the trailing
+  slash from declared-link ignore entries; controls and denial expectations stay.
+
+(b) HOST prerequisites and availability:
+
+- Initial NETWORK_ALTERNATE_LOOPBACK_V4, both modes: missing lo0 alias, errno49
+  at the unsandboxed 127.0.0.2 listener. Zack subsequently added the alias; Sol
+  verified ifconfig and bind. Both unchanged post-alias diagnostic variants and
+  both variants in R2 and R3 passed. Historical failures remain in initial data;
+  this prerequisite is now resolved. Evidence:
+  sweep/sandbox-v3-sol3-r1-network-alternate-host-refresh.json/.txt.
+- R3 NETWORK_NONLOOPBACK_BIND_V6/enabled: actual unsandboxed :: bind at port54556
+  returned errno48/EADDRINUSE. Its command log proves no subject driver launched.
+  This is transient positive-control port availability, not sandbox-denial proof
+  or an unconditional fixture impossibility; earlier sweeps passed this case.
+- R3 DECLARED_PORT_BIND_V6/enabled and GROUP_CHILD_CLEAN/enabled: BASE canary
+  operation reports denied write and scratch success, but the marker is absent
+  from the authenticated raw log stdout itself. Raw captures are 2268 and 3262
+  bytes respectively, received=retained, below 8MiB, hash-verified, with matching
+  session predicates, banner-before-prepare, no recorded drop/fault and observed
+  healthy close. Candidate phases have their own canary events and are supported.
+  Aggregate unverifiable is correct. Sol and Terra independently inspected these
+  facts. Class (b) is limited to the observed diagnostic-stream positive-control
+  dependency being unavailable in those invocations. Upstream cause remains
+  unproved; this is NOT proof that the OS never emitted an event or that no
+  upstream/product cause exists. No parser can recover the missing marker from
+  these captured bytes. Original two Mismatch rows remain Mismatch, not passes.
+
+(c) IMPLEMENTATION failures found and repaired:
+
+- Initial three RESTORE_OR_ALIAS_{SYMLINK_WRITE,HARDLINK_WRITE,
+  ANCESTOR_ALIAS_WRITE} cases, both modes, failed setup with ENOENT rather than
+  the required denial. CACHE_WRITE_REDIRECTED_SCRATCH and DECLARED_SCRATCH_WRITE,
+  both modes, also failed. These ten Mismatches were treated as implementation
+  defects: the parent now materializes only validated ignored/disjoint declared
+  output roots before taking its protected inventory. No runtime grant expanded.
+  All ten corresponding R2 and R3 variants pass unchanged predicates.
+- Initial REDIRECT_HOME_TMP_CACHE/enabled and R2 GROUP_CHILD_CLEAN/enabled failed
+  due to absent canary evidence. Their particular upstream causes are unproved,
+  and these historical failures remain recorded. Source/component controls
+  independently proved receiver defects: split UTF-8 records, multi-record chunks,
+  shutdown unsubscribe omission and unsafe late-denial substring filtering.
+  The build-time pinned srt patch now frames all complete records incrementally;
+  malformed/unpaired/oversized framing is ambiguous, not silently ignored.
+  Subscription lasts through collector close; late deliveries/failures invalidate.
+  Exact routine-operation/canary matching replaces substring exemptions.
+  R3 adds bounded authenticated raw stdout, lifecycle timestamps, startup-banner
+  progress observation and a one-shot isolated Python canary without site hooks.
+  Missing events still make verification unverifiable; no retry manufactures pass.
+
+The latest seven raw non-passes classify exactly as (a)=4, (b)=3, (c)=0 at the
+observed boundary. This is not a claim of universal implementation correctness
+or complete OS logs. R3/classified-nonpass-index.json gives every row, evidence
+path, original status, category and raw hash; earlier classified indexes remain.
+The canary cases remain blocked for qualification, not GREEN.
+
+### Bounded repair validation and retained identities
+
+Mocked collector controls (not OS-delivery qualification) live under
+sweep/collector-controls/: before.json, after.json, framing-before.json,
+framing-r2-exact.json, patched-after.json and r3 startup/capture/limit controls.
+They prove split/batch loss before repair; afterwards all 211 byte boundaries,
+including UTF-8, preserve exact contents/order, malformed input is ambiguous,
+shutdown events are retained with faults, routine disk-space stays benign and
+misleading path substrings stay relevant. Raw overflow and missing-banner controls
+fail closed. Script/preload/source/bundle hashes are retained; the intermediate
+supervisor source was archived under its matching hash.
+
+sweep/tcp-emission-comparison.json proves the authenticated r1/r3
+generateSandboxProfile body is byte-identical. The module postimage changed
+because the collector changed; network profile emission was not repaired or
+broadened at runtime. Exact patch preimages were preserved, application checked
+against clean inputs, replay refused, postimage hashes and generator bindings
+updated together. Patch SHA-256:
+`9116e04677a6a058947b7e24d2b71372d86dfd6c756f25f126f512a73ac7beb2`.
+
+Fresh retained r3 DEV bundle: ~/.local/state/kernel/dev-bundle-v3-sweep-r3/.
+Receipt: ~/.local/state/kernel/dev-bundle-v3-sweep-r3.receipt.json.
+Bundle digest: `4b3c5cf4af4cbcf2d4b3d8eaa41114f028340cc851c747f40c931c4c7cca2cef`.
+Receipt SHA-256: `1390c998cedbe5d0fbf5eaac0cf32b934adb4156deca728fc60ec90c075a5ed6`.
+Expected final MANIFEST.sha256 digest:
+`3031d1ae45ea1037a94fed16f6fdc10333a1222539724e6c347057ff36d0651c`, held in
+~/.local/state/kernel/sweep/release-r3.json. It was regenerated from retained
+package contents; this checkpoint is not a manifest member.
+
+Required regressions on r3 all exit0 with that external digest: selftest.py
+(6/6), tests/self_check.py (5/5), tests/cleanup.py (5/5). Logs and consolidated
+JSON use prefix sweep/sol3-final-r3-20261106T2250Z-{selftest,self_check,cleanup}.txt
+and -regressions.json. Earlier regression/assembly logs are retained as well.
+No operator bundle or official Node artifact was qualified: development Node
+provenance remains UNQUALIFIED_LOCAL_EXECUTABLE.
+
+### Proposed v4 diff — review before any freeze
+
+Proposal: ~/.local/state/kernel/sandbox-v4-proposal.diff.
+Rationale: ~/.local/state/kernel/sandbox-v4-proposal-rationale.txt.
+Input/proposal hashes: ~/.local/state/kernel/sandbox-v4-proposal-receipt.json.
+Proposal SHA-256:
+`919e37c6d6e0e92ec7a06723a68ace1d4ecb3e79ae67ca29f74276bd2c17c66d`.
+
+The proposal fixes both strict (a) seams, documents explicit host prerequisites,
+propagates the narrow missing diagnostic positive-control condition as
+Unavailable (never a pass), updates v4 metadata and makes the cost helper write
+a fresh v4 report exclusively. It preserves all 201 cases/388 modes, operations,
+expected verdicts, assertion IDs, scope, timeouts and baseline witness logic.
+The helper uses receipt claims for unavailability propagation before full
+identity validation, never to certify a pass. Host/implementation classification
+still requires the human/source/raw evidence described above.
+Read-only git apply --check and independent Terra review passed. It was NOT
+applied, frozen or used for any of the sweep results above.
+
+Three passing-case coverage observations are separately documented in the
+rationale for reviewer disposition before the single v4 freeze: the actual temp
+alias differs from literal /tmp on the current temp root; supervisor death is
+currently prelaunch; and two lifecycle faults substitute group_child for the
+matrix timeout operation. These are not hidden as unconditional (a) failures or
+claimed covered by existing passes. Amend the same proposal before freezing if
+stronger controls are selected; no additional freeze was created here.
+
+Next owner action is reviewer disposition of this proposal and remaining host
+availability evidence. Only after explicit approval: freeze v4 on the reviewed
+old-subject lineage, obtain meaningful baseline RED, then port implementation and
+run full qualifying evidence. No v4 freeze, main/next push, sudo, network
+configuration by Sol, operator provisioning, installation or desk prove occurred.
+Branch is pushed in-review and this run stops for proposal review.
