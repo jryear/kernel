@@ -359,3 +359,272 @@ package/cache/directory inventories are retained at
 metadata for required branch/desk/snapshot operations is explicitly excluded).
 Hashes establish observed lasting integrity only. No sandbox, flake, mutants,
 BidZizi work, main merge/push, or release was undertaken.
+
+
+## Sandbox v3 freeze — amendment 2026-11-06, FREEZE ONLY
+
+Branch `kernel/sandbox-v3` starts exactly at `origin/next`
+`f9a0c82ebef62184208a3493be84df365f5c83a5`, the reviewed amendment landing.
+Binding source is docs/SANDBOX_DECISION.md, section "Amendment 2026-11-06: exact
+loopback ports via pinned srt patch", read in full; plan remains v6. The earlier
+unmodified-backend restriction and loopback-only binding claims are superseded
+at declared ports as specified there. This phase does not port implementation.
+
+**FROZEN_BASE: `f86aadec2564160d062b7c4ab3da8d2f7cd4938e`.**
+The one freeze commit adds only tasks/sandbox.toml and the full fixture chain:
+tests/tamper_suite.py and tests/sandbox_fixtures/{README.md,harness.py,matrix.json,
+measure_cost.py,payload.py,profile_faults.py,subject_driver.py}. No product source,
+patch, supervisor, provisioning source, installed dependency, decision or plan is
+edited. Scope/protection is byte-equivalent to v2; sandbox_runtime/* already
+covers the future patch/validator/bundle sources. No protection is loosened.
+
+V2 remains history on `kernel/sandbox-v2` at
+`39a419c97b1271ab1ba08b9dfab948e7665456da`, with immutable v2 freeze
+`4fa15c4b0afeb9adb5afe5caea31e864775b8580`. The v3 fixtures were copied from that
+freeze, not from partial implementation. No v2 frozen file was edited on its
+branch and no v2 implementation was cherry-picked into v3.
+
+### Exact v2 to v3 evidence changes and reasons
+
+The complete line-for-line unified diff, including every README/harness/matrix
+change, is retained externally as
+`~/.local/state/kernel/sandbox-v3-v2-interface.diff`, SHA-256
+`98478887c3a21971330a6d724c70e289d0466a9414a7d7bd6618c046453c2094`.
+It is reproducible with `git diff --binary 4fa15c4b0afeb9adb5afe5caea31e864775b8580
+f86aadec2564160d062b7c4ab3da8d2f7cd4938e -- tasks/sandbox.toml tests` on one line.
+`~/.local/state/kernel/sandbox-v3-evidence-diff.json` separately records exact
+before/after evidence arrays per changed case, every new case, and this diff
+hash. The following is the exhaustive semantic change map for review.
+
+**Matrix:** All 181 prior case IDs, layers/groups, operations, expected verdicts,
+logging variants, params and evidence_source fields remain identical. All
+operation controls remain unchanged in payload.py and the existing harness case
+handlers. Payload.py and tests/tamper_suite.py are byte-identical to v2. Exactly
+11 prior evidence lines change; no other existing matrix field changes.
+
+Old line in each of these 11 rows:
+`policy contains only declared exact loopback tuples`
+
+New line, verbatim in each:
+`declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted`
+
+Changed rows:
+- `NETWORK_DIRECT_V4_DEFAULT`
+- `NETWORK_DIRECT_V6_DEFAULT`
+- `NETWORK_WRONG_PORT`
+- `NETWORK_DECLARED_PORT_V4`
+- `NETWORK_DECLARED_PORT_V6`
+- `NETWORK_ALTERNATE_LOOPBACK_V4`
+- `NETWORK_NONLOOPBACK_BIND_V4`
+- `NETWORK_NONLOOPBACK_BIND_V6`
+- `NETWORK_UDP_DEFAULT`
+- `NETWORK_PROXY_HTTP_UNDECLARED`
+- `NETWORK_PROXY_CONNECT_UNDECLARED`
+
+Reason for every replacement: the old line described canonical loopback tuples
+as exhaustive authority and could conceal wildcard binding. The amendment
+requires canonical declarations AND the actual versioned effective grants plus
+explicit residual limits. The rows' other evidence lines are unchanged. The
+remaining five network rows (DECLARED_PORT_BIND_V4/V6, DECLARED_PROXY_HTTP/CONNECT,
+UDP_DENIED_WITH_DECLARED_TCP_PORT) retain their original evidence arrays. The
+shared receipt predicate for all 16 now enforces the amended meaning; native
+successful bind observations still must match the requested native address/port.
+
+**Harness receipt evidence:**
+
+- Parent sandbox_receipt.schema changes 1 to 2. Operator request schema remains 1.
+  Required policy fields add network_semantics, effective_network_rules,
+  profile_sha256 and profile_validation; this versions the authority correction.
+- localhost_endpoints is explicitly the declared application list, still exactly
+  two canonical TCP tuples per integer. A multiplicity-preserving list comparison
+  replaces the previous set comparison, so duplicate declared tuples cannot hide.
+- network_semantics must equal srt-0.0.81-exact-tcp-v1. Expected effective IP rules
+  are exactly local TCP bind/inbound at host * and remote TCP outbound at host
+  localhost per declared port, plus one remote TCP localhost outbound rule per
+  distinct actual proxy port. Complete-list/multiplicity comparison rejects
+  omissions, extras, duplicates, UDP/ip, local outbound or broad host/port rules.
+  Empty declarations require an empty application bind/inbound set.
+- internal_ipc now explicitly separates proxies and non_ip_rules. Each proxy
+  carries role, canonical host, integer port, tcp transport, positive PID/start
+  identity, ready=true and ownership_verified=true; http/socks roles are unique,
+  can share a mux port, and may not overlap declarations. The only fixed reviewed
+  non-IP rule is system-socket, AF_SYSTEM, protocol 2. This prevents proxy and
+  Unix-socket authority from being omitted or confused with declarations.
+- profile_validation binds validator_id=kernel-srt-profile-validator-v1,
+  exact_match, the complete retained UTF-8 inspected_profile string, and errors.
+  Its SHA-256 must equal policy.profile_sha256. Successful launched/enforced
+  receipts must match complete declarations and grants, not just a network
+  marker section. Failed inspection requires exact_match=false, nonempty errors
+  and retained mismatching profile identity. Unparsed effective rules may be
+  unavailable on rejection; the fixture does not demand fictitious repaired rules.
+- policy.exceptions explicitly discloses address_wildcard_declared_tcp_binding
+  (sorted ports, nonloopback_inbound_exposure and accepted_connection_data_exchange
+  true iff declarations are nonempty), localhost_address_class_aliases
+  (literal_spelling_enforced=false), and mapped_outbound_qualification
+  (supported/unavailable, universal_compatibility=false, this platform, exact
+  OS build and matching Node version/artifact). Each has a nonempty detail.
+- assurance adds required false loopback_only_binding and literal_address_only;
+  all five preexisting false assurance limits remain. This prevents obsolete
+  loopback-only or literal-spelling claims while retaining other evidence bounds.
+- bundle must bind patch_id=kernel-srt-0.0.81-exact-tcp-v1, patch_sha256,
+  patch_preimages, patch_postimages and bundle_digest exactly to the external
+  operator receipt. Both patch manifests are nonempty unique relative
+  {path,sha256} lists with identical changed-file sets and valid SHA-256 values.
+  Existing pinned srt/Node/lock and release digest checks remain.
+- Probe.invoke additionally retains the declared ports, external expected bundle
+  metadata, whether any final verdict was written, and a bounded bundle-executable
+  launch audit. The real-effect witness and its short-circuit/Unavailable
+  behavior are unchanged; its detail protocol changes sandbox-freeze-2 to -3.
+
+**New fault evidence and adapter:** profile_faults.py only alters test input.
+subject_driver.py wraps the future production
+`kernel_sandbox.validate_generated_profile(profile, context)` seam, passes the
+altered complete bytes to that real validator, and records before/inspected
+hashes. It raises actual RuntimeError/OSError for failed/unavailable inspection.
+It does not implement a profile parser, fabricate a validator result or rewrite
+an actual launch profile. Missing API is Unavailable, never RED. The production
+prelaunch call and identical-byte launch binding remain independent source-review
+requirements. profile_faults.py is added to every check's declared chain.
+
+Each profile rejection must return exit 2/unverifiable, enforced=false,
+launched=false, no candidate operation, no protected change, exact_match=false,
+a precise error list and the inspected hash/bytes matching the injected witness.
+For PATCH_AUTHENTICATION_FAILURE, dependency_case appends bytes only to the
+inventoried patch_file in a disposable bundle copy with original expected hashes.
+It requires exit 3, no final verdict and no observed bundle-executable launch.
+The adapter audits Popen for executables under that disposable bundle root; this
+is bounded launch evidence, not exhaustive semantic/code-loading attestation.
+
+**README:** The title/counts/table become v3 and 201/388 with the revised policy
+budget. The parent receipt schema paragraph becomes schema 2. The old paragraph
+calling localhost_endpoints exact effective authority is replaced by the
+canonical-destination/effective-rule/internal-IPC/profile/exception definitions
+above, with exact machine-readable field shapes. The bundle section adds patch
+file/ID/own digest/pre/postimage identities and whole-bundle coverage. A new
+read-only validator seam paragraph explains the reviewed fault path and required
+production wiring. The assurance paragraph adds both false flags. The old
+"16 network rows byte-for-byte" paragraph becomes the exact 11-line evidence
+replacement accounting while retaining every operation/outcome/control. New
+rejection-case paragraphs specify each verdict, input mutation, retained evidence
+and launch audit limit. The explicit residual-limit paragraphs disclose wildcard
+bind/inbound and accepted-connection data exchange, OS localhost alias/mapped
+matching, no server/process identity, possible relay by allowed services,
+occupancy/permission/race unavailability and all unchanged UDP/egress/log/attempt/
+hostile-host limits. V3's external-egress exclusion remains; no external endpoint
+or egress receipt is introduced. Patch file/hash/authentication are future
+implementation outputs, not fabricated by this freeze.
+
+**Contract and cost helper:** ID changes sandbox-v2 to sandbox-v3. Existing four
+names, assertion IDs, baseline failure sets, groups, scope and protections remain
+identical. The fixture helper chain adds profile_faults.py. Only the policy/
+dependency timeout changes, to budget the new cases by the existing formula.
+measure_cost.py retains approved v2 cost floors and writes sandbox-v3-costs.json,
+preserving old evidence; it never changes the frozen task timeout itself.
+
+### Added cases
+
+Every new case has operation clean and both disabled/enabled logging variants.
+The 19 profile faults belong to policy; the patch fault belongs to dependency.
+All are in the existing policy-dependency check; no other group changes.
+
+| New case ID | Reviewed fault | Required nested outcome |
+| --- | --- | --- |
+| `PROFILE_MISSING_RULE` | missing_rule | unverifiable, exit 2, launched=false |
+| `PROFILE_ADDITIONAL_RULE` | additional_rule | unverifiable, exit 2, launched=false |
+| `PROFILE_DUPLICATE_RULE` | duplicate_rule | unverifiable, exit 2, launched=false |
+| `PROFILE_MALFORMED_RULE` | malformed_rule | unverifiable, exit 2, launched=false |
+| `PROFILE_BROADENED_HOST` | broadened_host | unverifiable, exit 2, launched=false |
+| `PROFILE_IP_TRANSPORT` | ip_transport | unverifiable, exit 2, launched=false |
+| `PROFILE_WILDCARD_PORT` | wildcard_port | unverifiable, exit 2, launched=false |
+| `PROFILE_LOCAL_OUTBOUND` | local_outbound | unverifiable, exit 2, launched=false |
+| `PROFILE_UNACCOUNTED_PROXY` | unaccounted_proxy | unverifiable, exit 2, launched=false |
+| `PROFILE_UNIX_SOCKET` | unix_socket | unverifiable, exit 2, launched=false |
+| `PROFILE_UNEXPECTED_DEFAULT` | unexpected_default | unverifiable, exit 2, launched=false |
+| `PROFILE_INSPECTION_FAILURE` | inspection_failure | unverifiable, exit 2, launched=false |
+| `PROFILE_INSPECTION_UNAVAILABLE` | inspection_unavailable | unverifiable, exit 2, launched=false |
+| `PROFILE_UNKNOWN_SYNTAX` | unknown_syntax | unverifiable, exit 2, launched=false |
+| `PROFILE_INCLUDE` | include | unverifiable, exit 2, launched=false |
+| `PROFILE_MACRO` | macro | unverifiable, exit 2, launched=false |
+| `PROFILE_OPERATION_WILDCARD` | operation_wildcard | unverifiable, exit 2, launched=false |
+| `PROFILE_OUTSIDE_NETWORK_SECTION` | outside_network_section | unverifiable, exit 2, launched=false |
+| `PROFILE_NONNETWORK_TEMPLATE` | nonnetwork_template | unverifiable, exit 2, launched=false |
+| `PATCH_AUTHENTICATION_FAILURE` | patch file byte tamper | exit 3, no verdict |
+
+No previous case is removed, weakened, renamed or reclassified. The count is
+201 cases / 388 variants (181/348 retained plus 20/40 new). A synthetic declared
+port 12345 supplies a known application rule for profile mutations. Mutators
+cover every listed rejection class, plus an extra grant beyond a marker section
+and a changed non-network template to exercise complete-profile inspection.
+The patch case targets its own authenticated patch-file digest, not a missing API.
+These new paths are frozen for review, not executed/qualified on the absent
+patched product. Baseline witnesses do not individually credit their outcome.
+
+### Cost calibration and timeouts
+
+Same formula: max(600, ceil_to_60(120 + 4 * projected_seconds + 5 * variants)).
+Charge every variant the slowest calibrated nested invocation, including pure
+classifier/prelaunch variants, plus one gate/check, extra isolation invocations,
+187 file controls, 32 network controls and six seconds per timeout variant.
+Keep approved v2 floors: nested 2.31162816699 s, file 0.23199816700 s, network
+0.73749454098 s; fresh faster samples must not shrink existing budgets.
+
+| Check | Cases / variants | Fresh measured witness samples (s) | Projection (s) | Frozen timeout (s) |
+| --- | ---: | --- | ---: | ---: |
+| effect-classifier | 124 / 234 | 1.3969, 1.3726 | 586.62 | 3660 |
+| protocol | 13 / 26 | 1.3841, 1.3843 | 62.41 | 600 |
+| policy-dependency | 57 / 114 | 1.4029, 1.3787 | 289.44 | 1860 |
+| isolation | 7 / 14 | 1.4114, 1.4096 | 75.30 | 600 |
+
+The 40 added variants add 92.4651 s to the policy projection, which becomes
+289.4371 s, yielding 1860 s. Other budgets remain exactly 3660/600/600. Fresh
+measurements and full arithmetic are external:
+`~/.local/state/kernel/sandbox-v3-costs.txt` and sandbox-v3-costs.json.
+These are unsandboxed fixture samples/projections, not a patched-backend timing
+or a correct-build GREEN claim. Inner timeouts and all prior controls remain.
+
+### Baseline, inventory and fixture checks
+
+Initial installed-judge baseline: exit 0, BASELINE_READY sandbox-v3,
+assurance=schema2-evidence-validity. All four checks fail exactly their existing
+named boundary assertion with harness_error=false. Each decisive witness is an
+actual synthetic protected write, independent lasting change, nested exit 0 and
+SUPPORTED with complete check/cleanup evidence. No API, CLI, dependency or setup
+failure is counted as RED. Subsequent rows are explicitly unqualified after the
+witness. Unavailable still propagates without an outer assertion result.
+
+Initial output/log:
+`~/.local/state/kernel/sandbox-v3-baseline.txt`, sandbox-v3-baseline.jsonl.
+The same literal immutable SHA is used for initial and final documentation-head
+baselines:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B ~/code/_kernel/verify.py tasks/sandbox.toml --repo . --base f86aadec2564160d062b7c4ab3da8d2f7cd4938e --baseline --log ~/.local/state/kernel/sandbox-v3-baseline-final.jsonl
+```
+
+Final output: `~/.local/state/kernel/sandbox-v3-baseline-final.txt`.
+Before/after judge inventories: sandbox-v3-judge-before.json and
+sandbox-v3-judge-after.json under the same external state directory. They include
+all package/cache files, directories, modes, mtimes, sizes, bytes and links;
+only shared .git metadata required for branches/Desk/snapshots is excluded.
+Comparison: sandbox-v3-judge-comparison.json. The installed judge is read-only.
+
+Syntax, unique/exhaustive grouping, original case-field preservation, exact 11
+matrix replacements, unchanged entry/payload, complete protected helper chain
+and unchanged scope checks passed. All 19 mutation inputs were exercised on a
+synthetic generated-profile string for fixture wiring only. The new receipt
+predicate accepted one synthetic control and rejected 14 distinct malformed
+metadata controls (missing/duplicate rules, ip, wildcard port, local outbound,
+broadened host, proxy bind, wrong declaration, extra IPC, profile hash, validation
+failure, missing exception, literal alias overclaim and undisclosed exposure).
+Log: `~/.local/state/kernel/sandbox-v3-fixture-validation.txt`. This is fixture
+predicate evidence, not product validator/enforcement or patched-bundle proof.
+
+### Review stop
+
+Desk sandbox lease was released from v2 before branching; sol-2 claimed it on
+kernel/sandbox-v3 under instruction_version 6 and maintained heartbeats. Branch
+is pushed and workspace is in-review for **v3 freeze review**. No desk prove,
+implementation port, patch construction/application, supervisor/validator product
+code, npm install, provisioning, egress, flake, mutants, BidZizi work, installation,
+merge or push to main/next occurred in this phase. Phase 2 needs a separate go
+after this freeze is approved. The approved v2 history and evidence are preserved.
