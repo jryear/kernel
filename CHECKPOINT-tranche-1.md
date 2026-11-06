@@ -628,3 +628,207 @@ implementation port, patch construction/application, supervisor/validator produc
 code, npm install, provisioning, egress, flake, mutants, BidZizi work, installation,
 merge or push to main/next occurred in this phase. Phase 2 needs a separate go
 after this freeze is approved. The approved v2 history and evidence are preserved.
+
+
+## Sandbox v3 implementation — INCOMPLETE context checkpoint
+
+User-authorized Phase 2, Sol implementation manager with Terra and Luna. Stopping
+at the requested context boundary with a coherent pushed checkpoint rather than
+claiming acceptance. **Source HEAD: `24a54b42be83c346b2f2009f10bf71a1e993153c`**
+on kernel/sandbox-v3. This source commit was pushed before this documentation
+commit. Approved FROZEN_BASE remains
+`f86aadec2564160d062b7c4ab3da8d2f7cd4938e`; tests/tasks/decision/spike/Desk plan
+are unchanged and every changed path is inside its frozen implementation scope.
+
+**Done condition is NOT met:** no all-four-check installed-judge claim has run.
+The work below is development/component evidence only, not qualification, full
+acceptance, production readiness or provisioning authorization.
+
+### Implemented source and ownership
+
+- Terra: versioned dist patch, authenticated pre/postimage manifest and an exact
+  hunk applicator; trusted Node supervisor; read-only complete-profile validator
+  kernel-srt-profile-validator-v1 in kernel_profile.py.
+- Luna: exact sandbox.package.json/lock, fresh external bundle assembler,
+  Zack-only provision.sh, runtime docs and README/FRONTIER residual limits.
+- Sol: ported classifier/policy validation, new kernel_bundle.py authentication,
+  kernel_sandbox_runtime.py trusted-parent session/receipt integration, schema-2
+  parser/runtime/report hooks and legacy opt-in refusal, source review, final
+  package manifest/external digest and integrated DEV smoke/regressions.
+
+The patch is sandbox_runtime/kernel-srt-0.0.81-exact-tcp-v1.patch, SHA-256
+`361badaf1608a8eca139ce3a17fe69722d70e85c31078e90dca2fbb6dfb212ce`.
+It changes only the three listed pinned dist files, with exact preimages and
+postimages in sandbox_runtime/patch-manifest.json. The custom applicator checks
+version, own patch hash, complete changed-file sets, old hunk positions/content
+without fuzz, line counts and all postimage hashes before writing any output.
+Already-applied or changed preimages are refused. Assembly is fresh; it never
+patches an existing bundle in place. The private sorted integer-port input is
+validated even when upstream initialize bypasses schema parsing. Broad
+allowLocalBinding or unrestricted generation throws. Per-port/proxy rules are
+exactly the amendment's TCP grants, with no proxy bind/inbound grants.
+
+The Node supervisor owns separate literal-canonical HTTP/CONNECT and numeric
+SOCKS gateways outside the candidate group. It rejects alternate spellings and
+undeclared ports rather than relying on upstream hostname canonicalization. It
+constructs an independent proxy-only reference profile first from authenticated
+code and trusted filesystem configuration, then generates the actual launch
+profile once. Python validates the entire actual profile and reference via the
+same public validator seam used by the frozen adapter. Actual profile bytes
+are never repaired or regenerated after validation. Python executes the returned
+wrapped argv in kernel_process.execute; the supervisor stays outside that group
+until candidate cleanup. The canary replaces only the trusted final command in
+a copy of that argv, retaining the identical profile bytes.
+
+Authentication occurs before loading/launching bundle code. It checks regular
+file inventory/hash/mode, no extra files/symlinks, complete bundle digest,
+upstream lock, patch own hash, pre/post manifest binding and actual postimages.
+Production requires a caller-held KERNEL_SANDBOX_BUNDLE_RECEIPT_SHA256 and
+operator ownership/non-writable ancestry. Development requires explicit
+KERNEL_SANDBOX_DEV=1 and is always marked dev_only. Missing capability/runtime
+returns unavailable; failed authentication exits 3. No npm/patch/fallback occurs
+in the verifier. The production per-check and aggregate decisions call the same
+classify_sandbox_evidence code exercised by the classifier fixtures.
+
+The parent uses fresh private scratch/home/cache/result state and a reviewed
+same-profile protected/scratch write canary before candidate execution. Explicit
+secret paths and bounded preexisting hardlink aliases are denied; unaccounted
+existing secret hardlinks fail closed. No exhaustive host alias/secret or
+transient-read claim follows. Parent receipts use schema 2, disclose wildcard
+TCP binding/inbound and accepted-connection exposure, OS localhost alias
+semantics, unavailable mapped qualification, patch/bundle binding, complete
+inspected bytes/hash and exact effective IP/proxy rules.
+
+### Fresh development bundles and retained failures
+
+The historical ~/.local/state/kernel/dev-bundle was never modified. Fresh v3
+assembly used a clean npm ci from the exact frozen lock outside repo/judge.
+The first v3 assembly copied the local Homebrew Node executable without libnode
+and failed dyld startup; it is retained, not rewritten. The second fresh runtime
+bundle includes copied/relocated local dylibs and ad-hoc signatures ONLY for
+DEV use. This is not an official authenticated Node distribution artifact.
+Production provisioning instead requires the authenticated official archive.
+
+Current fresh checkpoint bundle:
+`~/.local/state/kernel/dev-bundle-v3-checkpoint/`
+
+External DEV receipt:
+`~/.local/state/kernel/dev-bundle-v3-checkpoint.receipt.json`
+
+Bundle digest: `399ec720ede447bc653f58358559c942dbbb191a761edf785327855bd2d426a0`.
+Receipt SHA-256: `6eb80b46a5e84ba1561d7db76529d71aab232c9c1c38fec55ca9061c5a211da7`.
+The receipt explicitly records dev_only, development-only qualification,
+UNQUALIFIED_LOCAL_EXECUTABLE artifact provenance, actual executable digest,
+patch identity, network limits and false assurance claims. Old dev-bundle-v3 and
+dev-bundle-v3-runtime2 remain unchanged. Assembly log:
+`~/.local/state/kernel/sandbox-v3-checkpoint-assembly.json`.
+
+The first integrated smoke exposed srt overriding TMPDIR to nonexistent
+/private/tmp/claude, so the payload failed before its operation. That failure is
+retained in sandbox-v3-first-integration-smoke.txt and is not RED. The trusted
+supervisor environment now supplies CLAUDE_CODE_TMPDIR to fresh child scratch;
+shared /tmp/claude and state-level convenience cache paths are explicitly denied.
+The successful retry is sandbox-v3-integration-smoke-r2.txt. A final smoke on
+source HEAD against the checkpoint bundle is retained as
+sandbox-v3-integration-smoke-final.txt/json. It requires the frozen receipt_check
+and denied_probe predicates on a real protected-write operation: EPERM, nested
+unverifiable, no protected changes, exact schema-2 patch/profile/rule evidence.
+This is one DEV-ONLY disabled-logging smoke, not the full effect group.
+
+### Per-check acceptance status and other validation
+
+| Frozen check | Installed-judge DEV claim status | Available bounded evidence |
+| --- | --- | --- |
+| effect-classifier | NOT RUN | Real boundary smoke; 41/41 classifier variants |
+| protocol | NOT RUN | Existing regression handshake tests only |
+| policy-dependency | NOT RUN | Actual profile smoke; synthetic validator controls; worker proxy controls |
+| isolation | NOT RUN | Existing cleanup regression suite only |
+
+No sandbox-v3 claim log or all-four GREEN exists at this checkpoint. These
+statuses must not be converted to passing acceptance by a later reader.
+
+- selftest.py: 6/6 pass, external expected package digest supplied;
+  sandbox-v3-selftest-checkpoint.txt.
+- tests/self_check.py: all five assertions pass;
+  sandbox-v3-self-check-checkpoint.txt.
+- tests/cleanup.py: all five assertions pass;
+  sandbox-v3-cleanup-checkpoint.txt.
+- Combined regression exits/log paths:
+  ~/.local/state/kernel/sandbox-v3-regressions-checkpoint.json.
+- Parent component controls: 41 classifier/logging variants, a synthetic valid
+  full profile and 17 directly mutated profile inputs pass/reject as expected;
+  sandbox-v3-component-controls-checkpoint.txt. The two injected inspection
+  exceptions still need full frozen-harness exercise.
+- Terra reported exact patch first-apply success/replay refusal, JS syntax,
+  actual generated-profile acceptance, local CONNECT/SOCKS positive nonce echo
+  and CONNECT 127.1 refusal. Those worker checks are component leads, not the
+  independent full claim. The original local Node was used before copied Node
+  closure was fixed; do not treat them as final-bundle qualification.
+- Parent source syntax, bash -n provision.sh, node --check supervisor, whitespace,
+  unchanged protected paths and frozen-scope checks passed.
+- Installed judge package/cache remains byte/mode/mtime identical across 206
+  entries to the v3-freeze inventory (shared .git metadata excluded):
+  sandbox-v3-implementation-judge-comparison.json. No installed-judge invocation
+  occurred during this implementation checkpoint.
+
+All log names above are under ~/.local/state/kernel/. Package MANIFEST.sha256
+was regenerated from final retained sources. External expected-digest receipt:
+`~/.local/state/kernel/sandbox-v3-implementation-release.json`, manifest SHA-256
+`97f13b01418b0bf04262cba8a43f68b140638fa2937cd575d990ab6132a228b7`.
+The checkpoint is not a package-manifest member, so this documentation commit
+does not change that expected package digest.
+
+### Zack's future provisioning command — DO NOT RUN YET
+
+The single operator script is sandbox_runtime/provision.sh. It authenticates an
+operator-supplied official Node archive digest, calls the same assembler into
+fresh staging, refuses existing digest directories/receipts, sets root ownership
+and non-writable ancestry/deny-write ACLs, writes the external protected operator
+receipt and prints its SHA-256. Administrative ownership/ACL behavior is not
+executed or qualified here. Receipt parent must already be root-owned,
+non-writable and symlink-free. Future arm64 command, after full implementation
+acceptance/review and authenticated archive acquisition:
+
+```sh
+sudo ./sandbox_runtime/provision.sh --node-archive "$HOME/Downloads/node-v24.22.0-darwin-arm64.tar.gz" --node-archive-sha256 "$KERNEL_NODE_ARTIFACT_SHA256" --receipt "/Library/Application Support/KernelRuntime/receipts/kernel-sandbox-v3.json"
+```
+
+KERNEL_NODE_ARTIFACT_SHA256 must be independently authenticated for that exact
+archive, not inferred from an untrusted local download. No sudo or provisioning
+was run. This checkpoint is not a request for Zack to provision incomplete work.
+
+### Exact continuation and known gaps
+
+1. Review the integrated parent/session/authentication/proxy/validator source on
+   HEAD. In particular, verify independent reference-template construction,
+   same-byte execution, allow/deny path overlaps, bounded hardlink handling,
+   failed inspection receipts and protected inventory attribution.
+2. Run the full installed-judge claim on clean committed HEAD against the current
+   DEV receipt, with KERNEL_SANDBOX_DEV=1 and KERNEL_SANDBOX_BUNDLE_RECEIPT set.
+   Do NOT set VERIFY_SANDBOX=1 on the outer judge; the frozen nested harness owns
+   that opt-in. Use the user-authorized command/model label, literal FROZEN_BASE
+   and a new external JSONL log, for example:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 KERNEL_SANDBOX_DEV=1 KERNEL_SANDBOX_BUNDLE_RECEIPT="$HOME/.local/state/kernel/dev-bundle-v3-checkpoint.receipt.json" python3 -B ~/code/_kernel/verify.py tasks/sandbox.toml --repo . --base f86aadec2564160d062b7c4ab3da8d2f7cd4938e --claim "DEV-ONLY sandbox-v3 integration" --implementer-model "gpt-6.1-sol medium (+terra/luna)" --log "$HOME/.local/state/kernel/sandbox-v3-dev-claim.jsonl"
+```
+
+3. Resolve real full-matrix failures in implementation only. Do not edit tests
+   or tasks or loosen protections/timeouts. Retain failed logs. Likely required
+   review areas include enabled collector readiness/loss/drain behavior, proxy
+   socket teardown, actual lifecycle failure injection, read/alias and default
+   policy cases, malformed/stale result handling and exact prelaunch refusal.
+   Enabled diagnostic collection and full lifecycle evidence remain unqualified;
+   absence of errors/events must never stand in for that evidence.
+4. Rebuild a fresh external bundle whenever bundled sources change; never mutate
+   existing development bundles. Re-run required regressions after fixes,
+   regenerate final manifest/expected digest, and get all four checks GREEN in
+   one complete installed-judge claim before stating the requested done condition.
+5. Append final per-check logs/known gaps to this checkpoint, push v3, set
+   in-review and stop. Qualification still waits for Zack's separately provisioned
+   immutable bundle. No desk prove before that qualifying run.
+
+Desk sandbox remains sol-2 on kernel/sandbox-v3 with heartbeat. Both bounded
+workers have completed and own no pending writes. Workspace is set in-review;
+this run stops for context recovery with acceptance incomplete. No egress,
+flake, mutants, BidZizi work, installation, merge or main/next push occurred.
