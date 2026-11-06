@@ -828,6 +828,157 @@ PYTHONDONTWRITEBYTECODE=1 KERNEL_SANDBOX_DEV=1 KERNEL_SANDBOX_BUNDLE_RECEIPT="$H
    in-review and stop. Qualification still waits for Zack's separately provisioned
    immutable bundle. No desk prove before that qualifying run.
 
+
+## Sandbox v3 implementation — DEV blocked at immutable fixture
+
+Continuation authorized 2026-11-06. Sol-3 acquired the expired sol-2 lease at
+20:41:43 UTC under instruction_version 6 and maintained heartbeats. Source HEAD:
+`f15f7d9a4edc66fcb6ea6f201e4afd13a8b9e0d2` on kernel/sandbox-v3. This checkpoint
+is incomplete: **no all-four GREEN and no DEV-complete claim**. The documentation
+commit containing this section is recorded in the external delivery receipt.
+
+### Stop boundary and exact blockers
+
+The user's immutable-path stop rule applies. No tests/tasks/spike/.desk/decision
+files were changed. Two independently reproduced blockers prevent the requested
+complete DEV claim:
+
+1. `NETWORK_ALTERNATE_LOOPBACK_V4` (policy layer) needs an unsandboxed reachable
+   listener at 127.0.0.2. Both a plain bind and the unchanged frozen network_case
+   fail with errno 49, Can't assign requested address. The actual frozen error
+   is `harness.Unavailable: controlled listener unavailable: [Errno 49] Can't
+   assign requested address`. No host network provisioning or sudo was used.
+   Logs: `sandbox-v3-sol3-r1-policy-dependency-diagnostic.txt` and
+   `sandbox-v3-sol3-r1-network-alternate-v4.txt` under ~/.local/state/kernel/.
+2. Frozen `matrix.json` lines 2759–2771 supply `INVALID_POLICY_GRANT` with
+   `params.policy = "unsafe_grant"`. Frozen `harness.py:682` instead reads
+   `params.invalid_declaration`, defaults to the case ID, and at line 692 raises
+   `Unavailable: unmapped invalid-policy fixture INVALID_POLICY_GRANT`.
+   This happens before preparing/invoking the product, so implementation changes
+   cannot repair it. The existing unsafe_grant mapping is present at line 686.
+   Do not change frozen inputs in place or add a product test backdoor. Reviewer
+   disposition/new freeze is required. Exact evidence and 20 preceding tail
+   variant observations: `sandbox-v3-sol3-r1-policy-tail.jsonl`,
+   `sandbox-v3-sol3-r1-policy-tail-summary.json`, and
+   `sandbox-v3-sol3-r1-policy-tail-run.txt` under the external state directory.
+
+These are unavailable evidence, not meaningful feature RED or product denial.
+No positive control was emulated, skipped into success, or reclassified.
+
+### Source review and retained implementation
+
+Terra repaired proxy socket tracking/teardown, immediate diagnostic JSONL
+spooling, observation of the embedded srt collector process and detectable
+same-chunk loss, and bounded diagnostic drain/shutdown. Sol integrated parent
+consumption and authentication of those spool bytes/counts; sanitized the Node
+version-query environment; bound inspected profile bytes to the precise
+sandbox-exec -p argv slot; included resolved Git metadata and bundle paths in
+protected inventories; retained provisional result bytes/hash and an additional
+final integrity observation; and separated the reviewed no-descendant canary
+from arbitrary-check process cleanup so lifecycle faults exercise the check.
+Luna assembled a fresh DEV bundle and ran the mechanical diagnostics/regressions.
+
+The reviewed reference is generated separately with empty application ports;
+the validator compares the entire non-network template plus exact rule
+multiplicity, and the retained inspected bytes are launched without regeneration.
+Path overlap, bounded hardlink fail-closed handling, inspection exception
+receipts and typed classifier wiring were reviewed. This is source review and
+bounded DEV evidence, not independent product acceptance or production proof.
+
+Further read-only review found two pending source corrections. Implementation
+stopped at the immutable-fixture boundary before applying them:
+
+- Keep the diagnostic subscription active until collector close is observed;
+  currently it unsubscribes before reset/close, leaving a known omission window.
+  Account conservatively for deliveries after the drain deadline.
+- Anchor benign late-denial matching to recognized operations/exact trusted
+  canary identity. Current substring exemptions are too broad, and routine
+  `system-info vfs.disk-space` is not exempted as the decision requires.
+
+No claim about complete logs, invisible attempts, exhaustive cleanup, external
+egress, mapped-address universality or production qualification follows.
+
+### Exact DEV evidence status
+
+The installed-judge command used the literal FROZEN_BASE and requested model
+label, with PYTHONDONTWRITEBYTECODE=1, KERNEL_SANDBOX_DEV=1 and the fresh r1
+KERNEL_SANDBOX_BUNDLE_RECEIPT. Outer VERIFY_SANDBOX was unset. Source stayed
+clean/committed during execution. The full run was stopped at the user's scope
+boundary; no complete four-check JSONL was published and no acceptance is credited.
+
+| Frozen check | Installed-judge verdict line | Separate direct diagnostic |
+| --- | --- | --- |
+| effect-classifier | NONE — interrupted during candidate matrix | incomplete; no GREEN |
+| protocol | NONE — not reached before stop | exit 0, 26/26 variants, no mismatches |
+| policy-dependency | NONE — not reached before stop | unavailable at alternate-loopback control; later partial diagnostic unavailable at INVALID_POLICY_GRANT |
+| isolation | NONE — not reached before stop | exit 0, 14/14 variants, no mismatches |
+
+Full command console: ~/.local/state/kernel/sandbox-v3-sol3-dev-claim-r1.txt.
+Requested JSONL path: sandbox-v3-sol3-dev-claim-r1.jsonl (NOT emitted).
+Interruption/cleanup receipt: sandbox-v3-sol3-r1-interruption.json. Exit 130 is
+an intentional interrupted run, not a test verdict. The harness was paused,
+its current nested descendants were observed to finish, then the dedicated
+judge group was interrupted. Judge/harness PIDs were absent afterwards and no
+verification worktrees remained. This is observed cleanup, not exhaustive proof.
+
+Direct group logs: sandbox-v3-sol3-r1-protocol-diagnostic.txt and
+sandbox-v3-sol3-r1-isolation-diagnostic.txt; summary
+sandbox-v3-sol3-r1-diagnostics.json. They do not replace an installed-judge claim.
+The policy-tail diagnostic completed 20 variants with zero Mismatches and
+stopped at its first Unavailable; later rows are not qualified.
+
+All three regressions exited 0 with the external expected package digest:
+selftest.py (6/6), tests/self_check.py (5/5), tests/cleanup.py (5/5).
+Logs: sandbox-v3-sol3-r1-selftest.py.txt, sandbox-v3-sol3-r1-self_check.txt,
+sandbox-v3-sol3-r1-cleanup.txt; summary sandbox-v3-sol3-r1-regressions.json.
+Installed judge inventory remains exactly equal across 206 entries, excluding
+only shared .git metadata: sandbox-v3-sol3-judge-before.json,
+sandbox-v3-sol3-judge-after.json and sandbox-v3-sol3-judge-comparison.json.
+All evidence names in this section are under ~/.local/state/kernel/.
+
+### Final retained package and DEV bundle identities
+
+MANIFEST.sha256 was regenerated from retained final package contents and checked
+again at stop. Its external expected digest is
+`aa773d8a0ab07e5f2fbe48da1bd3c1a562b53d90ad18c35b7ed04c077511c5b2`.
+External receipt: ~/.local/state/kernel/sandbox-v3-sol3-blocked-release.json.
+This checkpoint is not a manifest member and does not change the package digest.
+
+Fresh bundle: ~/.local/state/kernel/dev-bundle-v3-sol3-r1/.
+Receipt: ~/.local/state/kernel/dev-bundle-v3-sol3-r1.receipt.json.
+Bundle digest: `0fb60c9613adaafb1254f9b82df465a0ec2d9184c55bdf0d828655f2ea1c05e5`.
+Receipt SHA-256: `96d11fa4acca57b6a9c0d7b9c2969c9e75bbf1c7502e07c886cfa4784c484ad8`.
+Patch file SHA-256:
+`361badaf1608a8eca139ce3a17fe69722d70e85c31078e90dca2fbb6dfb212ce`.
+Assembly log: sandbox-v3-sol3-r1-assembly.txt. Assembly itself succeeded; Luna's
+initial shell exit-recorder used zsh's reserved status variable and failed after
+success. A redundant r2 assembly attempt was interrupted; it is not acceptance
+evidence. Existing historical bundles were not overwritten. The retained r1
+Node remains an UNQUALIFIED_LOCAL_EXECUTABLE with development-only provenance.
+
+### Exact continuation and Zack-only later provisioning
+
+Reviewer must first resolve the immutable fixture seam and route the missing
+alternate-loopback host prerequisite; do not infer authority to edit tests or
+configure the host. After explicit continuation, repair the two diagnostic
+source gaps above, assemble another fresh external bundle, regenerate the
+manifest/external expected digest, and rerun the complete installed-judge claim
+with the reviewed frozen base/contract. Do not borrow the direct protocol or
+isolation passes as all-four GREEN. Preserve this interrupted run and all
+unavailable evidence. Repeat regressions after code changes.
+
+The future operator command remains below for Zack, after implementation and
+review gates; it was NOT run and this blocked checkpoint is not a provisioning
+request. The archive checksum must be independently authenticated:
+
+```sh
+sudo ./sandbox_runtime/provision.sh --node-archive "$HOME/Downloads/node-v24.22.0-darwin-arm64.tar.gz" --node-archive-sha256 "$KERNEL_NODE_ARTIFACT_SHA256" --receipt "/Library/Application Support/KernelRuntime/receipts/kernel-sandbox-v3.json"
+```
+
+Branch is delivered for review of this blocked continuation. No push to main or
+next, installation, provisioning, sudo, fixture edit or desk prove occurred.
+Qualifying acceptance still requires Zack's separately provisioned bundle.
+
 Desk sandbox remains sol-2 on kernel/sandbox-v3 with heartbeat. Both bounded
 workers have completed and own no pending writes. Workspace is set in-review;
 this run stops for context recovery with acceptance incomplete. No egress,
