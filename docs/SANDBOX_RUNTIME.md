@@ -1,0 +1,104 @@
+# Sandbox v3 runtime bundle
+
+Sandbox execution is opt-in and remains development work until the complete
+frozen sandbox-v3 matrix and independent review pass. The runtime depends on
+Node v24.22.0, `@anthropic-ai/sandbox-runtime` 0.0.81, the exact transitive
+lock, the assembly patch `kernel-srt-0.0.81-exact-tcp-v1`, the trusted supervisor,
+and the read-only profile validator. Checks do not download, install, patch, or
+resolve dependencies.
+
+## Development bundle
+
+Use an explicit trusted-caller opt-in (`KERNEL_SANDBOX_DEV=1`) only with the
+local development receipt. Assembly creates a new directory at
+`~/.local/state/kernel/dev-bundle-v3`; it refuses to replace an existing bundle
+or receipt. It never writes the historical `dev-bundle` directory or
+`~/code/_kernel`.
+
+After the patch inputs and supervisor have been reviewed into the source tree:
+
+```sh
+python3 -B sandbox_runtime/assemble.py --dev \
+  --node "$HOME/.local/bin/node" \
+  --destination "$HOME/.local/state/kernel/dev-bundle-v3" \
+  --receipt "$HOME/.local/state/kernel/dev-bundle-v3.receipt.json"
+```
+
+The assembler requires Node `v24.22.0`, checks the frozen lock SHA-256
+`53908b1e23845bd0d452463f81a3df0f9b92bce76aa8c69c8f75c51a22600ec9`, runs
+`npm ci` with scripts and network audit disabled in the fresh external staging
+directory, and applies the exact patch with pre/postimage validation. This is
+an operator/build action, never a verifier startup action. Its receipt has
+`dev_only: true`, `qualification: "development-only"`,
+`node.artifact_sha256: "UNQUALIFIED_LOCAL_EXECUTABLE"`, and the SHA-256 of the
+actual executable bytes in the assembled bundle. The current local Node is a
+Homebrew-linked build; the assembler copies its non-system dynamic libraries
+into `node/lib` and relocates only the disposable development copies. It does
+not qualify an official Node release, protected ownership, ACLs, or a production
+bundle.
+
+The bundle digest is SHA-256 of compact sorted-key JSON containing sorted
+regular-file rows `{path, sha256, mode}`. The external receipt lists those same
+files and binds the lock, Node version and executable, patch ID and patch-file
+digest, changed-file preimages/postimages, and bundle digest. The receipt is
+outside the digest tree to avoid self-reference.
+
+## Operator provisioning
+
+Production provisioning is Zack-only. Use an authenticated official Node archive
+and checksum from the official Node release metadata. The archive digest must be
+provided as an operator input; a locally computed executable digest is not a
+substitute for the release artifact digest. Create a root-owned, non-writable
+receipt parent outside candidate authority, then run:
+
+```sh
+sudo ./sandbox_runtime/provision.sh \
+  --node-archive /absolute/path/node-v24.22.0-darwin-arm64.tar.gz \
+  --node-archive-sha256 <authenticated-official-archive-sha256> \
+  --receipt /absolute/protected/path/kernel-sandbox-bundle.json
+```
+
+Use the `darwin-x64` archive on Intel macOS. The script rejects unsafe receipt
+ancestry, writable bundle ancestry, archive/version/hash mismatches, and any
+existing digest directory or receipt. It must include the archive's Node
+dynamic libraries with the executable, create the same patched bundle bytes
+used for the inventory and digest, establish root ownership and deny ACLs,
+write the caller-held receipt, and print its SHA-256. The verifier's trusted
+caller authenticates that exact receipt digest using
+`KERNEL_SANDBOX_BUNDLE_RECEIPT_SHA256`; the child environment cannot supply or
+override the trust input. Do not run provisioning as part of this implementation
+or a test.
+
+## Policy and evidence limits
+
+The versioned profile uses TCP-only exact-port rules. For each declared port,
+Seatbelt grants bind and inbound access on host `*` at that port and outbound
+access to the OS `localhost` address class at that port. This allows binding to
+`0.0.0.0`, `::`, or another available local address on a declared port. A
+listener can accept non-loopback inbound traffic and exchange data with peers.
+This is an actual inbound exposure; the rules do not identify services, peers,
+processes, or purpose. Empty declarations grant no application bind/inbound
+ports. Undeclared ports, UDP, and unbounded localhost access are not allowed.
+
+Seatbelt's `localhost` predicate is an OS address class, not a literal-address
+spelling check. Native IPv4 and IPv6 loopback and this host's tested mapped
+address behavior must be recorded for the exact OS/runtime. No universal mapped
+address compatibility is claimed. Do not broaden outbound policy to repair an
+unavailable mapped connection. Any reachable service on an allowed port can
+receive candidate TCP and may itself relay traffic; allowed access does not
+authenticate the service or guarantee availability. Isolated fixture services
+and caller-reviewed services remain necessary.
+
+The trusted proxy is separate from declared destinations. It may forward only
+canonical loopback destination/port pairs and must reject alternate addresses,
+arbitrary DNS forwarding, undeclared destinations, and UDP. Exact-profile
+validation compares the complete generated policy and refuses unknown,
+additional, missing, duplicate, wildcard-port, or non-TCP network grants.
+Failure occurs before candidate launch; there is no broad-policy retry,
+unsandboxed fallback, or alternate backend.
+
+Receipts must not claim loopback-only binding, literal-address-only matching,
+complete OS log delivery, absence of invisible attempts, no transient write and
+restore, complete hostile-process containment, external-egress qualification,
+service identity, or production readiness. These limits remain even when the
+bounded frozen assertions pass.

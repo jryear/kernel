@@ -1,0 +1,121 @@
+diff -ruN orig/sandbox/macos-sandbox-utils.js new/sandbox/macos-sandbox-utils.js
+--- orig/sandbox/macos-sandbox-utils.js	2026-11-06 12:06:01
++++ new/sandbox/macos-sandbox-utils.js	2026-11-06 12:09:22
+@@ -750,7 +750,7 @@
+ /**
+  * Generate complete sandbox profile
+  */
+-function generateSandboxProfile({ readConfig, libraryDenyEntries, writeConfig, httpProxyPort, socksProxyPort, needsNetworkRestriction, allowUnixSockets, allowAllUnixSockets, allowLocalBinding, allowMachLookup, allowPty, allowGitConfig = false, enableWeakerNetworkIsolation = false, allowAppleEvents = false, logTag, }) {
++function generateSandboxProfile({ readConfig, libraryDenyEntries, writeConfig, httpProxyPort, socksProxyPort, needsNetworkRestriction, allowUnixSockets, allowAllUnixSockets, allowLocalBinding, kernelLocalhostPorts = [], allowMachLookup, allowPty, allowGitConfig = false, enableWeakerNetworkIsolation = false, allowAppleEvents = false, logTag, }) {
+     const profile = [
+         '(version 1)',
+         `(deny default (with message "${logTag}"))`,
+@@ -922,10 +922,14 @@
+         ')',
+         '',
+     ];
++    // The embedded manager does not parse the exported schema on every call.
++    if (!Array.isArray(kernelLocalhostPorts) || !kernelLocalhostPorts.every((p, i) => Number.isInteger(p) && p >= 1 && p <= 65535 && (i === 0 || kernelLocalhostPorts[i - 1] < p))) {
++        throw new Error('invalid kernelLocalhostPorts');
++    }
+     // Network rules
+     profile.push('; Network');
+-    if (!needsNetworkRestriction) {
+-        profile.push('(allow network*)');
++    if (!needsNetworkRestriction || allowLocalBinding) {
++        throw new Error('kernel requires restricted network and forbids allowLocalBinding');
+     }
+     else {
+         // Allow local binding if requested.
+@@ -948,10 +952,10 @@
+         // "localhost:*") matches connect() to 127.0.0.1 and ::1 but not
+         // ::ffff:127.0.0.1; runtimes that connect to loopback via dual-stack
+         // sockets need to use AF_INET (see JAVA_TOOL_OPTIONS injection below).
+-        if (allowLocalBinding) {
+-            profile.push('(allow network-bind (local ip "*:*"))');
+-            profile.push('(allow network-inbound (local ip "*:*"))');
+-            profile.push('(allow network-outbound (remote ip "localhost:*"))');
++        for (const port of kernelLocalhostPorts) {
++            profile.push(`(allow network-bind (local tcp "*:${port}"))`);
++            profile.push(`(allow network-inbound (local tcp "*:${port}"))`);
++            profile.push(`(allow network-outbound (remote tcp "localhost:${port}"))`);
+         }
+         // Unix domain sockets for local IPC (SSH agent, Docker, Gradle, etc.)
+         // Three separate operations must be allowed:
+@@ -979,17 +983,13 @@
+         // If both allowAllUnixSockets and allowUnixSockets are false/undefined/empty, Unix sockets are blocked by default
+         // Allow localhost TCP operations for the HTTP proxy
+         if (httpProxyPort !== undefined) {
+-            profile.push(`(allow network-bind (local ip "localhost:${httpProxyPort}"))`);
+-            profile.push(`(allow network-inbound (local ip "localhost:${httpProxyPort}"))`);
+-            profile.push(`(allow network-outbound (remote ip "localhost:${httpProxyPort}"))`);
++            profile.push(`(allow network-outbound (remote tcp "localhost:${httpProxyPort}"))`);
+         }
+         // Allow localhost TCP operations for the SOCKS proxy. Skip when it's
+         // the same port as the HTTP proxy (the mux serves both on one port);
+         // SBPL accepts duplicate allow clauses but there's no need to emit them.
+         if (socksProxyPort !== undefined && socksProxyPort !== httpProxyPort) {
+-            profile.push(`(allow network-bind (local ip "localhost:${socksProxyPort}"))`);
+-            profile.push(`(allow network-inbound (local ip "localhost:${socksProxyPort}"))`);
+-            profile.push(`(allow network-outbound (remote ip "localhost:${socksProxyPort}"))`);
++            profile.push(`(allow network-outbound (remote tcp "localhost:${socksProxyPort}"))`);
+         }
+     }
+     profile.push('');
+@@ -1044,7 +1044,7 @@
+  * Wrap command with macOS sandbox
+  */
+ export function wrapCommandWithSandboxMacOS(params) {
+-    const { command, commandId, needsNetworkRestriction, httpProxyPort, socksProxyPort, proxyAuthToken, caCertPath, javaAgentJarPath, allowUnixSockets, allowAllUnixSockets, allowLocalBinding, allowMachLookup, readConfig, writeConfig, unsetEnvVars, setEnvVars, maskedFileBinds, degradeToDenyPaths, allowPty, allowGitConfig = false, gitSafeDirectories, enableWeakerNetworkIsolation = false, allowAppleEvents = false, binShell, } = params;
++    const { command, commandId, needsNetworkRestriction, httpProxyPort, socksProxyPort, proxyAuthToken, caCertPath, javaAgentJarPath, allowUnixSockets, allowAllUnixSockets, allowLocalBinding, kernelLocalhostPorts, allowMachLookup, readConfig, writeConfig, unsetEnvVars, setEnvVars, maskedFileBinds, degradeToDenyPaths, allowPty, allowGitConfig = false, gitSafeDirectories, enableWeakerNetworkIsolation = false, allowAppleEvents = false, binShell, } = params;
+     // SBPL cannot redirect a read to different bytes, so whole-file masking
+     // degrades to read-deny on macOS: the sandboxed process gets EPERM
+     // instead of the sentinel. The DYLD interposer (a later step) lifts
+@@ -1096,6 +1096,7 @@
+         allowUnixSockets,
+         allowAllUnixSockets,
+         allowLocalBinding,
++        kernelLocalhostPorts,
+         allowMachLookup,
+         allowPty,
+         allowGitConfig,
+diff -ruN orig/sandbox/sandbox-config.js new/sandbox/sandbox-config.js
+--- orig/sandbox/sandbox-config.js	2026-11-06 12:06:01
++++ new/sandbox/sandbox-config.js	2026-11-06 12:09:22
+@@ -616,21 +616,10 @@
+         .boolean()
+         .optional()
+         .describe('If true, allow all Unix sockets (disables blocking on both platforms). On Linux this also unblocks VM sockets (AF_VSOCK).'),
+-    allowLocalBinding: z
+-        .boolean()
+-        .optional()
+-        .describe('Whether sandboxed commands may use local ports directly (default: ' +
+-        'false). macOS: allows binding and accepting on any local port ' +
+-        'and connecting to localhost on any port. Windows: allows ' +
+-        'connecting to loopback addresses (127.0.0.0/8, ::1) on any TCP ' +
+-        'or UDP port; it is part ' +
+-        'of the machine-wide filter set, so it MUST match how `srt-win ' +
+-        'install` was run (`--allow-loopback` or not) and a session that ' +
+-        'differs from the install is refused. Linux: ignored — the ' +
+-        'sandbox has its own network namespace, whose loopback is ' +
+-        'always usable and is not the host one. Every service listening ' +
+-        'on localhost becomes reachable, including any local proxy or ' +
+-        'forwarder that would carry traffic off the machine.'),
++    kernelLocalhostPorts: z.array(z.number().int().min(1).max(65535))
++        .refine(ports => ports.every((port, i) => i === 0 || ports[i - 1] < port),
++            'kernelLocalhostPorts must be unique and sorted').default([]),
++    allowLocalBinding: z.literal(false).optional(),
+     allowMachLookup: z
+         .array(z.string().refine(val => {
+         const prefix = val.endsWith('*') ? val.slice(0, -1) : val;
+diff -ruN orig/sandbox/sandbox-manager.js new/sandbox/sandbox-manager.js
+--- orig/sandbox/sandbox-manager.js	2026-11-06 12:06:01
++++ new/sandbox/sandbox-manager.js	2026-11-06 12:09:22
+@@ -1992,6 +1992,7 @@
+                 allowUnixSockets: getAllowUnixSockets(),
+                 allowAllUnixSockets: getAllowAllUnixSockets(),
+                 allowLocalBinding: getAllowLocalBinding(),
++                kernelLocalhostPorts: customConfig?.network?.kernelLocalhostPorts ?? config?.network?.kernelLocalhostPorts ?? [],
+                 allowMachLookup: getAllowMachLookup(),
+                 ignoreViolations: getIgnoreViolations(),
+                 allowPty,
