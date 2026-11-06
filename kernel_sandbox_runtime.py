@@ -73,10 +73,15 @@ def load_context(spec, repo, log, tracked, links):
 
 
 def _platform():
-    build = subprocess.run(['/usr/bin/sw_vers', '-buildVersion'], capture_output=True, text=True)
+    build = 'unavailable'
+    if platform.system() == 'Darwin':
+        try:
+            result = subprocess.run(['/usr/bin/sw_vers', '-buildVersion'], capture_output=True, text=True)
+            if result.returncode == 0: build = result.stdout.strip()
+        except OSError: pass
     return {'system': platform.system(), 'release': platform.release(), 'machine': platform.machine(),
             'python': sys.version, 'git': shutil.which('git'), 'ps': shutil.which('ps'),
-            'build': build.stdout.strip() if build.returncode == 0 else 'unavailable'}
+            'build': build}
 
 
 def _secret_aliases(operator):
@@ -89,11 +94,13 @@ def _secret_aliases(operator):
     if (Path.home()/'.ssh').exists(): secrets.append((Path.home()/'.ssh').resolve(strict=True))
     aliases = set(secrets)
     protected = [Path(p).resolve() for p in operator.get('additional_protected_paths', [])]
-    if not protected: return [str(p) for p in aliases]
-    common = Path(os.path.commonpath([str(p) for p in protected]))
+    common = Path(os.path.commonpath([str(p) for p in protected])) if protected else None
     if common == Path('/') or common == Path.home():
         common = None  # Never enumerate the host or the user's entire home.
+    files = set(secrets)
     for secret in secrets:
+        if secret.is_dir(): files.update(path for path in secret.rglob('*') if path.is_file())
+    for secret in files:
         info = secret.stat()
         if not secret.is_file() or info.st_nlink < 2: continue
         found = {secret}
@@ -106,6 +113,15 @@ def _secret_aliases(operator):
             raise DependencyUnavailable('secret hardlink aliases are not fully inventoried in operator roots')
         aliases.update(found)
     return sorted(str(p) for p in aliases)
+
+
+def git_metadata(root):
+    paths = []
+    for flag in ('--absolute-git-dir', '--git-common-dir'):
+        result = subprocess.run(['git', 'rev-parse', flag], cwd=root,
+                                capture_output=True, text=True, check=True)
+        paths.append((Path(root)/result.stdout.strip()).resolve(strict=True))
+    return paths
 
 
 def run_check(root, check, phase, context):
@@ -124,6 +140,7 @@ def run_check(root, check, phase, context):
                    'raw_events_sha256': hashlib.sha256(b'').hexdigest(), 'collector_ready': False, 'complete': False}
     cleanup = {'complete': True, 'survivors': [], 'errors': [], 'timed_out': False, 'observed': []}
     code = 99; output = ''; before = after = {}; failed = []; assertion = None; unavailable = None; supervisor = None
+    provisional_bytes = None
     state_parent = Path(operator.get('scratch_root', tempfile.gettempdir())).resolve()
     state_parent.mkdir(parents=True, exist_ok=True)
     state = state_parent / ('kernel-' + token); state.mkdir(mode=0o700)
@@ -133,12 +150,17 @@ def run_check(root, check, phase, context):
     excluded = tuple(Path(path) for path in writes)
     protected_paths = [root, Path(context['package']), Path(context['repo']),
                        *map(Path, operator.get('additional_protected_paths', [])), Path(context['log'])]
+    protected_paths += git_metadata(root) + git_metadata(context['repo'])
+    if bundle:
+        protected_paths += [bundle['root'], Path(operator['bundle_receipt']).resolve()]
     profile_hash = None; inspected = ''
     try:
         before = snapshot(protected_paths, excluded)
         if context.get('unavailable'): raise DependencyUnavailable(context['unavailable'])
         if not backend_supports_policy(declaration): raise DependencyUnavailable('backend cannot enforce the requested policy')
-        version = subprocess.run([bundle['node'], '--version'], capture_output=True, text=True, timeout=5)
+        trusted_env = {'PATH': '/usr/bin:/bin:/usr/sbin:/sbin', 'LANG': 'C.UTF-8'}
+        version = subprocess.run([bundle['node'], '--version'], env=trusted_env,
+                                 capture_output=True, text=True, timeout=5)
         if version.returncode or version.stdout.strip() != 'v24.22.0': raise DependencyUnavailable('qualified Node version unavailable')
         env = {'PATH': '/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin', 'LANG': 'C.UTF-8',
                'HOME': str(scratch), 'TMPDIR': str(scratch), 'XDG_CACHE_HOME': str(scratch),
@@ -152,7 +174,8 @@ def run_check(root, check, phase, context):
                                  'allowWrite': [*writes, str(scratch)],
                                  'denyWrite': [str(p) for p in protected_paths if p != root] + ['/tmp/claude', '/private/tmp/claude', str(state/'.npm'), str(state/'.claude')]},
                   'localhost_ports': ports, 'diagnostics': mode,
-                  'prepared_path': str(state/'prepared.json'), 'result_path': str(state/'supervisor-result.json')}
+                  'prepared_path': str(state/'prepared.json'), 'result_path': str(state/'supervisor-result.json'),
+                  'spool_path': str(state/'diagnostics.jsonl')}
         config_path = state/'config.json'; config_path.write_text(json.dumps(config))
         supervisor_env = {'PATH': env['PATH'], 'HOME': str(state), 'TMPDIR': str(state), 'LANG': env['LANG'], 'PYTHONDONTWRITEBYTECODE': '1', 'CLAUDE_CODE_TMPDIR': str(scratch)}
         supervisor = subprocess.Popen([bundle['node'], bundle['supervisor'], str(config_path)],
@@ -175,48 +198,92 @@ def run_check(root, check, phase, context):
         inspected = validation['inspected_profile']; profile_hash = hashlib.sha256(inspected.encode()).hexdigest()
         if validation.get('exact_match') is not True: raise DependencyUnavailable('generated profile inspection failed: ' + '; '.join(validation['errors']))
         wrapped = prepared['argv']; index = prepared['command_index']
-        if (not isinstance(wrapped, list) or not 0 <= index < len(wrapped) or wrapped[index] != config['command'] or
+        if (not isinstance(wrapped, list) or type(index) is not int or not 5 <= index < len(wrapped) or wrapped[index] != config['command'] or
+                wrapped[index-5:index] != ['/usr/bin/sandbox-exec', '-p', profile, '/bin/bash', '-c'] or
                 wrapped.count(profile) != 1 or prepared['env'] != env):
             raise DependencyUnavailable('prepared launch bytes/environment differ from inspected policy')
         canary = state/'canary-protected'; canary.write_text('protected')
         script = "import pathlib,sys,json; p=pathlib.Path(sys.argv[1]); s=pathlib.Path(sys.argv[2]); denied=False\ntry:p.write_text('forbidden')\nexcept OSError as e:denied=e.errno in (1,13)\ns.write_text('scratch'); print(json.dumps({'denied':denied,'scratch':s.read_text()=='scratch'}))"
         probe_argv = list(wrapped); probe_argv[index] = shlex.join([sys.executable, '-B', '-c', script, str(canary), str(scratch/'canary-allowed')])
-        pre_code, pre_output, pre_cleanup = execute(probe_argv, root, env, 5)
-        pre = json.loads(pre_output.strip())
+        # This reviewed probe creates no descendants. Keep its lifecycle separate
+        # from the arbitrary check's observed process-group cleanup boundary.
+        probe = subprocess.run(probe_argv, cwd=root, env=env, timeout=5,
+                               capture_output=True, text=True, start_new_session=True)
+        pre = json.loads(probe.stdout.strip())
         diagnostics['canary'] = {'write_denied': pre.get('denied') is True, 'scratch_succeeded': pre.get('scratch') is True, 'event_received': False}
-        if pre_code or not pre_cleanup['complete'] or not all(pre.values()) or canary.read_text() != 'protected':
+        if probe.returncode or not all(pre.values()) or canary.read_text() != 'protected':
             raise DependencyUnavailable('reviewed same-policy write canary failed')
         lifecycle.update(launched=True, started_at=time.time())
         code, output, cleanup = execute(wrapped, root, env, check['timeout'])
         lifecycle.update(exited_at=time.time(), cleanup_finished_at=time.time())
-        try: assertion, failed = read_result(result_path, check, phase, token, code)
+        try:
+            assertion, failed = read_result(result_path, check, phase, token, code)
+            provisional_bytes = result_path.read_bytes()
         except (OSError, ValueError, TypeError, UnicodeError) as error: row['result_protocol_error'] = str(error)
     except (DependencyUnavailable, OSError, ValueError, KeyError, StopIteration, subprocess.SubprocessError) as error:
         unavailable = str(error)
     finally:
         if supervisor is not None:
             try:
-                _, stderr = supervisor.communicate(b'finish\n', timeout=4)
+                if supervisor.poll() is not None:
+                    unavailable = unavailable or 'supervisor died before finish request'
+                _, stderr = supervisor.communicate(b'finish\n', timeout=8)
                 if supervisor.returncode: unavailable = unavailable or 'supervisor exited unsuccessfully'
             except (OSError, subprocess.TimeoutExpired):
                 unavailable = unavailable or 'supervisor cleanup incomplete'
                 try: os.killpg(supervisor.pid, signal.SIGKILL)
                 except ProcessLookupError: pass
-                supervisor.communicate()
+                except OSError as error: cleanup['errors'].append('supervisor group cleanup: ' + str(error))
+                try: supervisor.communicate(timeout=2)
+                except (OSError, subprocess.TimeoutExpired):
+                    cleanup['errors'].append('supervisor exit not observed')
+                cleanup['complete'] = False
             path = state/'supervisor-result.json'
-            if path.exists():
-                collected = json.loads(path.read_text()); events = collected.get('events', [])
-                diagnostics.update(received=len(events), persisted=len(events), dropped=collected.get('dropped', 0),
-                                   raw_events_sha256=hashlib.sha256(json.dumps(events, sort_keys=True).encode()).hexdigest())
+            try:
+                if not path.exists(): raise OSError('supervisor final evidence missing')
+                collected = json.loads(path.read_text())
+                if collected.get('error'): unavailable = unavailable or collected['error']
                 if mode == 'enabled':
-                    diagnostics['state'] = 'active' if not collected.get('error') else 'failed'
+                    spool = Path(config['spool_path'])
+                    raw_events = spool.read_bytes()
+                    events = [json.loads(line) for line in raw_events.splitlines()]
+                    if len(events) != collected.get('persisted'):
+                        raise ValueError('diagnostic spool count mismatch')
+                    if hashlib.sha256(raw_events).hexdigest() != collected.get('spool_sha256'):
+                        raise ValueError('diagnostic spool digest mismatch')
+                    diagnostics.update(state='failed' if collected.get('collector_fault') else 'active',
+                                       received=collected.get('received', len(events)), persisted=len(events),
+                                       dropped=collected.get('dropped', 0),
+                                       collector_fault=collected.get('collector_fault'),
+                                       drain_timed_out=collected.get('drain_timed_out', False),
+                                       late_event=collected.get('late_event'),
+                                       attribution=collected.get('attribution'), monitor=collected.get('monitor'),
+                                       raw_events_path=str(spool), raw_events_sha256=hashlib.sha256(raw_events).hexdigest())
                     diagnostics.setdefault('canary', {})['event_received'] = any('canary-protected' in str(event) and 'deny' in str(event) for event in events)
-            elif mode == 'enabled': diagnostics['state'] = 'failed'
+                lifecycle['supervisor'] = {'pid': supervisor.pid, 'exit': supervisor.returncode,
+                                           'cleanup_finished_at': time.time()}
+            except (OSError, ValueError, TypeError) as error:
+                unavailable = unavailable or 'supervisor evidence unavailable: ' + str(error)
+                if mode == 'enabled': diagnostics['state'] = 'failed'
+        if lifecycle['launched']:
+            lifecycle.setdefault('exited_at', time.time())
+            lifecycle['cleanup_finished_at'] = time.time()
         try: after = snapshot(protected_paths, excluded)
         except OSError as error: unavailable = unavailable or str(error)
     changes = [{'kind': 'protected_change', 'path': p, 'before': before.get(p), 'after': after.get(p)}
                for p in sorted(set(before)|set(after)) if before.get(p) != after.get(p)] if before and after else []
-    evidence = {'schema': 1, 'integrity': {'available': bool(before and after), 'before': before, 'after': after, 'changes': changes},
+    # Preserve measured changes even if this independent final observation fails.
+    final_inventory_available = True
+    try:
+        final = snapshot(protected_paths, excluded)
+        if final != after:
+            for p in sorted(set(after)|set(final)):
+                if after.get(p) != final.get(p):
+                    changes.append({'kind': 'protected_change', 'path': p, 'before': after.get(p), 'after': final.get(p), 'boundary': 'final'})
+    except OSError as error:
+        final_inventory_available = False; unavailable = unavailable or str(error)
+    evidence = {'schema': 1, 'integrity': {'available': bool(before and after), 'before': before, 'after': after, 'changes': changes,
+                                        'additional_inventory_available': final_inventory_available},
                 'execution': {'complete': unavailable is None, 'unavailable_reason': unavailable, 'timed_out': cleanup['timed_out']},
                 'cleanup': cleanup, 'assertions': {'complete': assertion is not None, 'failed': failed}, 'diagnostics': diagnostics}
     decision = classify_sandbox_evidence(evidence); host = _platform()
@@ -236,7 +303,9 @@ def run_check(root, check, phase, context):
     receipt = {'schema': 2, 'requested': True, 'enforced': validation.get('exact_match') is True and 'canary' in diagnostics, 'identity': {'run_id': token, 'check': check['name'], 'phase': phase, 'repetition': 0},
                'release': {'manifest_sha256': os.environ.get('VERIFY_RELEASE_SHA256')}, 'bundle': metadata, 'platform': host,
                'policy': policy, 'lifecycle': lifecycle, 'integrity': {**evidence['integrity'], 'judge_before': before, 'judge_after': after, 'receipt_prefix_sha256': before.get(context['log'], {}).get('sha256')},
-               'diagnostics': diagnostics, 'decision': decision, 'assertions': {'provisional': assertion, 'cleanup': cleanup},
+               'diagnostics': diagnostics, 'decision': decision, 'assertions': {'provisional': assertion, 'cleanup': cleanup,
+                   'provisional_bytes': provisional_bytes.decode('utf-8') if provisional_bytes is not None else None,
+                   'provisional_sha256': hashlib.sha256(provisional_bytes).hexdigest() if provisional_bytes is not None else None},
                'assurance': {k: False for k in ('all_attempts_detected','transient_writes_detected','complete_logs','semantic_attestation','exhaustive_descendant_containment','loopback_only_binding','literal_address_only')},
                'dev_only': (bundle or {}).get('dev_only', False)}
     row.update(exit=code, seconds=round(time.time()-start, 2), output=output, output_tail=output[-1500:], cleanup=cleanup,

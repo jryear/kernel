@@ -6,6 +6,8 @@ import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {randomUUID, createHash} from 'node:crypto';
 import {once} from 'node:events';
+import childProcess from 'node:child_process';
+import {syncBuiltinESMExports} from 'node:module';
 
 const cfg = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const started = new Date().toISOString();
@@ -17,10 +19,17 @@ const destination = (authority) => {
   if (!m || !declared.has(Number(m[2]))) return null;
   return {host: m[1] === '[::1]' ? '::1' : '127.0.0.1', port:Number(m[2])};
 };
+const sockets = new Set();
+function track(socket) {
+  sockets.add(socket);
+  socket.once('close',()=>sockets.delete(socket));
+  return socket;
+}
 function tunnel(client, target, head=Buffer.alloc(0), connected=()=>{}) {
-  const upstream = net.connect(target.port,target.host);
+  const upstream = track(net.connect(target.port,target.host));
   upstream.once('connect',()=>{connected();if(head.length) upstream.write(head);client.pipe(upstream);upstream.pipe(client);});
   upstream.on('error',()=>client.destroy()); client.on('error',()=>upstream.destroy());
+  upstream.once('close',()=>client.destroy()); client.once('close',()=>upstream.destroy());
 }
 const web = http.createServer((req,res)=>{
   const m = /^http:\/\/(127\.0\.0\.1|\[::1\]):([1-9][0-9]{0,4})(\/[^#]*)?$/.exec(req.url || '');
@@ -28,8 +37,10 @@ const web = http.createServer((req,res)=>{
   if (!dst) {res.writeHead(403);res.end();return;}
   const headers = {...req.headers}; delete headers['proxy-authorization']; delete headers['proxy-connection'];
   const out = http.request({hostname:dst.host,port:dst.port,path:m[3]||'/',method:req.method,headers}, response=>{res.writeHead(response.statusCode,response.headers);response.pipe(res);});
+  out.on('socket',track);
   out.on('error',()=>{if(!res.headersSent)res.writeHead(502);res.end();});req.pipe(out);
 });
+web.on('connection',track);
 web.on('connect',(req,client,head)=>{const dst=destination(req.url||'');if(!dst){client.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n');return;}tunnel(client,dst,head,()=>client.write('HTTP/1.1 200 Connection Established\r\n\r\n'));});
 web.on('clientError',(_e,socket)=>socket.destroy());
 const socks = net.createServer(socket=>{
@@ -49,27 +60,101 @@ const socks = net.createServer(socket=>{
     tunnel(socket,{host,port},head,()=>socket.write(Buffer.from([5,0,0,1,0,0,0,0,0,0])));
   };socket.on('data',consume);
 });
+socks.on('connection',track);
 async function listen(server) {for(let i=0;i<20;i++){server.listen(0,'127.0.0.1');await once(server,'listening');if(!declared.has(server.address().port))return;await new Promise(r=>server.close(r));}throw Error('unable to allocate disjoint proxy');}
 // srt's shell quote emits bare tokens or POSIX single quoted tokens with the
 // standard quote-escape sequence. Parse strictly; never execute it to inspect.
 function words(s){let out=[],v='',started=false,q=false;for(let i=0;i<s.length;i++){const c=s[i];if(q){if(c==="'")q=false;else v+=c;continue;}if(c==="'"){q=true;started=true;continue;}if(c==='"'&&s.slice(i,i+3)==='"\'"'){v+="'";i+=2;started=true;continue;}if(c===' '){if(started){out.push(v);v='';started=false;}continue;}if(!/[A-Za-z0-9_./:=@+,\-]/.test(c))throw Error('unexpected shell quoting');v+=c;started=true;}if(q)throw Error('unterminated quote');if(started)out.push(v);return out;}
 function unwrap(w){if(!Array.isArray(w.argv)||w.argv.length!==3||w.argv[1]!=='-c')throw Error('unsupported wrapper');const a=words(w.argv[2]);const i=a.indexOf('/usr/bin/sandbox-exec');if(i<0||a[i+1]!=='-p'||a[i+3]!=='/bin/bash'||a[i+4]!=='-c'||i+6!==a.length)throw Error('unexpected sandbox wrapper');return {argv:a,profile:a[i+2],command_index:i+5};}
-let manager, unsubscribe, events=[], dropped=0;
+// Observe the library's own collector without replacing its delivery path. The
+// observer sees only losses exposed in received chunks, not upstream omissions.
+let monitorProcess, monitorCount=0, stoppingMonitor=false, collectorFault=null;
+const monitor={pid:null,started:false,exit:null,closed:false,errors:[]};
+let dropped=0, drainTimedOut=false, finishing=false, attribution='original_invocation';
+let commandId, expectedEncodedCommand, lateEvent=null;
+const failCollector = message => {if (!collectorFault) collectorFault=message;};
+const originalSpawn=childProcess.spawn;
+childProcess.spawn=function(file,args,options) {
+  const child=originalSpawn.apply(this,arguments);
+  if (cfg.diagnostics==='enabled' && path.basename(String(file))==='log' && Array.isArray(args) && args[0]==='stream') {
+    monitorCount++;
+    if (monitorCount!==1) failCollector('multiple sandbox log collectors');
+    monitorProcess=child; monitor.pid=child.pid || null; monitor.started=Boolean(child.pid);
+    child.on('error',error=>{if(monitor.errors.length<16)monitor.errors.push(String(error).slice(0,2048));failCollector('sandbox log collector error');});
+    child.on('exit',(code,signal)=>{monitor.exit={code,signal};if(!stoppingMonitor)failCollector('sandbox log collector exited early');});
+    child.on('close',()=>{monitor.closed=true;});
+    child.stderr?.on('data',data=>{if(data.length){if(monitor.errors.length<16)monitor.errors.push(String(data).slice(0,2048));failCollector('sandbox log collector stderr');}});
+    child.stdout?.on('data',data=>{
+      const matches=String(data).split('\n').filter(line=>line.includes('Sandbox:')&&line.includes('deny')).length;
+      if(matches>1){dropped+=matches-1;failCollector('sandbox log collector omitted events in a received chunk');}
+    });
+  }
+  return child;
+};
+syncBuiltinESMExports();
+let manager, unsubscribe, events=[], spoolFd, persisted=0, received=0, supervisorError=null;
+const spoolPath=cfg.spool_path || path.join(path.dirname(cfg.result_path),'diagnostic-events.jsonl');
+const spoolHash=createHash('sha256');
+function saveEvent(event) {
+  if (events.length>=10000) {dropped++;failCollector('diagnostic spool capacity exceeded');return;}
+  if (event.encodedCommand!==expectedEncodedCommand) attribution='ambiguous';
+  if (finishing && !String(event.line || '').includes('canary-protected') &&
+      !/sysctl-read|file-read-metadata/.test(String(event.line || ''))) lateEvent='relevant_denial';
+  const bytes=Buffer.from(JSON.stringify(event)+'\n');
+  try {
+    let offset=0;
+    while(offset<bytes.length) {const written=fs.writeSync(spoolFd,bytes,offset,bytes.length-offset);if(written<=0)throw Error('short diagnostic spool write');offset+=written;}
+    spoolHash.update(bytes); persisted++; events.push(event);
+  } catch(error) {dropped++;failCollector('diagnostic spool write failed: '+String(error));}
+}
+const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 try {
+  spoolFd=fs.openSync(spoolPath,'wx',0o600);
   await listen(web); await listen(socks);
   const proxy = (role,server)=>({role,host:'127.0.0.1',port:server.address().port,transport:'tcp',pid:process.pid,started,ready:server.listening,ownership_verified:server.listening});
   const proxies=[proxy('http',web),proxy('socks',socks)];
   const root=path.dirname(fileURLToPath(import.meta.url));
   ({SandboxManager:manager}=await import(pathToFileURL(path.join(root,'node_modules/@anthropic-ai/sandbox-runtime/dist/index.js')).href));
   const store=manager.getSandboxViolationStore();let last=0;
-  unsubscribe=store.subscribe(tail=>{const total=store.getTotalCount(), count=total-last; if(count<=0)return; if(count>tail.length)dropped+=count-tail.length;for(const event of tail.slice(-Math.min(count,tail.length))){if(events.length<10000)events.push(event);else dropped++;}last=total;});
+  unsubscribe=store.subscribe(tail=>{const total=store.getTotalCount(), count=total-last; if(count<=0)return; received+=count; if(count>tail.length){dropped+=count-tail.length;failCollector('diagnostic subscription lost events');}for(const event of tail.slice(-Math.min(count,tail.length)))saveEvent(event);last=total;});
   process.chdir(cfg.cwd);
   await manager.initialize({network:{allowedDomains:[],deniedDomains:[],strictAllowlist:true,allowLocalBinding:false,kernelLocalhostPorts:cfg.localhost_ports,httpProxyPort:proxies[0].port,socksProxyPort:proxies[1].port},filesystem:cfg.filesystem},undefined,cfg.diagnostics==='enabled');
-  const commandId=randomUUID();
+  commandId=randomUUID(); expectedEncodedCommand=Buffer.from(commandId).toString('base64');
   const ref=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',{network:{kernelLocalhostPorts:[]}},undefined,cfg.cwd,{commandId}));
   const actual=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',undefined,undefined,cfg.cwd,{commandId}));
   const prepared={profile:actual.profile,argv:actual.argv,env:cfg.env,command_index:actual.command_index,proxies,template_context:{reference_profile:ref.profile,localhost_ports:cfg.localhost_ports,proxies,generator_sha256:'2b4d539624dde6067982722c9fe234ff7ba15b04ddb86ce5141c69ef40de2e5a'}};
   fs.writeFileSync(cfg.prepared_path,JSON.stringify(prepared),{mode:0o600,flag:'wx'});
+  if(cfg.diagnostics==='enabled' && (!monitor.started || monitorCount!==1 || monitor.exit)) failCollector('sandbox log collector unavailable');
   await once(process.stdin,'data');
-} catch(error) {try{fs.writeFileSync(cfg.result_path,JSON.stringify({error:String(error),launched:false}),{mode:0o600});}catch{} process.exitCode=1;}
-finally {if(unsubscribe)unsubscribe();if(manager)await manager.reset();for(const server of [web,socks])if(server.listening)await new Promise(r=>server.close(r));if(!fs.existsSync(cfg.result_path))fs.writeFileSync(cfg.result_path,JSON.stringify({events,dropped,mode:cfg.diagnostics,complete:false,profile_sha256:null}),{mode:0o600});}
+} catch(error) {supervisorError=String(error);failCollector('supervisor failure: '+supervisorError);process.exitCode=1;}
+finally {
+  finishing=true;
+  // No connection may outlive the candidate cleanup boundary. Close accepted
+  // and outgoing sockets before waiting for server close callbacks.
+  for(const socket of sockets) socket.destroy();
+  const closing=Promise.all([web,socks].map(server=>server.listening ? new Promise(resolve=>server.close(resolve)) : Promise.resolve()));
+  if(await Promise.race([closing.then(()=>false),delay(1000).then(()=>true)])) {drainTimedOut=true;failCollector('proxy shutdown timed out');}
+  if(cfg.diagnostics==='enabled') {
+    if(!monitorProcess || monitor.exit!==null || !monitor.started) failCollector('sandbox log collector not alive through finish');
+    await delay(2000);
+  }
+  if(unsubscribe)unsubscribe();
+  stoppingMonitor=true;
+  try {if(manager)await manager.reset();} catch(error) {failCollector('sandbox manager reset failed: '+String(error));process.exitCode=1;}
+  if(cfg.diagnostics==='enabled' && monitorProcess && !monitor.closed) {
+    await Promise.race([once(monitorProcess,'close').catch(()=>{}),delay(1000)]);
+    if(!monitor.closed){
+      drainTimedOut=true;failCollector('sandbox log collector shutdown timed out');
+      try {monitorProcess.kill('SIGKILL');} catch(error) {monitor.errors.push(String(error).slice(0,2048));}
+      await Promise.race([once(monitorProcess,'close').catch(()=>{}),delay(500)]);
+      if(!monitor.closed) process.exitCode=1;
+    }
+  }
+  if(spoolFd!==undefined) {
+    try {fs.fsyncSync(spoolFd);fs.closeSync(spoolFd);} catch(error) {failCollector('diagnostic spool finalization failed: '+String(error));}
+  }
+  const result={events,received,dropped,mode:cfg.diagnostics,complete:false,profile_sha256:null,error:supervisorError,
+    collector_fault:collectorFault,drain_timed_out:drainTimedOut,attribution,late_event:lateEvent,
+    spool_path:spoolPath,spool_sha256:spoolHash.digest('hex'),persisted,monitor};
+  try {fs.writeFileSync(cfg.result_path,JSON.stringify(result),{mode:0o600,flag:'wx'});} catch {process.exitCode=1;}
+}
