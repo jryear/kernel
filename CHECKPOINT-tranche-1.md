@@ -359,3 +359,149 @@ package/cache/directory inventories are retained at
 metadata for required branch/desk/snapshot operations is explicitly excluded).
 Hashes establish observed lasting integrity only. No sandbox, flake, mutants,
 BidZizi work, main merge/push, or release was undertaken.
+
+
+## Sandbox v2 freeze — plan v6, FREEZE ONLY
+
+Authority: Zack, 2026-11-06. Owner `sol-2`; independent reviewer lands reviewed
+work on `next`. Branch `kernel/sandbox-v2` starts from `origin/next` at
+`bf9ed3d` (plan v6 merge). Binding plan read from `origin/main` at `426e43a`,
+instruction_version 6; docs/SANDBOX_DECISION.md remains the acceptance boundary.
+The decision's historical plan-version prose does not override current v6 rules.
+
+**FROZEN_BASE: `4fa15c4b0afeb9adb5afe5caea31e864775b8580`.**
+This single commit adds only tasks/sandbox.toml and the full test/fixture chain:
+tests/tamper_suite.py and tests/sandbox_fixtures/{harness.py,subject_driver.py,
+payload.py,matrix.json,README.md,measure_cost.py}. Product sources and the installed
+3.1.0 judge are unchanged. This checkpoint is a separate documentation commit.
+
+### Changes from sandbox-v1, case by case
+
+The comparison is against `origin/kernel/sandbox`: freeze
+`c6f519b584c9d611601a0bc998472c5743d71df2`, checkpoint `a34d2a7`.
+
+- Move only `EXTERNAL_EGRESS_NO_AUTHORIZED_FIXTURE` (disabled and enabled logging)
+  to plan item `egress`. Remove its network dispatch, `egress_case` and
+  tests/sandbox_fixtures/egress_probe.py from this freeze and executable chain.
+  No new egress test is authored here; tests/egress_qualification.py freezes later.
+  Sandbox-v2 has no off-machine endpoint or external-egress receipt dependency.
+- Retain default IPv4/IPv6 direct connections, wrong port, declared IPv4/IPv6
+  ports, alternate loopback, IPv4/IPv6 non-loopback binds, UDP default,
+  undeclared HTTP/CONNECT proxies, declared IPv4/IPv6 binds, declared HTTP/CONNECT
+  proxies and UDP denied despite a declared TCP port. These 16 network rows are
+  unchanged, including their logging variants, positive controls and evidence.
+- All other 165 rows are unchanged. The exact 181 retained JSON case objects are
+  byte-equivalent after JSON parsing to v1 with the one moved row removed;
+  subject_driver.py and payload.py are byte-identical to v1. Totals change from
+  182 cases / 350 variants to **181 cases / 348 variants**. No other case is
+  removed, relaxed, renamed or individually credited as a novel baseline RED.
+- Replace the single 1200-second conjunction with four separately budgeted
+  acceptance checks. Each has a fresh real-effect boundary witness followed by
+  all assigned rows; it cannot pass by satisfying only the witness. With no
+  explicit group, the Desk command still runs all groups.
+- Classifier is folded into effect; dependency into policy. Installed 3.1.0
+  kernel_runtime.validate_spec explicitly rejects an empty acceptance
+  baseline_failures set. A missing classifier API/dependency is not RED. Each
+  named assertion instead conjoins its entire assigned layer set with the same
+  reviewed confinement boundary, independently exercised in its own disposable
+  fixture. A real successful forbidden write plus complete nested SUPPORTED
+  disproves that conjunction. Later rows are explicitly unqualified on that
+  short-circuit. Unavailable continues to escape without an assertion receipt.
+
+### Check split, measured costs and budgets
+
+Measured on macOS 27.0 arm64, Python 3.15.0, using the unsandboxed subject package
+from origin/next. Two actual nested base+candidate witness invocations per group;
+separate direct operation controls. File control samples: 0.2290, 0.2320, 0.2307 s.
+Network control samples including listener shutdown: 0.7375, 0.7361 s.
+
+| Check / named assertion | Cases / variants | Measured witness seconds | Full cost projection seconds | Timeout seconds |
+| --- | ---: | --- | ---: | ---: |
+| effect-classifier / `SANDBOX_EFFECT_CLASSIFIER_BOUNDARY` | 124 / 234 | 2.2988, 2.2628 | 586.62 | 3660 |
+| protocol / `SANDBOX_PROTOCOL_BOUNDARY` | 13 / 26 | 2.2431, 2.3116 | 62.41 | 600 |
+| policy-dependency / `SANDBOX_POLICY_DEPENDENCY_BOUNDARY` | 37 / 74 | 2.2699, 2.2400 | 196.97 | 1320 |
+| isolation / `SANDBOX_ISOLATION_BOUNDARY` | 7 / 14 | 2.2421, 2.2811 | 75.30 | 600 |
+
+The full-cost column is a calibrated projection, **not a measured sandbox run**.
+Every variant is conservatively charged the slowest measured nested invocation
+(2.311628 s), even classifier and prelaunch rows that do not execute that pipeline.
+Add one gate per check, extra sequential invocations (16 isolation invocations
+for 14 variants), 187 file controls, 32 network controls and six seconds per
+timeout variant (36 s total). Use the slowest measured control of each type.
+Timeout = max(600, round_up_to_60(120 + 4 * projection + 5 * variants)).
+This leaves generous startup/collector/backend headroom without certifying a
+future backend's cost. Inner fixture-command timeout remains 45 s; each nested
+payload check retains its intentional 3 s limit. Correct backend qualification
+and any unanticipated timing problem remain for implementation review; no
+post-GREEN timeout adjustment or retry is authorized by this checkpoint.
+
+Reproduction: `PYTHONDONTWRITEBYTECODE=1 python3 -B
+ tests/sandbox_fixtures/measure_cost.py` (one shell line). Measurement code is
+frozen, manual and outside acceptance; it neither implements nor mocks the
+sandbox. Raw external samples/model:
+`/Users/jryear/.local/state/kernel/sandbox-v2-costs.json` and
+`/Users/jryear/.local/state/kernel/sandbox-v2-costs.txt`.
+
+### Scope and protection audit
+
+Protected patterns remain exactly `tests/*`, `tasks/*`,
+`docs/SANDBOX_DECISION.md`, `spike/*`, `.desk/*`; no protection is loosened.
+Every executed entry/helper/catalogue is in each check's chain and protected.
+Evidence includes all fixture files, the decision and pinned spike lock bytes.
+
+Implementation scope covers verify.py; root kernel_*.py runtime/report/process/
+sandbox modules; kernel_sandbox/* package; sandbox_supervisor.mjs;
+sandbox_runtime/* bundle-source staging; sandbox.package.json/lock; VERSION;
+MANIFEST.sha256; README.md; FRONTIER.md; AGENTS.template.md installation/agent
+instructions; docs/SANDBOX_RUNTIME.md; and this checkpoint. The kernel_*.py
+pattern preserves v1's named modules while permitting additional runtime helpers;
+VERSION and AGENTS.template.md cover packaging/instruction updates. No scope
+entry overlaps the required protected paths. No installed bundle path or runtime
+write grant follows from source-edit scope. A later unexpected build output
+outside this scope requires review/refreeze, not a weakened frozen protection.
+This anticipates the integrate-1 scope collision without editing its old contract.
+
+### Installed-judge baseline and evidence
+
+Initial baseline: exit 0, `BASELINE_READY sandbox-v2
+assurance=schema2-evidence-validity`. All four checks emit exactly their named
+failure ID, `harness_error=false`. Each detail records a successful synthetic
+protected write, independently inventoried lasting byte change, nested exit 0
+and nested SUPPORTED with complete assertion/cleanup evidence. Missing API,
+CLI error, setup failure, unavailable dependency or missing receipt is never RED.
+Rows beyond each decisive witness are not individually qualified by this result.
+
+Initial output/log:
+`/Users/jryear/.local/state/kernel/sandbox-v2-baseline.txt`,
+`/Users/jryear/.local/state/kernel/sandbox-v2-baseline.jsonl`.
+The initial invocation used --base HEAD while HEAD was exactly FROZEN_BASE.
+The final checkpoint HEAD is re-baselined with the literal immutable SHA:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B ~/code/_kernel/verify.py tasks/sandbox.toml --repo . --base 4fa15c4b0afeb9adb5afe5caea31e864775b8580 --baseline --log ~/.local/state/kernel/sandbox-v2-baseline-final.jsonl
+```
+
+Final output: `/Users/jryear/.local/state/kernel/sandbox-v2-baseline-final.txt`.
+Judge inventories before/after:
+`/Users/jryear/.local/state/kernel/sandbox-v2-judge-before.json`,
+`/Users/jryear/.local/state/kernel/sandbox-v2-judge-after.json`.
+Inventory includes directory/file/link types, modes, mtimes, bytes, sizes and
+caches; only shared .git metadata used by required branch/Desk/snapshot operations
+is excluded. Comparison receipt:
+`/Users/jryear/.local/state/kernel/sandbox-v2-judge-comparison.json`.
+
+### Review stop and remaining boundary
+
+Desk claimed sandbox as `sol-2`, branch kernel/sandbox-v2, instruction_version 6,
+and heartbeats were maintained. No Desk prove is used to recast deliberate RED
+as GREEN. Branch is pushed and workspace set in-review for **freeze review**.
+No implementation, bundle provisioning, egress qualification, flake, mutants,
+BidZizi work, installation, merge or push to main/next occurs in this run.
+
+The v1 bundle proposal remains a proposal: operator-owned immutable external
+prefix, pinned srt 0.0.81 and spike transitive lock, qualified Node v24.22.0 with
+artifact/executable digests and caller-held receipt. No bundle or enforcement is
+qualified here. Full matrix execution and GREEN require that later authorized
+implementation/environment. Off-machine egress remains a separate default-on
+and release gate under plan v6. Logs remain diagnostic/incomplete; no invisible
+attempt, restored-write, semantic-attestation or exhaustive-cleanup claim is added.
