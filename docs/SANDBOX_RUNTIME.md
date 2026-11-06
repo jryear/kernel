@@ -18,6 +18,14 @@ loss, ambiguous attribution or incomplete shutdown remains unverifiable. Exact
 patch bytes and changed module postimages are authenticated in each new bundle;
 the TCP policy emission remains unchanged by the diagnostic framing repair.
 
+Enabled collection also retains a separate raw stdout spool capped at 8 MiB,
+with received/retained byte counts, hash, process identity, exact log predicate
+and lifecycle timestamps. The supervisor observes the log command's startup
+banner before publishing prepared launch data; that banner is startup progress,
+not a readiness or completeness guarantee. The one-shot protected/scratch
+canary uses isolated Python without site hooks and still requires its actual
+denial event. Missing events are never replaced by retries or quiet drains.
+
 ## Development bundle
 
 Use an explicit trusted-caller opt-in (`KERNEL_SANDBOX_DEV=1`) only with the

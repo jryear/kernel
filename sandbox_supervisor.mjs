@@ -69,7 +69,14 @@ function unwrap(w){if(!Array.isArray(w.argv)||w.argv.length!==3||w.argv[1]!=='-c
 // Observe the library's own collector without replacing its delivery path. The
 // observer sees only losses exposed in received chunks, not upstream omissions.
 let monitorProcess, monitorCount=0, stoppingMonitor=false, collectorFault=null;
-const monitor={pid:null,started:false,exit:null,closed:false,errors:[]};
+const monitor={pid:null,started:false,exit:null,closed:false,errors:[],argv:null};
+const collectorTimestamps={spawned_at:null,stdout_first_at:null,banner_at:null,prepared_at:null,finish_at:null,closed_at:null};
+const now=()=>Date.now()/1000;
+let bannerText='', bannerSeen=false, signalBanner;
+const bannerReady=new Promise(resolve=>{signalBanner=resolve;});
+let rawFd, rawBytes=0, rawReceived=0;
+const rawCapacity=8*1024*1024, rawHash=createHash('sha256');
+const rawPath=cfg.collector_spool_path || path.join(path.dirname(cfg.result_path),'collector.raw');
 let dropped=0, drainTimedOut=false, finishing=false, attribution='original_invocation', drainDeadline=null;
 let commandId, expectedEncodedCommand, lateEvent=null;
 const failCollector = message => {if (!collectorFault) collectorFault=message;};
@@ -85,12 +92,25 @@ childProcess.spawn=function(file,args,options) {
     monitorCount++;
     if (monitorCount!==1) failCollector('multiple sandbox log collectors');
     monitorProcess=child; monitor.pid=child.pid || null; monitor.started=Boolean(child.pid);
+    monitor.argv=[String(file),...args.map(String)];collectorTimestamps.spawned_at=now();
     child.on('error',error=>{if(monitor.errors.length<16)monitor.errors.push(String(error).slice(0,2048));failCollector('sandbox log collector error');});
     child.on('exit',(code,signal)=>{monitor.exit={code,signal};if(!stoppingMonitor)failCollector('sandbox log collector exited early');});
-    child.on('close',()=>{monitor.closed=true;});
+    child.on('close',()=>{monitor.closed=true;collectorTimestamps.closed_at=now();});
     child.stderr?.on('data',data=>{if(data.length){if(monitor.errors.length<16)monitor.errors.push(String(data).slice(0,2048));failCollector('sandbox log collector stderr');}});
     child.stdout?.on('data',data=>{
       if(data.length) afterDrainDeadline();
+      if(data.length && collectorTimestamps.stdout_first_at===null)collectorTimestamps.stdout_first_at=now();
+      rawReceived+=data.length;
+      try {
+        const available=Math.max(0,rawCapacity-rawBytes), writeData=data.subarray(0,available);
+        let offset=0;
+        while(offset<writeData.length){const written=fs.writeSync(rawFd,writeData,offset,writeData.length-offset);if(written<=0)throw Error('short raw collector write');rawHash.update(writeData.subarray(offset,offset+written));offset+=written;rawBytes+=written;}
+        if(writeData.length!==data.length)failCollector('raw collector spool capacity exceeded');
+      } catch(error) {failCollector('raw collector spool write failed: '+String(error));}
+      if(!bannerSeen){
+        bannerText=(bannerText+data.toString('utf8')).slice(-8192);
+        if(bannerText.includes('Filtering the log data using ')){bannerSeen=true;collectorTimestamps.banner_at=now();signalBanner();}
+      }
     });
   }
   return child;
@@ -128,6 +148,7 @@ async function within(promise,ms) {
 }
 try {
   spoolFd=fs.openSync(spoolPath,'wx',0o600);
+  if(cfg.diagnostics==='enabled')rawFd=fs.openSync(rawPath,'wx',0o600);
   await listen(web); await listen(socks);
   const proxy = (role,server)=>({role,host:'127.0.0.1',port:server.address().port,transport:'tcp',pid:process.pid,started,ready:server.listening,ownership_verified:server.listening});
   const proxies=[proxy('http',web),proxy('socks',socks)];
@@ -137,15 +158,21 @@ try {
   unsubscribe=store.subscribe(tail=>{const total=store.getTotalCount(), count=total-last; if(count<=0)return; received+=count; if(count>tail.length){dropped+=count-tail.length;failCollector('diagnostic subscription lost events');}for(const event of tail.slice(-Math.min(count,tail.length)))saveEvent(event);last=total;});
   process.chdir(cfg.cwd);
   await manager.initialize({network:{allowedDomains:[],deniedDomains:[],strictAllowlist:true,allowLocalBinding:false,kernelLocalhostPorts:cfg.localhost_ports,httpProxyPort:proxies[0].port,socksProxyPort:proxies[1].port},filesystem:cfg.filesystem},undefined,cfg.diagnostics==='enabled');
+  if(cfg.diagnostics==='enabled') {
+    if(!monitor.started || monitorCount!==1 || monitor.exit || collectorFault || !await within(bannerReady,5000) || monitor.exit || collectorFault)
+      throw Error('sandbox log collector startup banner unavailable');
+  }
   commandId=randomUUID(); expectedEncodedCommand=Buffer.from(commandId).toString('base64');
   const ref=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',{network:{kernelLocalhostPorts:[]}},undefined,cfg.cwd,{commandId}));
   const actual=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',undefined,undefined,cfg.cwd,{commandId}));
   const prepared={profile:actual.profile,argv:actual.argv,env:cfg.env,command_index:actual.command_index,proxies,template_context:{reference_profile:ref.profile,localhost_ports:cfg.localhost_ports,proxies,generator_sha256:'9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400'}};
   fs.writeFileSync(cfg.prepared_path,JSON.stringify(prepared),{mode:0o600,flag:'wx'});
+  collectorTimestamps.prepared_at=now();
   if(cfg.diagnostics==='enabled' && (!monitor.started || monitorCount!==1 || monitor.exit)) failCollector('sandbox log collector unavailable');
   await once(process.stdin,'data');
 } catch(error) {supervisorError=String(error);failCollector('supervisor failure: '+supervisorError);process.exitCode=1;}
 finally {
+  collectorTimestamps.finish_at=now();
   finishing=true;
   // No connection may outlive the candidate cleanup boundary. Close accepted
   // and outgoing sockets before waiting for server close callbacks.
@@ -172,8 +199,15 @@ finally {
   if(spoolFd!==undefined) {
     try {fs.fsyncSync(spoolFd);fs.closeSync(spoolFd);} catch(error) {failCollector('diagnostic spool finalization failed: '+String(error));}
   }
+  if(rawFd!==undefined) {
+    try {fs.fsyncSync(rawFd);fs.closeSync(rawFd);} catch(error) {failCollector('raw collector spool finalization failed: '+String(error));}
+  }
+  const rawSha256=rawHash.digest('hex');
+  monitor.timestamps=collectorTimestamps;monitor.banner_seen=bannerSeen;
   const result={events,received,dropped,mode:cfg.diagnostics,complete:false,profile_sha256:null,error:supervisorError,
     collector_fault:collectorFault,drain_timed_out:drainTimedOut,attribution,late_event:lateEvent,
-    spool_path:spoolPath,spool_sha256:spoolHash.digest('hex'),persisted,monitor};
+    spool_path:spoolPath,spool_sha256:spoolHash.digest('hex'),persisted,monitor,
+    collector_persisted_bytes:rawBytes,collector_received_bytes:rawReceived,collector_spool_sha256:rawSha256,collector_capacity:rawCapacity,
+    collector_raw:{path:cfg.diagnostics==='enabled'?rawPath:null,sha256:rawSha256,bytes:rawBytes,received_bytes:rawReceived,capacity:rawCapacity,banner_seen:bannerSeen,timestamps:collectorTimestamps}};
   try {fs.writeFileSync(cfg.result_path,JSON.stringify(result),{mode:0o600,flag:'wx'});} catch {process.exitCode=1;}
 }

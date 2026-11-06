@@ -180,7 +180,8 @@ def run_check(root, check, phase, context):
                                  'denyWrite': [str(p) for p in protected_paths if p != root] + ['/tmp/claude', '/private/tmp/claude', str(state/'.npm'), str(state/'.claude')]},
                   'localhost_ports': ports, 'diagnostics': mode,
                   'prepared_path': str(state/'prepared.json'), 'result_path': str(state/'supervisor-result.json'),
-                  'spool_path': str(state/'diagnostics.jsonl')}
+                  'spool_path': str(state/'diagnostics.jsonl'),
+                  'collector_spool_path': str(state/'collector.raw')}
         config_path = state/'config.json'; config_path.write_text(json.dumps(config))
         supervisor_env = {'PATH': env['PATH'], 'HOME': str(state), 'TMPDIR': str(state), 'LANG': env['LANG'], 'PYTHONDONTWRITEBYTECODE': '1', 'CLAUDE_CODE_TMPDIR': str(scratch)}
         supervisor = subprocess.Popen([bundle['node'], bundle['supervisor'], str(config_path)],
@@ -208,8 +209,11 @@ def run_check(root, check, phase, context):
                 wrapped.count(profile) != 1 or prepared['env'] != env):
             raise DependencyUnavailable('prepared launch bytes/environment differ from inspected policy')
         canary = state/'canary-protected'; canary.write_text('protected')
-        script = "import pathlib,sys,json; p=pathlib.Path(sys.argv[1]); s=pathlib.Path(sys.argv[2]); denied=False\ntry:p.write_text('forbidden')\nexcept OSError as e:denied=e.errno in (1,13)\ns.write_text('scratch'); print(json.dumps({'denied':denied,'scratch':s.read_text()=='scratch'}))"
-        probe_argv = list(wrapped); probe_argv[index] = shlex.join([sys.executable, '-B', '-c', script, str(canary), str(scratch/'canary-allowed')])
+        # Avoid site hooks and filesystem discovery in the trusted probe. The
+        # protected open still reports an actual EPERM/EACCES and must have its
+        # own diagnostic event; no retry can substitute for a missing canary.
+        script = "import os,sys,json; denied=False\ntry:\n fd=os.open(sys.argv[1],os.O_WRONLY|os.O_TRUNC); os.close(fd)\nexcept OSError as e:denied=e.errno in (1,13)\nfd=os.open(sys.argv[2],os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600); os.write(fd,b'scratch'); os.close(fd)\nfd=os.open(sys.argv[2],os.O_RDONLY); data=os.read(fd,16); os.close(fd)\nprint(json.dumps({'denied':denied,'scratch':data==b'scratch'}))"
+        probe_argv = list(wrapped); probe_argv[index] = shlex.join([sys.executable, '-I', '-S', '-B', '-c', script, str(canary), str(scratch/'canary-allowed')])
         # This reviewed probe creates no descendants. Keep its lifecycle separate
         # from the arbitrary check's observed process-group cleanup boundary.
         probe = subprocess.run(probe_argv, cwd=root, env=env, timeout=5,
@@ -256,6 +260,10 @@ def run_check(root, check, phase, context):
                         raise ValueError('diagnostic spool count mismatch')
                     if hashlib.sha256(raw_events).hexdigest() != collected.get('spool_sha256'):
                         raise ValueError('diagnostic spool digest mismatch')
+                    collector_bytes = Path(config['collector_spool_path']).read_bytes()
+                    if (len(collector_bytes) != collected.get('collector_persisted_bytes') or
+                            hashlib.sha256(collector_bytes).hexdigest() != collected.get('collector_spool_sha256')):
+                        raise ValueError('raw collector spool identity mismatch')
                     diagnostics.update(state='failed' if collected.get('collector_fault') else 'active',
                                        received=collected.get('received', len(events)), persisted=len(events),
                                        dropped=collected.get('dropped', 0),
@@ -263,6 +271,11 @@ def run_check(root, check, phase, context):
                                        drain_timed_out=collected.get('drain_timed_out', False),
                                        late_event=collected.get('late_event'),
                                        attribution=collected.get('attribution'), monitor=collected.get('monitor'),
+                                       raw_collector_path=config['collector_spool_path'],
+                                       raw_collector_sha256=hashlib.sha256(collector_bytes).hexdigest(),
+                                       raw_collector_bytes=len(collector_bytes),
+                                       raw_collector_received_bytes=collected.get('collector_received_bytes'),
+                                       raw_collector_capacity=collected.get('collector_capacity'),
                                        raw_events_path=str(spool), raw_events_sha256=hashlib.sha256(raw_events).hexdigest())
                     diagnostics.setdefault('canary', {})['event_received'] = any('canary-protected' in str(event) and 'deny' in str(event) for event in events)
                 lifecycle['supervisor'] = {'pid': supervisor.pid, 'exit': supervisor.returncode,
@@ -305,7 +318,10 @@ def run_check(root, check, phase, context):
     metadata = {k: raw_bundle.get(k) for k in ('srt_version','lock_sha256','bundle_digest','patch_id','patch_sha256','patch_preimages','patch_postimages')}
     metadata.update(node_version=raw_bundle.get('node', {}).get('version'), node_artifact_sha256=raw_bundle.get('node', {}).get('artifact_sha256'))
     lifecycle['finalized_at'] = time.time()
-    receipt = {'schema': 2, 'requested': True, 'enforced': validation.get('exact_match') is True and 'canary' in diagnostics, 'identity': {'run_id': token, 'check': check['name'], 'phase': phase, 'repetition': 0},
+    enforced = (validation.get('exact_match') is True and
+                diagnostics.get('canary', {}).get('write_denied') is True and
+                diagnostics.get('canary', {}).get('scratch_succeeded') is True)
+    receipt = {'schema': 2, 'requested': True, 'enforced': enforced, 'identity': {'run_id': token, 'check': check['name'], 'phase': phase, 'repetition': 0},
                'release': {'manifest_sha256': os.environ.get('VERIFY_RELEASE_SHA256')}, 'bundle': metadata, 'platform': host,
                'policy': policy, 'lifecycle': lifecycle, 'integrity': {**evidence['integrity'], 'judge_before': before, 'judge_after': after, 'receipt_prefix_sha256': before.get(context['log'], {}).get('sha256')},
                'diagnostics': diagnostics, 'decision': decision, 'assertions': {'provisional': assertion, 'cleanup': cleanup,
