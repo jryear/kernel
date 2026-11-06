@@ -1,8 +1,10 @@
 [project]
 name = "kernel"
 outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
-main = "main"
-instruction_version = 4
+main = "next"
+instruction_version = 5
+# Landing rule: 3.2.0 work lands on `next`, never `main`. main stays byte-equal to the installed 3.1.0 judge until the release item switches it.
+# - Plan edits are committed on main (the plan the installed checkout reads) and merged into next.
 # Release rule: the installed release judges the next one.
 # - 3.2.0 is built in a separate worktree. ~/code/_kernel stays on installed 3.1.0, read-only until release gates pass.
 # - Freeze each item's complete tests/fixtures first; named new assertions must FAIL against 3.1.0 and PASS on the candidate.
