@@ -531,6 +531,9 @@ def main() -> int:
         resolved_base = git(repo, "rev-parse", f"{args.base}^{{commit}}")
         merge_base = git(repo, "merge-base", resolved_base, args._resolved_candidate)
         spec, raw_spec, spec_rel = load_frozen_spec(repo, args.spec, merge_base)
+        if os.environ.get("VERIFY_SANDBOX") == "1":
+            from kernel_sandbox import refuse_unqualified_backend
+            return refuse_unqualified_backend(args, repo, spec, merge_base)
         if spec.get("spec_version") == 2:
             from kernel_runtime import verify as verify_schema2
             try:
