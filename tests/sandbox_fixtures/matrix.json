@@ -1,0 +1,4139 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "id": "DENY_JUDGE_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "judge_copy/verify.py",
+        "boundary": "disposable judge copy"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_JUDGE_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "judge_copy/verify.py",
+        "boundary": "disposable judge copy"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_JUDGE_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "judge_copy/verify.py",
+        "boundary": "disposable judge copy"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_JUDGE_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "judge_copy/verify.py",
+        "boundary": "disposable judge copy"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_JUDGE_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "judge_copy/verify.py",
+        "boundary": "disposable judge copy"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_JUDGE_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "judge_copy/verify.py",
+        "boundary": "disposable judge copy"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CLAIM_LOG_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "claim_log",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CLAIM_LOG_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "claim_log",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CLAIM_LOG_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "claim_log",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CLAIM_LOG_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "claim_log",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CLAIM_LOG_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "claim_log",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CLAIM_LOG_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "claim_log",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_RUNTIME_MODULE_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "runtime_module",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_RUNTIME_MODULE_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "runtime_module",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_RUNTIME_MODULE_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "runtime_module",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_RUNTIME_MODULE_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "runtime_module",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_RUNTIME_MODULE_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "runtime_module",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_RUNTIME_MODULE_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "runtime_module",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_MANIFEST_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "manifest",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_MANIFEST_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "manifest",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_MANIFEST_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "manifest",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_MANIFEST_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "manifest",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_MANIFEST_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "manifest",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_MANIFEST_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "manifest",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CONTRACT_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "contract",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CONTRACT_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "contract",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CONTRACT_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "contract",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CONTRACT_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "contract",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CONTRACT_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "contract",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CONTRACT_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "contract",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CHAIN_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "chain",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CHAIN_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "chain",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CHAIN_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "chain",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CHAIN_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "chain",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CHAIN_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "chain",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_CHAIN_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "chain",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_FIXTURE_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "fixture",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_FIXTURE_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "fixture",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_FIXTURE_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "fixture",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_FIXTURE_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "fixture",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_FIXTURE_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "fixture",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_FIXTURE_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "fixture",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_WORKTREE_METADATA_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_worktree_metadata",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_WORKTREE_METADATA_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_worktree_metadata",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_WORKTREE_METADATA_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_worktree_metadata",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_WORKTREE_METADATA_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_worktree_metadata",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_WORKTREE_METADATA_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_worktree_metadata",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_WORKTREE_METADATA_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_worktree_metadata",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_COMMON_DIRECTORY_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_common_directory",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_COMMON_DIRECTORY_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_common_directory",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_COMMON_DIRECTORY_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_common_directory",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_COMMON_DIRECTORY_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_common_directory",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_COMMON_DIRECTORY_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_common_directory",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_GIT_COMMON_DIRECTORY_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "git_common_directory",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SRT_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_srt",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SRT_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_srt",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SRT_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_srt",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SRT_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_srt",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SRT_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_srt",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SRT_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_srt",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SUPERVISOR_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_supervisor",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SUPERVISOR_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_supervisor",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SUPERVISOR_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_supervisor",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SUPERVISOR_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_supervisor",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SUPERVISOR_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_supervisor",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_SUPERVISOR_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_supervisor",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_NODE_WRITE",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_node",
+        "operation_shape": "write",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_NODE_CREATE",
+      "layer": "effect",
+      "operation": "create",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_node",
+        "operation_shape": "create",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_NODE_UNLINK",
+      "layer": "effect",
+      "operation": "unlink",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_node",
+        "operation_shape": "unlink",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_NODE_RENAME",
+      "layer": "effect",
+      "operation": "rename",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_node",
+        "operation_shape": "rename",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_NODE_CHMOD",
+      "layer": "effect",
+      "operation": "chmod",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_node",
+        "operation_shape": "chmod",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_BUNDLE_NODE_REPLACE_PARENT",
+      "layer": "effect",
+      "operation": "replace_parent",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "bundle_node",
+        "operation_shape": "replace_parent",
+        "boundary": "disposable fixture only"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "RESTORE_OR_ALIAS_WRITE_RESTORE",
+      "layer": "effect",
+      "operation": "write_restore",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "via": "scratch_alias_or_restore",
+        "limitation": "swallowed denial with otherwise clean evidence is indistinguishable"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "RESTORE_OR_ALIAS_DELETE_RECREATE",
+      "layer": "effect",
+      "operation": "delete_recreate",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "via": "scratch_alias_or_restore",
+        "limitation": "swallowed denial with otherwise clean evidence is indistinguishable"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "RESTORE_OR_ALIAS_SYMLINK_WRITE",
+      "layer": "effect",
+      "operation": "symlink_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "via": "scratch_alias_or_restore",
+        "limitation": "swallowed denial with otherwise clean evidence is indistinguishable"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "RESTORE_OR_ALIAS_HARDLINK_WRITE",
+      "layer": "effect",
+      "operation": "hardlink_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "via": "scratch_alias_or_restore",
+        "limitation": "swallowed denial with otherwise clean evidence is indistinguishable"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "RESTORE_OR_ALIAS_ANCESTOR_ALIAS_WRITE",
+      "layer": "effect",
+      "operation": "ancestor_alias_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "via": "scratch_alias_or_restore",
+        "limitation": "swallowed denial with otherwise clean evidence is indistinguishable"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "MEASURED_LASTING_BYTE_CHANGE",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "trusted complete inventory records changed bytes for same protected object",
+        "execution and cleanup complete"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "MEASURED_LASTING_CHANGE_WITH_LOGGING",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "same reliable lasting-change fact",
+        "logging mode does not change effect classification"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "MEASURED_ADDITION",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "trusted inventory records addition protected object",
+        "evidence otherwise complete"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "change_kind": "addition",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "MEASURED_REMOVAL",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "trusted inventory records removal protected object",
+        "evidence otherwise complete"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "change_kind": "removal",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "MEASURED_REPLACEMENT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "trusted inventory records replacement protected object",
+        "evidence otherwise complete"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "change_kind": "replacement",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "MEASURED_MODE_CHANGE",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "trusted inventory records mode_change protected object",
+        "evidence otherwise complete"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "change_kind": "mode_change",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "CHANGE_PLUS_SURVIVOR",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "retain reliable protected-change fact",
+        "aggregate unverifiable takes precedence"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_incomplete": "survivor"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "CHANGE_PLUS_TIMEOUT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "retain reliable protected-change fact",
+        "aggregate unverifiable takes precedence"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_incomplete": "timeout"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "CHANGE_PLUS_MISSING_RESULT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "retain reliable protected-change fact",
+        "aggregate unverifiable takes precedence"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_incomplete": "missing_result"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "CHANGE_PLUS_COLLECTOR_LOSS",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "retain reliable protected-change fact",
+        "aggregate unverifiable takes precedence"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_incomplete": "collector_loss"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "CHANGE_PLUS_HASH_UNAVAILABLE",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "retain reliable protected-change fact",
+        "aggregate unverifiable takes precedence"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_incomplete": "hash_unavailable"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "HASH_READ_FAILURE_NO_CHANGE_FACT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled"
+      ],
+      "evidence": [
+        "inventory unavailable is not classified as a measured change"
+      ],
+      "params": {
+        "facts": {
+          "inventory": "unavailable",
+          "protected_change": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "PRECEDENCE_UNVERIFIABLE_OVER_CONTRADICTED",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "both facts retained",
+        "unverifiable precedes contradicted"
+      ],
+      "params": {
+        "facts": {
+          "incomplete_evidence": true,
+          "protected_change": "reliable"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "PRECEDENCE_CONTRADICTED_OVER_SUPPORTED",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "contradicted",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reliable failed assertion or lasting change retained",
+        "complete evidence"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "reliable",
+          "evidence_complete": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "DENY_READ_SYNTHETIC_SSH_KEY_ABSOLUTE_FIXTURE_PATH",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "secret_fixture": "synthetic_ssh_key",
+        "path_form": "absolute_fixture_path"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_READ_SYNTHETIC_SSH_KEY_SYMLINK_ALIAS",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "secret_fixture": "synthetic_ssh_key",
+        "path_form": "symlink_alias"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_READ_SYNTHETIC_SSH_KEY_ANCESTOR_ALIAS",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "secret_fixture": "synthetic_ssh_key",
+        "path_form": "ancestor_alias"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_READ_SYNTHETIC_ENV_SECRET_ABSOLUTE_FIXTURE_PATH",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "secret_fixture": "synthetic_env_secret",
+        "path_form": "absolute_fixture_path"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_READ_SYNTHETIC_ENV_SECRET_SYMLINK_ALIAS",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "secret_fixture": "synthetic_env_secret",
+        "path_form": "symlink_alias"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_READ_SYNTHETIC_ENV_SECRET_ANCESTOR_ALIAS",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "secret_fixture": "synthetic_env_secret",
+        "path_form": "ancestor_alias"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_DIRECT_V4_DEFAULT",
+      "layer": "policy",
+      "operation": "connect",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "direct_v4_default",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_DIRECT_V6_DEFAULT",
+      "layer": "policy",
+      "operation": "connect",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "direct_v6_default",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_WRONG_PORT",
+      "layer": "policy",
+      "operation": "connect",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "wrong_port",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_DECLARED_PORT_V4",
+      "layer": "policy",
+      "operation": "connect",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "positive control reaches isolated fixture",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "declared_port_v4",
+        "declared_ports": [
+          "fixture_port"
+        ]
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_DECLARED_PORT_V6",
+      "layer": "policy",
+      "operation": "connect",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "positive control reaches isolated fixture",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "declared_port_v6",
+        "declared_ports": [
+          "fixture_port"
+        ]
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_ALTERNATE_LOOPBACK_V4",
+      "layer": "policy",
+      "operation": "connect",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "alternate_loopback_v4",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_NONLOOPBACK_BIND_V4",
+      "layer": "policy",
+      "operation": "bind",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "nonloopback_bind_v4",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_NONLOOPBACK_BIND_V6",
+      "layer": "policy",
+      "operation": "bind",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "nonloopback_bind_v6",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_UDP_DEFAULT",
+      "layer": "policy",
+      "operation": "udp",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "udp_default",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_PROXY_HTTP_UNDECLARED",
+      "layer": "policy",
+      "operation": "proxy_http",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "proxy_http_undeclared",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NETWORK_PROXY_CONNECT_UNDECLARED",
+      "layer": "policy",
+      "operation": "proxy_connect",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "independent operation/listener evidence establishes denied destination or bind",
+        "declared destinations are exact canonical TCP tuples; effective bind/inbound/outbound and internal-proxy grants match the versioned profile specification, with residual limits explicitly receipted"
+      ],
+      "params": {
+        "destination": "proxy_connect_undeclared",
+        "declared_ports": []
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CACHE_WRITE_REDIRECTED_SCRATCH",
+      "layer": "effect",
+      "operation": "cache_write",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "cache succeeds in fresh declared scratch",
+        "protected inventories match",
+        "complete assertions and cleanup"
+      ],
+      "params": {
+        "cache_location": "per-check_scratch"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CACHE_WRITE_PROTECTED_SOURCE",
+      "layer": "effect",
+      "operation": "cache_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "cache_location": "source_or_judge_fixture"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CLEAN_CONTROL",
+      "layer": "effect",
+      "operation": "clean",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "complete assertions",
+        "protected inventory matches",
+        "cleanup complete",
+        "judge fixture unchanged"
+      ],
+      "params": {
+        "mode": "no_logging_claim"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DECLARED_SCRATCH_WRITE",
+      "layer": "effect",
+      "operation": "scratch_write",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "write succeeds only under declared scratch root",
+        "protected inventory matches",
+        "cleanup complete"
+      ],
+      "params": {
+        "target": "per_check_scratch"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "GROUP_CHILD_CLEAN",
+      "layer": "isolation",
+      "operation": "group_child",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "child in check group observed dead after cleanup",
+        "no survivors",
+        "assertions complete"
+      ],
+      "params": {
+        "fixture": "disposable_child_process"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "ESCAPE_CHILD_SURVIVOR",
+      "layer": "isolation",
+      "operation": "escape_child",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "setsid child identity observed alive after group cleanup",
+        "survivor recorded even if remediation kills it"
+      ],
+      "params": {
+        "fixture": "disposable_child_process"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CHECK_TIMEOUT",
+      "layer": "isolation",
+      "operation": "timeout",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "timeout recorded",
+        "cleanup and observation result retained"
+      ],
+      "params": {
+        "fixture": "disposable_child_process"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "SUPERVISOR_DEATH",
+      "layer": "isolation",
+      "operation": "group_child",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "supervisor termination recorded",
+        "parent observes actual check group and cleanup"
+      ],
+      "params": {
+        "fixture": "disposable_child_process"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CANARY_MISSING",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "expected canary operation outcome recorded",
+        "missing event recorded as collector gap"
+      ],
+      "params": {
+        "fault": "suppress_canary_event",
+        "facts": {
+          "diagnostics": "enabled",
+          "collector_fault": "suppress_canary_event",
+          "evidence_complete": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "BURST_OVER_100_PERSISTED",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "supported",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "all 150 emitted events persisted by the subscription outside the 100-event in-memory tail",
+        "no injected drop or spool loss",
+        "store tail rollover alone is not failure"
+      ],
+      "params": {
+        "facts": {
+          "diagnostics": "enabled",
+          "emitted": 150,
+          "persisted": 150,
+          "dropped": 0,
+          "store_tail_capacity": 100
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "SUBSCRIPTION_DROP",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "injected dropped event count/gap retained"
+      ],
+      "params": {
+        "fault": "drop_subscription_event",
+        "facts": {
+          "diagnostics": "enabled",
+          "collector_fault": "drop_subscription_event",
+          "evidence_complete": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "SPOOL_OVERFLOW",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "spool capacity and dropped/lost count recorded"
+      ],
+      "params": {
+        "fault": "overflow_spool",
+        "facts": {
+          "diagnostics": "enabled",
+          "collector_fault": "overflow_spool",
+          "evidence_complete": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "COLLECTOR_DEATH",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "collector exit and incomplete evidence recorded"
+      ],
+      "params": {
+        "fault": "terminate_collector",
+        "facts": {
+          "diagnostics": "enabled",
+          "collector_fault": "terminate_collector",
+          "evidence_complete": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "AMBIGUOUS_EVENT_ID",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "event attribution ambiguity retained"
+      ],
+      "params": {
+        "fault": "ambiguous_run_id",
+        "facts": {
+          "diagnostics": "enabled",
+          "collector_fault": "ambiguous_run_id",
+          "evidence_complete": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "DELAYED_AFTER_LEADER_EXIT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "supported",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "known benign delayed event drained and assigned to original invocation before deadline",
+        "no claim that quiet drain proves upstream completeness"
+      ],
+      "params": {
+        "facts": {
+          "diagnostics": "enabled",
+          "delayed_event": "benign",
+          "drained_before_deadline": true,
+          "attribution": "original_invocation"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "CROSS_INVOCATION_EVENT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "unique invocation IDs prevent reassignment",
+        "missing isolation evidence fails closed"
+      ],
+      "params": {
+        "fault": "inject_prior_run_event",
+        "facts": {
+          "diagnostics": "enabled",
+          "collector_fault": "inject_prior_run_event",
+          "evidence_complete": false
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "LOGGING_DISABLED_EXPLICIT",
+      "layer": "classifier",
+      "operation": "clean",
+      "expected": "supported",
+      "logging": [
+        "disabled"
+      ],
+      "evidence": [
+        "receipt records disabled",
+        "no collector readiness or completeness claim",
+        "non-log evidence classifications unchanged"
+      ],
+      "params": {
+        "logging": "disabled"
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "MISSING_NODE",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "missing runtime fails closed without unconstrained execution"
+      ],
+      "params": {
+        "dependency": "qualified_node"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NODE_DIGEST_MISMATCH",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "authenticated bundle mismatch refuses before verdict"
+      ],
+      "params": {
+        "dependency": "qualified_node",
+        "identity": "digest_mismatch"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "MISSING_SANDBOX_FACILITY",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "facility unavailable after authentication",
+        "no fallback execution"
+      ],
+      "params": {
+        "dependency": "macOS_sandbox_facility"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "WRITABLE_BUNDLE",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "bundle outside candidate write authority cannot be established",
+        "no execution"
+      ],
+      "params": {
+        "dependency": "trusted_bundle_location"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "BUNDLE_DIGEST_MISMATCH",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "caller-authenticated bundle digest mismatch",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "dependency": "srt_supervisor_node_bundle"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "INVALID_POLICY_GRANT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "absolute path, alias, ancestor or invalid port declaration rejected before execution"
+      ],
+      "params": {
+        "policy": "unsafe_grant"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "UNSUPPORTED_EXACT_PORT_POLICY",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "capability unavailable before check launch",
+        "no broader localhost policy"
+      ],
+      "params": {
+        "policy": "exact_loopback_port"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "MALFORMED_RESULT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails schema or invocation identity/complete assertion validation",
+        "final receipt parent-owned"
+      ],
+      "params": {
+        "variant": "malformed_result"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "STALE_RESULT",
+      "layer": "protocol",
+      "operation": "stale_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails schema or invocation identity/complete assertion validation",
+        "final receipt parent-owned"
+      ],
+      "params": {
+        "variant": "stale_result"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "MISSING_RESULT",
+      "layer": "protocol",
+      "operation": "missing_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails schema or invocation identity/complete assertion validation",
+        "final receipt parent-owned"
+      ],
+      "params": {
+        "variant": "missing_result"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DUPLICATE_ASSERTIONS",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "duplicate assertion IDs rejected",
+        "complete exact ID set required"
+      ],
+      "params": {
+        "variant": "duplicate_assertion_id"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "INCONSISTENT_EXIT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "result assertions and process exit disagree"
+      ],
+      "params": {
+        "variant": "exit_result_mismatch"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "FINAL_RECEIPT_FORGERY",
+      "layer": "protocol",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "final receipt path is parent-owned and candidate write denied",
+        "attempt alone does not prove all attempts observed"
+      ],
+      "params": {
+        "target": "parent_owned_receipt"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "SEQUENTIAL_RUN_ISOLATION",
+      "layer": "isolation",
+      "operation": "clean",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "unique run/check/repeat IDs",
+        "fresh scratch and result slot",
+        "no reassigned late events or persistent candidate authority"
+      ],
+      "params": {
+        "runs": 2
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DRAIN_TIMEOUT",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "drain deadline expires with pending diagnostic event",
+        "incomplete evidence retained"
+      ],
+      "params": {
+        "facts": {
+          "diagnostics": "enabled",
+          "drain_timed_out": true,
+          "pending_event": true
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "LATE_RELEVANT_DENIAL",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "relevant denied operation arrives after leader exit but before finalization",
+        "affected invocation remains unverifiable"
+      ],
+      "params": {
+        "facts": {
+          "diagnostics": "enabled",
+          "late_event": "relevant_denial",
+          "attribution": "original_invocation"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "SWALLOWED_INVISIBLE_DENIAL_DISABLED",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "supported",
+      "logging": [
+        "disabled"
+      ],
+      "evidence": [
+        "logging disabled by declared mode",
+        "operation denial is caught and hidden with no independent observable effect",
+        "bounded clean claim is indistinguishable; do not assert attempt detection"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "swallow_denial": true,
+        "assurance_limit": "no detection claim from equal boundary hashes and valid neutral result"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "COMPARATOR_RESTORE_WITH_MISSING_EVIDENCE",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "comparator-only write then restore leaves equal hashes",
+        "independent execution evidence explicitly missing"
+      ],
+      "params": {
+        "facts": {
+          "protected_change": "none_at_boundaries",
+          "evidence_complete": false,
+          "attempt_observed": "comparator_only"
+        }
+      },
+      "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
+    },
+    {
+      "id": "KILL_FAILURE",
+      "layer": "isolation",
+      "operation": "timeout",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "kill operation failed and failure recorded",
+        "cannot claim cleanup complete"
+      ],
+      "params": {
+        "fixture": "disposable_child_process",
+        "failure": "kill"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PROCESS_OBSERVATION_FAILURE",
+      "layer": "isolation",
+      "operation": "timeout",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "process enumeration/identity observation failed",
+        "cannot claim cleanup complete"
+      ],
+      "params": {
+        "fixture": "disposable_child_process",
+        "failure": "ps_or_identity_observation"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "TMP_PRIVATE_TMP_ALIAS",
+      "layer": "effect",
+      "operation": "ancestor_alias_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "alias": "tmp_vs_private_tmp",
+        "target": "protected_fixture"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CASE_ALIAS",
+      "layer": "effect",
+      "operation": "ancestor_alias_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "alias": "case_insensitive_path",
+        "target": "protected_fixture"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "HARDLINK_READ_ALIAS",
+      "layer": "effect",
+      "operation": "read",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ],
+      "params": {
+        "alias": "hardlink_to_protected",
+        "target": "protected_fixture"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "ABSOLUTE_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "absolute_path",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PARENT_TRAVERSAL_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "parent_component",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "WILDCARD_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "wildcard_path",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "TRACKED_FILE_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "tracked_file_overlap",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DEPENDENCY_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "dependency_overlap",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PROTECTED_ANCESTOR_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "protected_ancestor",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "SYMLINK_WRITE_ROOT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "symlink_alias_to_protected",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DUPLICATE_PORT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "duplicate_port",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PORT_ZERO",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "port_zero",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PORT_TOO_LARGE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "port_65536",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PORT_STRING",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "port_string",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "PORT_WILDCARD",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "port_wildcard",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "RAW_NETWORK_FLAGS",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "invalid or impermissible policy rejected before execution",
+        "exit 3 and no verdict"
+      ],
+      "params": {
+        "invalid_declaration": "raw_srt_or_network_flags",
+        "execution_started": false
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DECLARED_PORT_BIND_V4",
+      "layer": "policy",
+      "operation": "bind",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reachable isolated listener positive control succeeds through exact declared port",
+        "resolved destination is exactly loopback and port tuple"
+      ],
+      "params": {
+        "destination": "127.0.0.1",
+        "port": "fixture_port",
+        "declared": true
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DECLARED_PORT_BIND_V6",
+      "layer": "policy",
+      "operation": "bind",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reachable isolated listener positive control succeeds through exact declared port",
+        "resolved destination is exactly loopback and port tuple"
+      ],
+      "params": {
+        "destination": "::1",
+        "port": "fixture_port",
+        "declared": true
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DECLARED_PROXY_HTTP",
+      "layer": "policy",
+      "operation": "proxy_http",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reachable isolated listener positive control succeeds through exact declared port",
+        "resolved destination is exactly loopback and port tuple"
+      ],
+      "params": {
+        "destination": "declared_loopback_tuple",
+        "port": "fixture_port",
+        "declared": true
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DECLARED_PROXY_CONNECT",
+      "layer": "policy",
+      "operation": "proxy_connect",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reachable isolated listener positive control succeeds through exact declared port",
+        "resolved destination is exactly loopback and port tuple"
+      ],
+      "params": {
+        "destination": "declared_loopback_tuple",
+        "port": "fixture_port",
+        "declared": true
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "UDP_DENIED_WITH_DECLARED_TCP_PORT",
+      "layer": "policy",
+      "operation": "udp",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "declaring a TCP localhost port does not grant UDP",
+        "independent operation evidence establishes denial"
+      ],
+      "params": {
+        "port": "declared_tcp_fixture_port",
+        "protocol": "udp"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "WRONG_NODE_VERSION",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "runtime version is not the qualified pinned version",
+        "no unconstrained execution or fallback"
+      ],
+      "params": {
+        "dependency": "qualified_node",
+        "identity": "version_mismatch"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "WRONG_PHASE_RESULT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails identity, parsing, exact-ID, or consistency validation",
+        "missing result is incomplete evidence, never a behavioral contradiction"
+      ],
+      "params": {
+        "variant": "wrong_phase"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "WRONG_CHECK_RESULT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails identity, parsing, exact-ID, or consistency validation",
+        "missing result is incomplete evidence, never a behavioral contradiction"
+      ],
+      "params": {
+        "variant": "wrong_check_id"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "MISSING_ASSERTION_ID",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails identity, parsing, exact-ID, or consistency validation",
+        "missing result is incomplete evidence, never a behavioral contradiction"
+      ],
+      "params": {
+        "variant": "missing_assertion_id"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "MALFORMED_JSON_RESULT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails identity, parsing, exact-ID, or consistency validation",
+        "missing result is incomplete evidence, never a behavioral contradiction"
+      ],
+      "params": {
+        "variant": "malformed_json"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "CONFLICTING_STATUS_RESULT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails identity, parsing, exact-ID, or consistency validation",
+        "missing result is incomplete evidence, never a behavioral contradiction"
+      ],
+      "params": {
+        "variant": "conflicting_status"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "NO_RESULT_JSON",
+      "layer": "protocol",
+      "operation": "missing_result",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "provisional result fails identity, parsing, exact-ID, or consistency validation",
+        "missing result is incomplete evidence, never a behavioral contradiction"
+      ],
+      "params": {
+        "variant": "result_absent"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "VALID_LOOKING_FABRICATED_RESULT_LIMIT",
+      "layer": "protocol",
+      "operation": "malformed_result",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "syntactically valid forged output may pass the reviewed harness assumption",
+        "receipt states this is not semantic execution attestation"
+      ],
+      "params": {
+        "variant": "fabricated_but_valid",
+        "assurance_limit": "no execution attestation"
+      },
+      "evidence_source": "reviewed operation probe plus independent protected inventory/listener/process observation and parent receipt"
+    },
+    {
+      "id": "DENY_SNAPSHOT_GIT_INDIRECTION",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {
+        "target": "snapshot_git_file"
+      },
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ]
+    },
+    {
+      "id": "CACHE_WRITE_EXTERNAL_DEPENDENCY",
+      "layer": "effect",
+      "operation": "cache_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {
+        "cache_location": "external_dependency"
+      },
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ]
+    },
+    {
+      "id": "CACHE_WRITE_JUDGE_FIXTURE",
+      "layer": "effect",
+      "operation": "cache_write",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {
+        "cache_location": "judge_fixture"
+      },
+      "evidence": [
+        "separate unsandboxed positive operation control succeeds",
+        "reviewed operation report proves EPERM/EACCES, not absence of logs or a nested verdict alone",
+        "independent bytes/types/modes/links/entries inventory and receipt prefix unchanged",
+        "nested verdict unverifiable; no claim about attempted intent"
+      ]
+    },
+    {
+      "id": "JUDGE_SIDE_CACHE_FAILURE",
+      "layer": "classifier",
+      "operation": "classify",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {
+        "facts": {
+          "judge_cache_created": true
+        }
+      },
+      "evidence": [
+        "host-side synthetic judge cache difference measured",
+        "attribution is judge/environment, not candidate tampering",
+        "unverifiable and source attribution retained"
+      ]
+    },
+    {
+      "id": "CLEAN_DEFAULT_POLICY",
+      "layer": "effect",
+      "operation": "clean",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {
+        "defaults": true
+      },
+      "evidence": [
+        "no sandbox table grants extra writes or ports",
+        "complete assertion set and cleanup",
+        "result writes only per-check redirected TMPDIR",
+        "bounded assurance does not claim no attempts"
+      ]
+    },
+    {
+      "id": "REDIRECT_HOME_TMP_CACHE",
+      "layer": "effect",
+      "operation": "environment_probe",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {},
+      "evidence": [
+        "reviewed payload records only HOME/TMPDIR/XDG_CACHE_HOME/no-bytecode paths",
+        "all paths resolve under fresh per-check scratch",
+        "writes succeed there; protected inventories unchanged",
+        "no raw environment or credentials retained"
+      ]
+    },
+    {
+      "id": "EXPECTED_DENIAL_BEHAVIORAL_ASSERTION",
+      "layer": "effect",
+      "operation": "write",
+      "expected": "supported",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "params": {
+        "target": "protected_fixture_file",
+        "expected_denial": true
+      },
+      "evidence": [
+        "reviewed frozen assertion explicitly tests a denied synthetic write",
+        "EPERM/EACCES independently observed, protected bytes unchanged",
+        "valid complete assertion receipt may be supported; no blanket rule turns all expected denials into failure"
+      ]
+    },
+    {
+      "id": "PROFILE_MISSING_RULE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "missing_rule",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_ADDITIONAL_RULE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "additional_rule",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_DUPLICATE_RULE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "duplicate_rule",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_MALFORMED_RULE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "malformed_rule",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_BROADENED_HOST",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "broadened_host",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_IP_TRANSPORT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "ip_transport",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_WILDCARD_PORT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "wildcard_port",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_LOCAL_OUTBOUND",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "local_outbound",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_UNACCOUNTED_PROXY",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "unaccounted_proxy",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_UNIX_SOCKET",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "unix_socket",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_UNEXPECTED_DEFAULT",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "unexpected_default",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_INSPECTION_FAILURE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "inspection_failure",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_INSPECTION_UNAVAILABLE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "inspection_unavailable",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_UNKNOWN_SYNTAX",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "unknown_syntax",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_INCLUDE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "include",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_MACRO",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "macro",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_OPERATION_WILDCARD",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "operation_wildcard",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_OUTSIDE_NETWORK_SECTION",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "outside_network_section",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PROFILE_NONNETWORK_TEMPLATE",
+      "layer": "policy",
+      "operation": "clean",
+      "expected": "unverifiable",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "reviewed generated-profile input fault reaches the production read-only validator seam",
+        "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+      ],
+      "params": {
+        "profile_fault": "nonnetwork_template",
+        "declared_port": 12345
+      },
+      "evidence_source": "host-owned input mutation, actual production validator, parent receipt and launch evidence"
+    },
+    {
+      "id": "PATCH_AUTHENTICATION_FAILURE",
+      "layer": "dependency",
+      "operation": "clean",
+      "expected": "refused",
+      "logging": [
+        "disabled",
+        "enabled"
+      ],
+      "evidence": [
+        "append bytes only to an authenticated disposable copy of the pinned patch file",
+        "patch authentication failure returns exit 3 and no verdict before bundle code or candidate launch",
+        "real operator bundle and installed judge remain unchanged"
+      ],
+      "params": {
+        "dependency": "pinned_srt_patch",
+        "identity": "patch_sha256_mismatch"
+      },
+      "evidence_source": "disposable patch-file bytes, original authenticated receipt and host-owned bundle-launch audit"
+    }
+  ],
+  "known_gaps": [
+    {
+      "id": "EXTERNAL_EGRESS_NO_AUTHORIZED_FIXTURE",
+      "reason": "External-egress probe is frozen but qualification requires a separately authorized isolated private endpoint, independent journal and reachable unsandboxed control; no endpoint is provisioned or exercised during this freeze."
+    },
+    {
+      "id": "INVISIBLE_RESTORED_OR_SWALLOWED_ATTEMPT",
+      "reason": "Hashes observe lasting boundary differences only and logs may miss events; an attempt caught and hidden with otherwise identical evidence cannot be asserted detected."
+    }
+  ]
+}
