@@ -1,0 +1,24 @@
+spec_version = 2
+id = "sandbox-v1"
+project = "kernel"
+goal = "Qualify the full frozen sandbox matrix using independently observed synthetic effects, complete receipts and conservative evidence classification"
+bypass_policy = "fail"
+
+[scope]
+include = ["verify.py", "kernel_runtime.py", "kernel_report.py", "kernel_process.py", "kernel_sandbox.py", "kernel_sandbox/*", "sandbox_supervisor.mjs", "sandbox_runtime/*", "sandbox.package.json", "sandbox.package-lock.json", "MANIFEST.sha256", "README.md", "FRONTIER.md", "docs/SANDBOX_RUNTIME.md", "CHECKPOINT-tranche-1.md"]
+protected = ["tests/*", "tasks/*", "docs/SANDBOX_DECISION.md", "spike/*", ".desk/*"]
+
+[[checks]]
+name = "sandbox evidence matrix"
+kind = "acceptance"
+timeout = 1200
+argv = ["python3", "tests/tamper_suite.py"]
+entry = "tests/tamper_suite.py"
+chain = ["tests/tamper_suite.py", "tests/sandbox_fixtures/harness.py", "tests/sandbox_fixtures/subject_driver.py", "tests/sandbox_fixtures/payload.py", "tests/sandbox_fixtures/egress_probe.py", "tests/sandbox_fixtures/matrix.json"]
+evidence = ["tests/tamper_suite.py", "tests/sandbox_fixtures/*", "docs/SANDBOX_DECISION.md", "spike/package-lock.json"]
+assertions = ["SANDBOX_MATRIX_BOUNDARY"]
+baseline_failures = ["SANDBOX_MATRIX_BOUNDARY"]
+
+[notes]
+assumptions = "External installed 3.1.0 judge; frozen reviewed effect fixtures; trusted Python/Git/ps/OS. Later qualification requires operator-provisioned authenticated immutable srt 0.0.81 and qualified Node bundle outside candidate authority; never installed by checks."
+out_of_scope = "This commit freezes tests only. A successful forbidden write is the decisive real baseline counterexample to the matrix conjunction; remaining matrix cases are not credited on that early return. Missing runtime/API/receipts never count as RED. Full GREEN requires all rows and logging variants, plus separately authorized isolated external-egress qualification. No guarantee of invisible attempts, restored writes, complete OS logs, semantic attestation or exhaustive hostile cleanup. Regression selftest.py remains separate through desk/release, because it emits no schema2 receipt."
