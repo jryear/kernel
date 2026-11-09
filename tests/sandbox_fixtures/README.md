@@ -4,6 +4,10 @@ This fixture-only v6 draft starts from sandbox-v5 at c6f0ba3. Its implementation
 is byte-identical to a1532a5. V5's freeze and CONTRADICTED claim remain historical
 evidence. The v6 changes repair host ordering and rig-failure classification;
 no rule, expected verdict, case ID, count or production implementation changes.
+Expected-denial reproductions additionally hold the controlled payload until the
+real parent sampler has observed the declared executable. A read-only trace
+records that observation; missing identity is host Unavailable before matcher
+assertions, never a fabricated identity or an assumption that sampling is complete.
 
 Finish is latched when the adapter starts, independent of frame arrival. Deferred
 frames rendezvous with that latch and are scheduled relative to the recorded

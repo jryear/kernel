@@ -231,13 +231,24 @@ else:
         def log_audit(event):
             with audit.open('a',encoding='utf-8') as f:
                 f.write(json.dumps(event,sort_keys=True)+'\n');f.flush();os.fsync(f.fileno())
-        if fixture['case_id']=='CANARY_BOUND_DELAYED_DIAGNOSTIC':
+        expected_identity_case=fixture['case_id'] in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL')
+        if fixture['case_id']=='CANARY_BOUND_DELAYED_DIAGNOSTIC' or expected_identity_case:
             def trace_binding(frame,event,arg):
-                if (event=='line' and frame.f_code.co_name=='run_check' and
-                    frame.f_code.co_filename.endswith('kernel_sandbox_runtime.py')):
-                    local=frame.f_locals
+                if event!='line':return trace_binding
+                local=frame.f_locals
+                if (frame.f_code.co_name=='run_check' and
+                        frame.f_code.co_filename.endswith('kernel_sandbox_runtime.py')):
                     if local.get('phase')=='candidate' and isinstance(local.get('canary_binding'),dict):
                         collector['canary_binding']=dict(local['canary_binding'])
+                if (expected_identity_case and frame.f_code.co_name=='observe' and
+                        frame.f_code.co_filename.endswith('kernel_process.py') and not collector.get('expected_sample')):
+                    row=local.get('row');check=collector.get('check')
+                    if isinstance(row,dict) and check and row.get('pid')==check.pid and any(
+                            item.get('sha256')==fixture['expected_executable_sha256'] for item in row.get('executables',[])):
+                        # Read-only observation of the real parent sampler. No
+                        # identity is manufactured or supplied to the subject.
+                        collector['expected_sample']=json.loads(json.dumps(row))
+                        log_audit({'type':'candidate_executable_observed','observation':collector['expected_sample'],'at':time.time()})
                 return trace_binding
             sys.settrace(trace_binding)
         def publish_release(path,nonce):
@@ -277,6 +288,8 @@ else:
                                 int(fields[0])!=check.pid or witness.get('pgid')!=check.pid or fields[1].startswith('Z') or
                                 (not delayed and (witness.get('errno') not in (1,13) or witness.get('outcome')!='denied'))):
                                 raise RuntimeError('diagnostic payload witness identity/operation unavailable')
+                            if expected_identity_case and not collector.get('expected_sample'):
+                                time.sleep(.005);continue
                             prepared=json.loads(Path(cfg['prepared_path']).read_text())
                             binding=collector.get('canary_binding') if delayed else None
                             if delayed and not binding: raise RuntimeError('host preflight binding unavailable')
@@ -356,6 +369,21 @@ else:
             proc=prior_popen(argv,*args,**kwargs)
             if isinstance(kwargs.get('env'),dict) and kwargs['env'].get('VERIFY_PROCESS_TOKEN') and kwargs['env'].get('VERIFY_TREE')=='candidate':
                 collector['check']=proc
+                if expected_identity_case:
+                    # First parent sampling starts only after this controlled
+                    # payload has exec'd and reached its private nonce barrier.
+                    # This closes the startup race without altering the sampler.
+                    cfg=collector['config'];handshake=Path(cfg['prepared_path']).parent/'child'/'diagnostic-handshake.json'
+                    until=time.monotonic()+2
+                    while time.monotonic()<until and proc.poll() is None:
+                        if handshake.exists():
+                            try: witness=json.loads(handshake.read_text())
+                            except (OSError,ValueError):time.sleep(.005);continue
+                            if witness.get('nonce')==fixture['nonce'] and witness.get('pid')==proc.pid and witness.get('pgid')==proc.pid:
+                                log_audit({'type':'stable_payload_before_sampling','pid':proc.pid,'nonce':fixture['nonce'],'at':time.time()})
+                                break
+                        time.sleep(.005)
+                    else:log_audit({'type':'adapter_error','error':'stable payload sampling barrier unavailable'})
             return proc
         subprocess.Popen=instrumented_popen
     subject = importlib.import_module('verify')

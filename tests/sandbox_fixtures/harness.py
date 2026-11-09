@@ -146,6 +146,17 @@ def validate_host_control(observed, case, mode):
             sealed=[r for r in audit if r.get('type')=='postfinal_origin_sealed']
             rig_need(len(sealed)==1 and len(silent)==1 and len(injected)==1 and
                      silent[0]['at']<sealed[0]['at']<injected[0]['boundary_ack']['written_at'],name+': origin was not sealed before later delivery')
+        if name in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL'):
+            stable=[r for r in audit if r.get('type')=='stable_payload_before_sampling']
+            sampled=[r for r in audit if r.get('type')=='candidate_executable_observed']
+            declaration=(json.loads((root/'operator.json').read_text()).get('expected_denials') or [{}])[0]
+            rig_need(len(stable)==1 and len(sampled)==1,name+': real parent executable observation unavailable')
+            sample=sampled[0]['observation']
+            rig_need(sample.get('pid')==stable[0]['pid'] and sample.get('started') and any(
+                     item.get('sha256')==declaration.get('executable_sha256') for item in sample.get('executables',[])),
+                     name+': sampled executable is not the trusted declaration')
+            rig_need(stable[0]['at']<=sampled[0]['at']<=min(r['boundary_ack']['written_at'] for r in injected),
+                     name+': frame preceded stable parent sampling')
         if name=='COLLECTOR_SEAM_NEGATIVE_CONTROL':
             sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
             output=observed['check'].get('output','')
@@ -453,6 +464,7 @@ baseline_failures = ["NEW"]
                 'scratch_root':str(self.out), 'root':str(self.root),
                 'nonce':self.config.get('diagnostic_barrier_nonce'),
                 'adapter':str(getattr(self,'collector_adapter',HERE/'collector_adapter.mjs')),
+                'expected_executable_sha256':(operator.get('expected_denials') or [{}])[0].get('executable_sha256'),
                 'force_finish_before_frame':os.environ.get('KERNEL_FIXTURE_FORCE_FINISH_FIRST')=='1' and self.case['id'] in ('LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT'),
                 'unexpected_target':self.config.get('unexpected_extra_target')}
 
