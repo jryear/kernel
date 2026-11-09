@@ -247,8 +247,9 @@ else:
                             item.get('sha256')==fixture['expected_executable_sha256'] for item in row.get('executables',[])):
                         # Read-only observation of the real parent sampler. No
                         # identity is manufactured or supplied to the subject.
-                        collector['expected_sample']=json.loads(json.dumps(row))
-                        log_audit({'type':'candidate_executable_observed','observation':collector['expected_sample'],'at':time.time()})
+                        observation=json.loads(json.dumps(row))
+                        log_audit({'type':'candidate_executable_observed','observation':observation,'at':time.time(),'monotonic':time.monotonic()})
+                        collector['expected_sample']=observation
                 return trace_binding
             sys.settrace(trace_binding)
         def publish_release(path,nonce):
@@ -320,6 +321,7 @@ else:
                                 silent=fixture['case_id']=='SWALLOWED_INVISIBLE_DENIAL_ENABLED'
                             frame={**frame,'frame_id':uuid.uuid4().hex}
                             if not silent:
+                                log_audit({'type':'frame_dispatch_begin','frame_id':frame['frame_id'],'at':time.time(),'monotonic':time.monotonic()})
                                 os.write(collector['write_fd'],(json.dumps(frame)+'\n').encode())
                                 if fixture['case_id']=='EXPECTED_DENIAL_UNRELATED_CONTROL':
                                     extra=witness.get('extra') or {}
@@ -380,7 +382,7 @@ else:
                             try: witness=json.loads(handshake.read_text())
                             except (OSError,ValueError):time.sleep(.005);continue
                             if witness.get('nonce')==fixture['nonce'] and witness.get('pid')==proc.pid and witness.get('pgid')==proc.pid:
-                                log_audit({'type':'stable_payload_before_sampling','pid':proc.pid,'nonce':fixture['nonce'],'at':time.time()})
+                                log_audit({'type':'stable_payload_before_sampling','pid':proc.pid,'nonce':fixture['nonce'],'at':time.time(),'monotonic':time.monotonic()})
                                 break
                         time.sleep(.005)
                     else:log_audit({'type':'adapter_error','error':'stable payload sampling barrier unavailable'})

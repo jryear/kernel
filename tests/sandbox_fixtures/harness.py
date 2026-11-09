@@ -147,6 +147,7 @@ def validate_host_control(observed, case, mode):
             rig_need(len(sealed)==1 and len(silent)==1 and len(injected)==1 and
                      silent[0]['at']<sealed[0]['at']<injected[0]['boundary_ack']['written_at'],name+': origin was not sealed before later delivery')
         if name in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL'):
+            rig_need(len(injected)==1 and not silent,name+': exact expected-denial stimulus unavailable')
             stable=[r for r in audit if r.get('type')=='stable_payload_before_sampling']
             sampled=[r for r in audit if r.get('type')=='candidate_executable_observed']
             declaration=(json.loads((root/'operator.json').read_text()).get('expected_denials') or [{}])[0]
@@ -155,7 +156,8 @@ def validate_host_control(observed, case, mode):
             rig_need(sample.get('pid')==stable[0]['pid'] and sample.get('started') and any(
                      item.get('sha256')==declaration.get('executable_sha256') for item in sample.get('executables',[])),
                      name+': sampled executable is not the trusted declaration')
-            rig_need(stable[0]['at']<=sampled[0]['at']<=min(r['boundary_ack']['written_at'] for r in injected),
+            dispatched=[r for r in audit if r.get('type')=='frame_dispatch_begin' and r.get('frame_id')==injected[0]['frame_id']]
+            rig_need(len(dispatched)==1 and stable[0]['monotonic']<=sampled[0]['monotonic']<=dispatched[0]['monotonic'],
                      name+': frame preceded stable parent sampling')
         if name=='COLLECTOR_SEAM_NEGATIVE_CONTROL':
             sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
