@@ -92,7 +92,7 @@ cp.spawn=function(file,args,options){
       };
       const pid=/Sandbox: \w+\((\d+)\)/.exec(msg.line)?.[1];
       if (!pid) throw Error('host event subject pid missing');
-      if(mode==='COLLECTOR_DEATH') {audit({type:'terminate_real_collector',pid:child.pid,frame_id:msg.frame_id});const killed=child.kill('SIGKILL');if(killed)fs.appendFileSync(ackPath,JSON.stringify({type:'collector_kill_sent',frame_id:msg.frame_id,pid:child.pid,at:Date.now()/1000})+'\n');continue;}
+      if(mode==='COLLECTOR_DEATH') {audit({type:'terminate_real_collector',pid:child.pid,frame_id:msg.frame_id});const killed=child.kill('SIGKILL');if(killed)fs.appendFileSync(ackPath,JSON.stringify({type:'collector_kill_sent',frame_id:msg.frame_id,pid:child.pid,finish_at:clock.finish_at,at:Date.now()/1000})+'\n');continue;}
       if(mode==='SPOOL_OVERFLOW' || mode==='BURST_OVER_100_PERSISTED' || mode==='SUBSCRIPTION_DROP') {
         const count=mode==='SPOOL_OVERFLOW'?10001:150;
         const frame=benign(pid);audit({type:'write_benign_burst',count});

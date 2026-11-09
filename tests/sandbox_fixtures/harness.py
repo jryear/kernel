@@ -115,9 +115,10 @@ def validate_host_control(observed, case, mode):
                 release=[r for r in audit if r.get('type')=='release_published' and r.get('nonce')==witness.get('nonce')]
                 rig_need(bool(release),name+': release absent')
                 if not drain:
+                    rig_need('finish_at' in ack and ack['finish_at'] is None,name+': active stimulus was written after finish')
                     rig_need(ack.get('at',0)<=release[-1]['at'],name+': released before boundary acknowledgement')
         if name=='DRAIN_RELEVANT_DENIAL_PASSING':
-            rig_need(any(r.get('type')=='drain_started' for r in writes) and all(r['boundary_ack'].get('deadline_mono') for r in injected),name+': actual drain entry not observed')
+            rig_need(any(r.get('type')=='drain_started' for r in writes) and all(r['boundary_ack'].get('deadline_mono') and r['boundary_ack']['deadline_mono']-2000<=r['boundary_ack']['written_mono']<r['boundary_ack']['deadline_mono'] for r in injected),name+': boundary write was not inside the actual unchanged drain')
         fault_rows=records('fault-adapter-audit.jsonl')
         rig_need(not any(r.get('type')=='rig_error' for r in fault_rows),name+': fault adapter missed window')
         required={'SUBSCRIPTION_DROP':'subscription_fault_armed','SPOOL_OVERFLOW':'write_benign_burst',
@@ -145,6 +146,12 @@ def validate_host_control(observed, case, mode):
             sealed=[r for r in audit if r.get('type')=='postfinal_origin_sealed']
             rig_need(len(sealed)==1 and len(silent)==1 and len(injected)==1 and
                      silent[0]['at']<sealed[0]['at']<injected[0]['boundary_ack']['written_at'],name+': origin was not sealed before later delivery')
+        if name=='COLLECTOR_SEAM_NEGATIVE_CONTROL':
+            sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
+            output=observed['check'].get('output','')
+            rig_need(sentinel in output and sentinel in json.dumps(observed['check'].get('assertion_result')),
+                     name+': candidate attack carriers were not exercised')
+            rig_need(isinstance(parse_line(output,'CANDIDATE_FD_INVENTORY '),list),name+': candidate descriptor inventory missing')
         proof['controls'].append({'collector_audit':audit,'boundary_writes':writes,'fault_audit':fault_rows})
     observed['host_control_validated']=True
     observed['host_control_proof']=proof

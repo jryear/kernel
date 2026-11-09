@@ -49,7 +49,7 @@ cp.spawn=function(file,args,options){
       if(!mux.readableFlowing || mux.listenerCount('data')===0)throw Error('host collector boundary not flowing');
       const writtenAt=Date.now()/1000,writtenMono=clock.now();
       mux.write(msg.line+'\nCMD64_'+msg.tag+'_END_'+(msg.suffix ?? suffix)+'\n');
-      setImmediate(()=>fs.appendFileSync(path.join(path.dirname(livePath),'collector-write-ack.jsonl'),JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,written_at:writtenAt,written_mono:writtenMono,deadline_mono:clock.deadline_mono,at:Date.now()/1000})+'\n'));
+      setImmediate(()=>fs.appendFileSync(path.join(path.dirname(livePath),'collector-write-ack.jsonl'),JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,written_at:writtenAt,written_mono:writtenMono,finish_at:clock.finish_at,deadline_mono:clock.deadline_mono,at:Date.now()/1000})+'\n'));
     }
   });
   child.on('close',()=>{control.destroy();fs.closeSync(live);});
