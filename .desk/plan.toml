@@ -2,7 +2,7 @@
 name = "kernel"
 outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
 main = "next"
-instruction_version = 6
+instruction_version = 7
 # Landing rule: 3.2.0 work lands on `next`, never `main`. main stays byte-equal to the installed 3.1.0 judge until the release item switches it.
 # - Plan edits are committed on main (the plan the installed checkout reads) and merged into next.
 # Release rule: the installed release judges the next one.
@@ -11,13 +11,16 @@ instruction_version = 6
 # - The six existing self-tests are regressions, not evidence for new guarantees. Setup/CLI errors are not RED.
 # - Judge, frozen contracts/fixtures, final logs, expected digest and pinned sandbox bundle stay outside candidate write authority.
 # - Judge invocations use python3 -B and nested Python uses PYTHONDONTWRITEBYTECODE=1; inventory the judge directory before/after.
-# Verdict rule: docs/SANDBOX_DECISION.md is the sandbox acceptance boundary.
-# - contradicted: reliably measured deterministic forbidden effect or complete failed behavioral assertion; denial is not intent.
-# - unverifiable: environment failures, survivors, incomplete execution/cleanup, enabled collector failure/loss, ambiguous/missing evidence.
-# - Aggregate precedence is unverifiable, then contradicted, then supported; retain deterministic change facts even when overridden.
-# - Hashes prove lasting differences at observed boundaries only, never no attempts, no restored writes, or read denial.
-# - Logs are diagnostic and incomplete. Intentional logging-disabled mode is distinct from collector failure; no silent fallback.
-# - Supported is bounded contract evidence, not proof of no attempts or hostile-process containment.
+# Verdict rule (amendments 2026-11-06 and 2026-11-09):
+# Verdict boundary: docs/SANDBOX_DECISION.md, including amendments 2026-11-06 and 2026-11-09.
+# Unverifiable precedes contradicted, which precedes supported; retain measured contradiction facts.
+# Observed attributed relevant unexpected denial at any phase -> unverifiable.
+# Enabled collector fault/death/overflow/known loss, invalid evidence, ambiguous relevant attribution,
+# cross-invocation contamination or incomplete bounded drain -> unverifiable. No silent fallback.
+# Logs are diagnostic, absence proves nothing: missing events/canary alone never gate support.
+# Bound canary logging is diagnostic; independent same-policy operation preflight still gates launch.
+# Supported is bounded observable contract evidence; swallowed undelivered denials may be supported.
+# Hashes do not prove no attempts, no transient writes or read denial. Disabled mode stays explicit.
 
 [[item]]
 id = "self-check"
@@ -50,15 +53,14 @@ acceptance = [["python3", "tests/self_check.py"], ["python3", "tests/cleanup.py"
 
 [[item]]
 id = "sandbox"
-title = "Opt-in sandbox: pinned embedded srt under a trusted supervisor; exact write/localhost policy, external receipts and typed integrity evidence"
-mandate = "Zack, 2026-11-03; architecture in docs/SANDBOX_DECISION.md. Freeze the full tamper matrix before implementation. Pin srt 0.0.81, transitive lock and qualified Node artifact outside candidate authority. Preserve integrated self-check/cleanup. Prove exact ports and path confinement; unsupported policy fails closed. Logs cannot prove intent or completeness."
+title = "Opt-in sandbox-v5: one-directional diagnostic logs, bound non-gating canary events and complete independent evidence"
+mandate = "Zack, 2026-11-09 go; docs/SANDBOX_DECISION.md amendments are binding. Preserve v4 freeze and UNVERIFIABLE claim. Before v5 freeze, reproduce every newly required case and strengthened event/fault path in disposable controlled runs and complete the full prefreeze sweep. Freeze reviewed v5 fixtures once, obtain genuine installed-3.1.0 behavioral baseline RED, then require full frozen sweep, regressions and four-check installed claim on exact candidate bytes. Observed relevant denials at any time and enabled collector faults remain unverifiable; absence alone does not. Keep same-policy operation preflight, third-party probe, pinned srt 0.0.81 exact-TCP patch, authenticated external bundle, independent inventories, cleanup and receipt protocol. Use nested sandbox receipt schema 3 and publish measured one-host logging and swallowed-denial limits. No Apple-binary substitution, retry-to-green, broadened policy or unconstrained fallback."
 depends = ["integrate-1", "sandbox-spike"]
 acceptance = [["python3", "-B", "tests/tamper_suite.py"]]
-# Zack, 2026-11-06: refrozen as sandbox-v2. External (off-machine) egress moved to the `egress` item; all on-machine network cases stay here.
-# Test observed denials -> unverifiable; reliable lasting protected changes -> contradicted unless independent evidence is unavailable.
-# Repeat with logging disabled; clean bounded controls may be supported. Never claim detection of swallowed invisible attempts.
-# Prove effects independently of nested verdicts, including reads, direct/proxy network, aliases, cache, receipts, bundle and judge integrity.
-# Enabled collector loss/failure and all incomplete cleanup remain unverifiable. No unconstrained fallback or runtime installation.
+# Off-machine egress remains in egress; retain every on-machine operation/effect control.
+# Canary absence is not collector loss. Collector crash/overflow/known drop remains unverifiable.
+# New oracle/receipt semantics belong only to sandbox-v5; never rewrite or relabel v4 evidence.
+# Preserve exact freeze/source/bundle/receipt bindings and all failed or unavailable observations.
 
 [[item]]
 id = "flake"
@@ -76,8 +78,8 @@ acceptance = [["python3", "-B", "tests/mutants.py"]]
 
 [[item]]
 id = "red-team"
-title = "Red-team procedure: an agent writes mutants and adversarial checks before freeze; they ship only as a new frozen contract version"
-mandate = "Zack, 2026-11-03: separate red-team agent, judged by the same frozen contract."
+title = "Red-team new frozen contracts and named sandbox residual risks before release"
+mandate = "Zack, 2026-11-03 separate red-team agent, judged by the same frozen contract; extended by 2026-11-09 decision. Preserve new-version-only freeze procedure. Address NONNETWORK_GENERATOR_COMMON_MODE using a disposable shared-generator non-network mutation and independent operation/effect witnesses; matching generator outputs are not an independent semantic oracle. Review ENTRYPOINT_EXTERNAL_AUTHENTICATION as a caller prerequisite and the swallowed-undelivered-denial limit. Record source, observations and limits. Release must publish both named trust risks and an owner disposition of mitigation or explicit residual acceptance; no claim of independent non-network validation without new proof."
 depends = ["mutants"]
 acceptance = [["python3", "tests/red_team_freeze.py"]]
 
