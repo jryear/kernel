@@ -20,7 +20,7 @@ _RAW = re.compile(r'^(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d+) .*?Sandbox: (.*)$')
 
 def match_canary_event(event, binding):
     """Match every binding independently; absent fields are never positive evidence."""
-    required = ('run_id', 'check', 'phase', 'repetition', 'probe_id', 'command_tag',
+    required = ('run_id', 'check', 'phase', 'repetition', 'probe_id', 'command_tag', 'session_suffix',
                 'path', 'operation', 'denial_result', 'subject_pid', 'subject_start',
                 'executable', 'executable_sha256')
     reasons = []
@@ -87,7 +87,7 @@ def parse_raw_events(raw, subscription_events, session_suffix, chunks):
     for event in subscription_events:
         available.setdefault((event.get('line'), event.get('encodedCommand')), []).append(event)
     output, faults = [], []
-    tag_re = re.compile(r'^CMD64_([A-Za-z0-9+/]+={0,2})_END_' + re.escape(session_suffix or '') + r'$')
+    tag_re = re.compile(r'^CMD64_([A-Za-z0-9+/]+={0,2})_END_(_[A-Za-z0-9]+_SBX)$')
     for index, line in enumerate(lines):
         match = _RAW.match(line)
         if not match or 'deny(' not in match.group(2):
@@ -95,7 +95,10 @@ def parse_raw_events(raw, subscription_events, session_suffix, chunks):
         detail = match.group(2)
         tag = tag_re.match(lines[index + 1]) if index + 1 < len(lines) else None
         encoded = tag.group(1) if tag else None
+        suffix = tag.group(2) if tag else None
         subscription = available.get((detail, encoded), [])
+        if not subscription:
+            subscription = available.get((detail, None), [])
         source = subscription.pop(0) if subscription else {}
         event = dict(source)
         arrival = next((chunk for chunk in chunks if chunk.get('start', -1) < offsets[index] <= chunk.get('end', -1)), None)
@@ -103,7 +106,7 @@ def parse_raw_events(raw, subscription_events, session_suffix, chunks):
             faults.append('diagnostic_evidence_invalid')
         else:
             event.update(received_epoch=arrival.get('received_epoch'), arrival_phase=arrival.get('arrival_phase'))
-        event.update(line=detail, encodedCommand=encoded,
+        event.update(line=detail, encodedCommand=encoded, session_suffix=suffix,
                      raw_line_sha256=hashlib.sha256(line.encode()).hexdigest(),
                      raw_line_number=index + 1)
         if not tag:
@@ -115,10 +118,12 @@ def parse_raw_events(raw, subscription_events, session_suffix, chunks):
     return output, list(dict.fromkeys(faults))
 
 
-def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
+def process_events(events, binding, raw=b'', lifecycle=None, origins=None, expected_denials=None, assertion=None):
     """Interpret persisted events; this function is never fed candidate output."""
     lifecycle = lifecycle or {}
     origins = origins or {}
+    expected_denials = expected_denials or []
+    assertion_ids = {a.get('id') for a in (assertion or {}).get('assertions', [])}
     corrections = []
     occurrences = raw_occurrences(raw)
     result, matches, rejected, faults = [], [], [], []
@@ -129,7 +134,7 @@ def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
         event_digest = hashlib.sha256(raw_event).hexdigest()
         row = {'event_sha256': event_digest, 'raw_reference': event.get('raw_line_sha256', event_digest), 'raw_line_number': event.get('raw_line_number'),
                'received_at': event.get('timestamp'), 'received_epoch': event.get('received_epoch'), 'arrival_phase': event.get('arrival_phase'), 'line': line,
-               'command_tag': event.get('encodedCommand'), 'origin': None,
+               'command_tag': event.get('encodedCommand'), 'session_suffix': event.get('session_suffix'), 'origin': None,
                'subject_pid': None, 'subject_start': None, 'operation': None,
                'resource': None, 'occurrence_epoch': None, 'lifecycle_phase': 'unknown',
                'attribution': 'ambiguous', 'relevance': 'ambiguous', 'exemption_id': None}
@@ -138,7 +143,9 @@ def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
             result.append(row)
             continue
         row.update(subject_pid=int(match.group('pid')), operation=match.group('operation'),
-                   resource=match.group('resource'), denial_result=int(match.group('result')))
+                   resource=match.group('resource'), path=match.group('resource'), denial_result=int(match.group('result')))
+        probe_name = re.fullmatch(r'canary-protected-([0-9a-f]{32})', os.path.basename(row['resource']))
+        row['probe_id'] = probe_name.group(1) if probe_name else None
         raw_times = occurrences.get(line, [])
         if raw_times:
             row['occurrence_epoch'] = raw_times.pop(0)
@@ -146,8 +153,9 @@ def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
             row[name] = binding.get(name)
         # The invocation tag is assigned by the trusted supervisor, never by
         # provisional child output. Wrong/absent tags are not reassigned.
-        if event.get('encodedCommand') != binding.get('command_tag') or not binding.get('command_tag'):
-            prior = origins.get(event.get('encodedCommand'))
+        if ((event.get('encodedCommand'), event.get('session_suffix')) !=
+                (binding.get('command_tag'), binding.get('session_suffix')) or not binding.get('command_tag')):
+            prior = origins.get((event.get('encodedCommand'), event.get('session_suffix')))
             if prior:
                 row['origin'] = prior['identity']
                 row['attribution'] = 'prior_invocation'
@@ -162,13 +170,16 @@ def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
                     if (row['subject_pid'] == old_binding.get('subject_pid') and occurred is not None and
                             old_binding.get('preflight_start', float('inf')) - .001 <= occurred <= old_binding.get('preflight_end', float('-inf')) + .001):
                         row.update(subject_start=old_binding.get('subject_start'), executable=old_binding.get('executable'),
-                                   executable_sha256=old_binding.get('executable_sha256'), probe_id=old_binding.get('probe_id'),
-                                   path=row['resource'])
+                                   executable_sha256=old_binding.get('executable_sha256'))
+                    for observation in prior.get('observed', []):
+                        if observation.get('pid') == row['subject_pid'] and not row.get('subject_start'):
+                            row['subject_start'] = observation.get('started')
+                            row['subject_executables'] = observation.get('executables', [])
                     for key in ('run_id', 'check', 'phase', 'repetition'):
                         row[key] = old_binding.get(key)
                     if match_canary_event(row, old_binding)['matched']:
                         row.update(relevance='expected_probe', exemption_id='bound-preflight-probe')
-                    elif occurred is None:
+                    elif occurred is None or not row.get('subject_start'):
                         row['relevance'] = 'ambiguous'
                         corrections.append({'code': 'diagnostic_attribution_ambiguous', 'original_receipt_sha256': prior['receipt_sha256'],
                                             'origin': prior['identity'], 'event_sha256': event_digest})
@@ -186,11 +197,14 @@ def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
                 row['occurrence_epoch'] is not None and
                 binding.get('preflight_start', float('inf')) - .001 <= row['occurrence_epoch'] <= binding.get('preflight_end', float('-inf')) + .001):
             row.update(subject_start=binding.get('subject_start'), executable=binding.get('executable'),
-                       executable_sha256=binding.get('executable_sha256'), probe_id=binding.get('probe_id'),
-                       path=row['resource'])
+                       executable_sha256=binding.get('executable_sha256'))
         for observed in lifecycle.get('observed', []):
             if observed.get('pid') == row['subject_pid'] and not row.get('subject_start'):
                 row['subject_start'] = observed.get('started')
+                row['subject_executables'] = observed.get('executables', [])
+                if len(row['subject_executables']) == 1:
+                    row['executable'] = row['subject_executables'][0]['path']
+                    row['executable_sha256'] = row['subject_executables'][0]['sha256']
         if row['occurrence_epoch'] is not None:
             if row['occurrence_epoch'] <= binding.get('preflight_end', -1): row['lifecycle_phase'] = 'preflight'
             elif row['occurrence_epoch'] <= lifecycle.get('exited_at', float('inf')): row['lifecycle_phase'] = 'check'
@@ -203,6 +217,22 @@ def process_events(events, binding, raw=b'', lifecycle=None, origins=None):
                 row.update(relevance='expected_probe', exemption_id='bound-preflight-probe')
                 matches.append(event_digest)
             else:
+                occurrence = row.get('occurrence_epoch')
+                observed_executables = row.get('subject_executables', [])
+                expected = next((item for item in expected_denials
+                    if item['assertion_id'] in assertion_ids and item['operation'] == row['operation']
+                    and item['target'] == row['resource'] and row.get('subject_start')
+                    and any(executable.get('sha256') == item['executable_sha256'] for executable in observed_executables)
+                    and type(occurrence) in (int, float) and math.isfinite(occurrence)
+                    and lifecycle.get('started_at', float('inf')) - .001 <= occurrence <= lifecycle.get('exited_at', float('-inf')) + .001), None)
+                if expected:
+                    row.update(relevance='expected_denial', exemption_id=expected['id'],
+                               exemption_evidence={'assertion_id': expected['assertion_id'],
+                                   'contract_sha256': expected['contract_sha256'], 'source_sha256': expected['source_sha256'],
+                                   'executable_sha256': expected['executable_sha256'], 'phase': expected['phase'],
+                                   'check_interval': [lifecycle.get('started_at'), lifecycle.get('exited_at')]})
+                    result.append(row)
+                    continue
                 if 'canary' in row['resource'] or row['subject_pid'] == binding.get('subject_pid'):
                     rejected.append({'event_sha256': event_digest, 'reasons': canary['reasons']})
                 # The matching supervisor tag establishes this invocation, not

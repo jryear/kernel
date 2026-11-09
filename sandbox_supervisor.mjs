@@ -94,7 +94,7 @@ childProcess.spawn=function(file,args,options) {
     const match=/^\(eventMessage ENDSWITH "(_[A-Za-z0-9]+_SBX)"\)$/.exec(predicate);
     if (!match) throw Error('unexpected collector predicate');
     sessionSuffix=match[1];
-    args=[...args]; args[index+1]=`(senderImagePath ENDSWITH "/Sandbox") AND ${predicate}`;
+    args=[...args]; args[index+1]=`(senderImagePath == "/System/Library/Extensions/Sandbox.kext/Contents/MacOS/Sandbox") AND ${predicate}`;
   }
   const child=originalSpawn.call(this,file,args,options);
   if (cfg.diagnostics==='enabled' && path.basename(String(file))==='log' && Array.isArray(args) && args[0]==='stream') {

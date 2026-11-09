@@ -79,7 +79,7 @@ def classify_sandbox_evidence(evidence):
     elif mode == 'disabled':
         if (diagnostics.get('state') != 'disabled' or diagnostics.get('received', 0) or
                 diagnostics.get('persisted', 0) or diagnostics.get('events') or
-                diagnostics.get('monitor', {}).get('started')):
+                (diagnostics.get('monitor') or {}).get('started')):
             unavailable.append('diagnostic mode changed')
     else:
         unavailable.append('diagnostic mode unavailable')

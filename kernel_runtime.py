@@ -287,6 +287,7 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
     if os.environ.get('VERIFY_SANDBOX') == '1':
         from kernel_sandbox_runtime import load_context
         sandbox_context = load_context(spec, repo, log, candidate_objects, links)
+        sandbox_context['contract_sha256'] = hashlib.sha256(raw_spec).hexdigest()
     if not clean(repo):
         state = 'BASELINE_NOT_READY' if args.baseline else 'UNVERIFIABLE'
         print(f'{state}  {spec["id"]}  assurance={ASSURANCE}: candidate input must be clean committed source')
