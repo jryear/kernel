@@ -409,6 +409,14 @@ print(json.dumps({'denied':denied,'errno':error,'scratch':data==b'scratch','sysc
                     interpreted = process_events(raw_denials, canary_binding, collector_bytes, {**lifecycle, 'observed': cleanup.get('observed', [])}, context.get('diagnostic_origins'), expected_denials, assertion)
                     diagnostics.update(events=interpreted['events'], raw_denial_count=len(raw_denials),
                                        faults=list(dict.fromkeys(diagnostics['faults'] + raw_faults + interpreted['faults'])))
+                    # The parent can resolve a retained prior origin that the
+                    # per-session supervisor could only mark non-current.
+                    if (interpreted['events'] and not raw_faults and
+                            all(event['attribution'] in ('original_invocation', 'prior_invocation')
+                                for event in interpreted['events'])):
+                        diagnostics['attribution'] = ('resolved_cross_invocation'
+                            if any(event['attribution'] == 'prior_invocation' for event in interpreted['events'])
+                            else 'original_invocation')
                     canary_record = diagnostics.setdefault('canary', {})
                     canary_record['event_received'] = bool(interpreted['matched'])
                     canary_record['match_status'] = ('matched' if interpreted['matched'] else

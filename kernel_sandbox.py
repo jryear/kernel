@@ -68,7 +68,7 @@ def classify_sandbox_evidence(evidence):
             unavailable.append('diagnostic_loss')
         if diagnostics.get('drain_timed_out'):
             unavailable.append('diagnostic_drain_incomplete')
-        if diagnostics.get('attribution') not in (None, 'original_invocation'):
+        if diagnostics.get('attribution') not in (None, 'original_invocation', 'resolved_cross_invocation'):
             unavailable.append('diagnostic_attribution_ambiguous')
         for fault in diagnostics.get('faults', []):
             code = fault.get('code') if isinstance(fault, dict) else fault
