@@ -63,7 +63,7 @@ def executable_identity(pid, started, path=None):
             return None
         check = subprocess.run(['/bin/ps', '-p', str(pid), '-o', 'lstart='],
                                capture_output=True, text=True, timeout=2)
-        if check.returncode or check.stdout.strip() != started:
+        if check.returncode or ' '.join(check.stdout.split()) != ' '.join(started.split()):
             return None
         return {'path': path, 'sha256': hashlib.sha256(Path(path).read_bytes()).hexdigest(),
                 'sampling': 'observed-process-not-execution-attestation'}
