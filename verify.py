@@ -537,6 +537,9 @@ def main() -> int:
                 return verify_schema2(args, repo, merge_base, spec, raw_spec, spec_rel, globals())
             except (ValueError, OSError, UnicodeError) as error:
                 raise SpecError(str(error)) from error
+        if os.environ.get("VERIFY_SANDBOX") == "1":
+            from kernel_sandbox import refuse_unqualified_backend
+            return refuse_unqualified_backend(args, repo, spec, merge_base)
         checks, policy = validate_spec(spec)
         review = load_review_metadata(args.review_metadata)
     except (SpecError, OSError) as error:

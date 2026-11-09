@@ -88,3 +88,18 @@ remediation subsequently kills them. Detection uses ps sampling plus an inherite
 invocation marker; hostile children can erase it and escape between observations.
 This is observed cleanup evidence, not exhaustive containment or sandboxing.
 Legacy schema1 services (as distinct from checks) remain outside this guarantee.
+
+## Sandbox v3 status
+
+Sandbox v3 is an opt-in, macOS-only implementation boundary using a trusted Node
+v24.22.0 supervisor and patched srt 0.0.81 bundle. The frozen contract requires
+schema-2 parent receipts, authenticated bundle and patch identities, exact
+profile validation, and independent operation effects. Do not infer qualification
+or GREEN from assembly, development receipts, source checks, or an absent error.
+
+Declared ports allow TCP binding on wildcard host addresses and inbound TCP at
+those ports. This can expose a listener to non-loopback peers. The OS
+`localhost` match is not a literal-address check. Service identity, external
+egress, complete diagnostic delivery, invisible write attempts, and exhaustive
+hostile-process containment remain outside the claim. See
+[docs/SANDBOX_RUNTIME.md](docs/SANDBOX_RUNTIME.md).

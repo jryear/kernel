@@ -1,0 +1,33 @@
+{
+  "patch_id": "kernel-srt-0.0.81-exact-tcp-v1",
+  "srt_version": "0.0.81",
+  "patch_sha256": "9116e04677a6a058947b7e24d2b71372d86dfd6c756f25f126f512a73ac7beb2",
+  "preimages": [
+    {
+      "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/macos-sandbox-utils.js",
+      "sha256": "7f297d6acb08a44adc9198876a38ce49ffa59e3a7aa09692933b3e008b446a32"
+    },
+    {
+      "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-config.js",
+      "sha256": "405594c97db94951d9698a19cfab71f074acbea58c559994e3ae2dab4551ca5a"
+    },
+    {
+      "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-manager.js",
+      "sha256": "03bd1f22e0b7a5fa401ef8f164390b8bfe8972885856ea8dce0657fa57a31114"
+    }
+  ],
+  "postimages": [
+    {
+      "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/macos-sandbox-utils.js",
+      "sha256": "9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400"
+    },
+    {
+      "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-config.js",
+      "sha256": "754a3c6cb134a14e116ba098b5d723c22f347a8581fe787f87d2b50d088a1421"
+    },
+    {
+      "path": "node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-manager.js",
+      "sha256": "0504e5336ed2b0bfdf6115cfcd284809a89cf7b582ea42760c9110421de72cba"
+    }
+  ]
+}

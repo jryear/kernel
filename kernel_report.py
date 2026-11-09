@@ -55,6 +55,9 @@ def read_result(path, check, phase, token, exit_code):
 
 
 def run_check(root, check, phase):
+    if check.get('_sandbox_context') is not None:
+        from kernel_sandbox_runtime import run_check as run_sandbox_check
+        return run_sandbox_check(root, check, phase, check['_sandbox_context'])
     start = time.monotonic()
     token = uuid.uuid4().hex
     row = {'name': check['name'], 'kind': check['kind'], 'expected_exit': 0,

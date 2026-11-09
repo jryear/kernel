@@ -88,3 +88,22 @@ remediation subsequently kills them. Detection uses ps sampling plus an inherite
 invocation marker; hostile children can erase it and escape between observations.
 This is observed cleanup evidence, not exhaustive containment or sandboxing.
 Legacy schema1 services (as distinct from checks) remain outside this guarantee.
+
+## Sandbox v3 runtime boundary
+
+The opt-in macOS sandbox runtime is a separately assembled dependency bundle,
+not part of the Python-only install. It pins Node v24.22.0, srt 0.0.81, the
+frozen transitive npm lock, the reviewed exact-TCP patch, supervisor, and profile
+validator. See [docs/SANDBOX_RUNTIME.md](docs/SANDBOX_RUNTIME.md) for fresh
+external assembly, receipt authentication, and the Zack-only provisioning
+command. Verification itself never installs or patches dependencies.
+
+The sandbox-v3 receipt binds the complete regular-file bundle inventory and
+patch preimages/postimages. Development receipts state `dev_only: true` and
+`qualification: "development-only"`; they do not establish production trust or
+qualification. The exact-port profile permits wildcard-address TCP bind and
+inbound at declared ports, so a listener may expose data beyond localhost.
+The `localhost` predicate is an OS address class and does not guarantee literal
+address spelling. No service identity, external-egress restriction, complete
+logging, invisible-attempt detection, or exhaustive process containment is
+claimed. A passing bounded check is not a production release or authorization.
