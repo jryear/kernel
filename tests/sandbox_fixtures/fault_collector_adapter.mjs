@@ -116,7 +116,7 @@ cp.spawn=function(file,args,options){
       }
       if(mode==='DRAIN_TIMEOUT'){
         afterFinish(msg,2100,()=>{
-          audit({type:'schedule_after_unchanged_drain_deadline',delay_after_finish_ms:2100});
+          audit({type:'schedule_after_unchanged_drain_deadline',delay_after_drain_start_ms:2100});
           deliver(benign(pid),'write_after_drain_deadline');
         });
         continue;

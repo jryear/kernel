@@ -63,6 +63,8 @@ def validate_host_control(observed, case, mode):
         if not path.exists(): return []
         try: return [json.loads(line) for line in path.read_text().splitlines()]
         except (OSError,ValueError) as error: raise Unavailable('host audit invalid: '+filename) from error
+    if observed.get('host_input'):
+        proof['controls'].append(observed['host_input'])
     if fault:
         rig_need(observed.get('fault_applied'),name+': fault was not applied')
         proof['controls'].append({'fault':fault,'evidence':observed.get('fault_evidence')})
@@ -444,7 +446,7 @@ baseline_failures = ["NEW"]
                 'scratch_root':str(self.out), 'root':str(self.root),
                 'nonce':self.config.get('diagnostic_barrier_nonce'),
                 'adapter':str(getattr(self,'collector_adapter',HERE/'collector_adapter.mjs')),
-                'force_finish_before_frame':os.environ.get('KERNEL_FIXTURE_FORCE_FINISH_FIRST')=='1',
+                'force_finish_before_frame':os.environ.get('KERNEL_FIXTURE_FORCE_FINISH_FIRST')=='1' and self.case['id'] in ('LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT'),
                 'unexpected_target':self.config.get('unexpected_extra_target')}
 
         if self.fault in ('supervisor_death','kill','ps_or_identity_observation'):
@@ -496,7 +498,7 @@ baseline_failures = ["NEW"]
                 'fault_applied':(self.root/'fault-applied').exists(),
                 'fault_evidence':(self.root/'fault-applied').read_text() if (self.root/'fault-applied').exists() else None,
                 'progress_evidence':(self.root/'fault-progress.json').read_text() if (self.root/'fault-progress.json').exists() else None,
-                'owned_cleanup':owned_cleanup,'fixture_root':str(self.root),'host_fault':self.fault,'host_config':self.config}
+                'owned_cleanup':owned_cleanup,'host_input':getattr(self,'host_control_input',None),'fixture_root':str(self.root),'host_fault':self.fault,'host_config':self.config}
 
 
 def denied_probe(observed, case):
@@ -1086,6 +1088,15 @@ def dependency_case(top,case,mode,bundle):
     elif variant=='UNSUPPORTED_EXACT_PORT_POLICY':probe.fault='unsupported_policy';probe.policy['localhost_ports']=[12345]
     else:raise Unavailable('unmapped dependency fixture')
     path=top/'bundle-receipt.json';path.write_text(json.dumps(copy_receipt));probe.bundle_receipt=str(path) if variant in ('WRITABLE_BUNDLE','NODE_DIGEST_MISMATCH','BUNDLE_DIGEST_MISMATCH','PATCH_AUTHENTICATION_FAILURE') else bundle
+    if not probe.fault:
+        changed=[{'path':row['path'],'expected_sha256':row['sha256'],'actual_sha256':digest(shadow/row['path'])}
+                 for row in original['files'] if digest(shadow/row['path'])!=row['sha256']]
+        if variant=='WRITABLE_BUNDLE':
+            rig_need(stat.S_IMODE(shadow.stat().st_mode)==0o777,'bundle mode mutation not applied')
+        else:
+            rig_need(len(changed)==1,'exactly one authenticated bundle preimage must be changed')
+        probe.host_control_input={'kind':'bundle_mutation','variant':variant,'root':str(shadow),
+                                  'mode':stat.S_IMODE(shadow.stat().st_mode),'changed':changed}
     probe.prepare();observed=probe.invoke();receipt=receipt_check(observed,case,mode,require_enforced=False)
     need(observed['operation'] is None,'unavailable dependency ran an unconstrained check')
     if receipt:need(receipt['lifecycle'].get('launched') is False,'dependency failure did not fail before check launch')
@@ -1171,7 +1182,7 @@ def isolation_case(top,case,mode,bundle):
             identities.append(receipt['identity']['run_id'])
             need(bool(receipt['policy'].get('scratch_root')),'fresh scratch identity missing')
             rows.append({'identity':receipt['identity'],'scratch':receipt['policy']['scratch_root'],'cleanup':cleanup,
-                         'operation':case['operation'],'host_barrier':evidence,'host_owned_cleanup':observed.get('owned_cleanup'),
+                         'verdict':observed['record']['verdict'],'operation':case['operation'],'host_barrier':evidence,'host_owned_cleanup':observed.get('owned_cleanup'),
                          'fault_evidence':observed.get('fault_evidence')})
         finally:
             # Teardown only PIDs reported by the reviewed disposable payload.
