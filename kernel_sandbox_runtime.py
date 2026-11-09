@@ -366,11 +366,23 @@ print(json.dumps({'denied':denied,'errno':error,'scratch':data==b'scratch','sysc
             try:
                 if not path.exists(): raise OSError('supervisor final evidence missing')
                 collected = json.loads(path.read_text())
+                if not isinstance(collected, dict) or collected.get('mode') != mode:
+                    raise ValueError('diagnostic requested mode differs from supervisor evidence')
+                monitor = collected.get('monitor')
+                if not isinstance(monitor, dict):
+                    raise ValueError('diagnostic collector lifecycle evidence missing')
+                if mode == 'disabled':
+                    diagnostics['monitor'] = monitor
+                    if (monitor.get('started') or collected.get('received') or
+                            collected.get('persisted') or collected.get('dropped') or collected.get('events')):
+                        raise ValueError('unexpected collector activity in disabled mode')
                 if collected.get('error'): unavailable = unavailable or collected['error']
                 if mode == 'enabled':
                     spool = Path(config['spool_path'])
                     raw_events = spool.read_bytes()
                     events = [json.loads(line) for line in raw_events.splitlines()]
+                    if any(not isinstance(event, dict) for event in events):
+                        raise ValueError('invalid diagnostic event record')
                     if len(events) != collected.get('persisted'):
                         raise ValueError('diagnostic spool count mismatch')
                     if hashlib.sha256(raw_events).hexdigest() != collected.get('spool_sha256'):
@@ -425,6 +437,7 @@ print(json.dumps({'denied':denied,'errno':error,'scratch':data==b'scratch','sysc
                                            'cleanup_finished_at': time.time()}
             except (OSError, ValueError, TypeError) as error:
                 unavailable = unavailable or 'supervisor evidence unavailable: ' + str(error)
+                diagnostics['faults'].append('diagnostic_evidence_invalid')
                 if mode == 'enabled': diagnostics['state'] = 'failed'
         if lifecycle['launched']:
             lifecycle.setdefault('exited_at', time.time())

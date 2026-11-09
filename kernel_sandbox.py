@@ -51,6 +51,12 @@ def classify_sandbox_evidence(evidence):
     elif assertions.get('failed'):
         contradictions.append('complete behavioral assertion failed')
     mode = diagnostics.get('mode')
+    # Protocol/lifecycle faults remain failures even when logging was requested
+    # disabled; an unexpected collector is not intentional disabled operation.
+    for fault in diagnostics.get('faults', []):
+        code = fault.get('code') if isinstance(fault, dict) else fault
+        if isinstance(code, str) and code not in unavailable:
+            unavailable.append(code)
     if diagnostics.get('semantics') != 'advisory-one-directional-v1':
         unavailable.append('diagnostic_evidence_invalid')
     if mode == 'enabled':
@@ -161,17 +167,18 @@ def refuse_unqualified_backend(args, repo, spec, base):
         'schema': 1,
         'integrity': {'available': False, 'changes': []},
         'execution': {'complete': False, 'unavailable_reason':
-                      'sandbox execution requires the authenticated patched schema-2 backend'},
+                      'sandbox execution requires the authenticated patched schema-3 backend'},
         'cleanup': {'complete': True, 'survivors': []},
         'assertions': {'complete': False, 'failed': []},
-        'diagnostics': {'mode': 'disabled', 'state': 'disabled'},
+        'diagnostics': {'mode': 'disabled', 'state': 'disabled',
+                        'semantics': 'advisory-one-directional-v1'},
     }
     decision = classify_sandbox_evidence(evidence)
     record = {'schema': 2, 'task_id': spec['id'], 'base_ref': args.base,
               'merge_base': base, 'verdict': decision['verdict'],
               'assurance': 'sandbox-backend-unqualified',
               'base_checks': [], 'candidate_checks': [],
-              'sandbox_receipt': {'schema': 2, 'requested': True, 'enforced': False,
+              'sandbox_receipt': {'schema': 3, 'requested': True, 'enforced': False,
                                   'lifecycle': {'launched': False},
                                   'decision': decision, 'evidence': evidence}}
     if args.log:
