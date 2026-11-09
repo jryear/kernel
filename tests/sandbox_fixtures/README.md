@@ -23,6 +23,13 @@ nonce, phase, leader and fault preconditions are validated before any verdict
 comparison. Missing/wrong host stimulus raises Unavailable; subject parsing,
 attribution, reason and verdict defects remain behavioral Mismatch.
 
+Burst faults retain their exact input bytes and boundary-write digest. Distinct
+host log thread metadata identifies every benign burst frame without changing its
+operation, resource or attribution; the host validates count and distinctness
+before reading the expected verdict. The unrelated-denial auxiliary retains both
+frame UUIDs, targets and boundary acknowledgements, and validates both before
+release/verdict checks.
+
 The retained v5 wording below is historical background. This v6 draft has not been
 reviewed or frozen. The historical wording below that describes the old freeze,
 old counts or schema is historical background; the 2026-11-09 amendment in

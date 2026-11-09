@@ -329,8 +329,11 @@ else:
                                         raise RuntimeError('second independent denial unavailable')
                                     at=datetime.fromtimestamp(extra['at']).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                                     other={'type':'event','frame_id':uuid.uuid4().hex,'line':f"{at} E kernel[0:abcd] (Sandbox) Sandbox: Python({witness['pid']}) deny(1) file-write-data {fixture['unexpected_target']}",'tag':prepared['command_tag']}
+                                    log_audit({'type':'frame_dispatch_begin','frame_id':other['frame_id'],'at':time.time(),'monotonic':time.monotonic()})
                                     os.write(collector['write_fd'],(json.dumps(other)+'\n').encode())
-                                    wait_host_record('collector-write-ack.jsonl',lambda r:r.get('frame_id')==other['frame_id'],deadline)
+                                    other_ack=wait_host_record('collector-write-ack.jsonl',lambda r:r.get('frame_id')==other['frame_id'],deadline)
+                                    log_audit({'type':'injected','case':fixture['case_id'],'frame':other,'witness':{**extra,'nonce':witness['nonce'],'pid':witness['pid'],'pgid':witness['pgid']},
+                                               'host_identity':fields,'at':time.time(),'leader_exited':check.poll() is not None,'boundary_ack':other_ack,'frame_id':other['frame_id']})
                             ack=None if silent else wait_host_record('collector-write-ack.jsonl',lambda r:r.get('frame_id')==frame['frame_id'],deadline)
                             os.close(collector['write_fd']);collector['write_fd']=None
                             log_audit({'type':'upstream_non_delivery' if silent else 'injected','case':fixture['case_id'],'frame':frame,

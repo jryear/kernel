@@ -1,6 +1,7 @@
 // Host-only preload for disposable collector-path fault reproductions.
 // Nothing in the candidate environment references this module or its pipe.
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import {observeDrain} from './collector_clock.mjs';
 import cp from 'node:child_process';
 import path from 'node:path';
@@ -87,7 +88,7 @@ cp.spawn=function(file,args,options){
         if(!mux.readableFlowing || mux.listenerCount('data')===0){audit({type:'rig_error',frame_id:msg.frame_id,error:'collector boundary is not flowing'});return;}
         mux.write(bytes);
         const writtenAt=Date.now()/1000, writtenMono=clock.now();
-        audit({type:kind,frame_id:msg.frame_id,written_at:writtenAt,written_mono:writtenMono,finish_at:clock.finish_at,deadline_mono:clock.deadline_mono});
+        audit({type:kind,frame_id:msg.frame_id,bytes_sha256:createHash('sha256').update(bytes).digest('hex'),written_at:writtenAt,written_mono:writtenMono,finish_at:clock.finish_at,deadline_mono:clock.deadline_mono});
         setImmediate(()=>{fs.appendFileSync(ackPath,JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,kind,written_at:writtenAt,written_mono:writtenMono,finish_at:clock.finish_at,deadline_mono:clock.deadline_mono,at:Date.now()/1000})+'\n');if(mode==='DRAIN_TIMEOUT')clock.acknowledgeLateWrite();});
       };
       const pid=/Sandbox: \w+\((\d+)\)/.exec(msg.line)?.[1];
@@ -95,8 +96,13 @@ cp.spawn=function(file,args,options){
       if(mode==='COLLECTOR_DEATH') {audit({type:'terminate_real_collector',pid:child.pid,frame_id:msg.frame_id});const killed=child.kill('SIGKILL');if(killed)fs.appendFileSync(ackPath,JSON.stringify({type:'collector_kill_sent',frame_id:msg.frame_id,pid:child.pid,finish_at:clock.finish_at,at:Date.now()/1000})+'\n');continue;}
       if(mode==='SPOOL_OVERFLOW' || mode==='BURST_OVER_100_PERSISTED' || mode==='SUBSCRIPTION_DROP') {
         const count=mode==='SPOOL_OVERFLOW'?10001:150;
-        const frame=benign(pid);audit({type:'write_benign_burst',count});
-        deliver(frame.repeat(count),'burst_boundary_written');continue;
+        // Vary only the host log thread metadata: operation, resource, subject,
+        // occurrence time and attribution stay identical and benign.
+        const frames=Array.from({length:count},(_,i)=>benign(pid).replace(/kernel\[[^\]]+\]/,`kernel[0:${i.toString(16)}]`));
+        const bytes=frames.join(''),inputFile='burst-input-'+msg.frame_id+'.txt';
+        fs.writeFileSync(path.join(root,inputFile),bytes,{flag:'wx'});
+        audit({type:'write_benign_burst',frame_id:msg.frame_id,count,distinct_count:new Set(frames).size,input_file:inputFile,bytes_sha256:createHash('sha256').update(bytes).digest('hex')});
+        deliver(bytes,'burst_boundary_written');continue;
       }
       if(mode==='AMBIGUOUS_EVENT_ID') {audit({type:'write_unknown_command_tag'});deliver(msg.line+'\nCMD64_dW5rbm93bi10YWc=_END_'+suffix+'\n','unknown_tag_boundary_written');continue;}
       if(mode==='CROSS_INVOCATION_EVENT') {

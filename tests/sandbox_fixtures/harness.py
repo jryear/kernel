@@ -127,6 +127,24 @@ def validate_host_control(observed, case, mode):
                   'LATE_RELEVANT_DENIAL':'write_late_denial','DELAYED_AFTER_LEADER_EXIT':'write_benign_delayed_event'}
         if name in required:
             rig_need(any(r.get('type')==required[name] for r in fault_rows),name+': named injected fault missing')
+        if name in ('SPOOL_OVERFLOW','SUBSCRIPTION_DROP'):
+            bursts=[r for r in fault_rows if r.get('type')=='write_benign_burst']
+            rig_need(len(bursts)==1,name+': exact host burst unavailable')
+            burst=bursts[0];count=10001 if name=='SPOOL_OVERFLOW' else 150
+            frame_id=burst.get('frame_id');input_file='burst-input-'+str(frame_id)+'.txt'
+            rig_need(burst.get('input_file')==input_file and len(injected)==1 and
+                     injected[0]['frame_id']==frame_id,name+': burst input identity mismatch')
+            path=root/input_file
+            rig_need(path.is_file() and not path.is_symlink(),name+': retained burst input absent')
+            raw=path.read_bytes();lines=raw.decode().splitlines()
+            rig_need(len(lines)==2*count and len(set(lines[::2]))==count and
+                     burst.get('count')==burst.get('distinct_count')==count and
+                     hashlib.sha256(raw).hexdigest()==burst.get('bytes_sha256') and
+                     any(r.get('type')=='burst_boundary_written' and r.get('frame_id')==frame_id and
+                         r.get('bytes_sha256')==burst['bytes_sha256'] for r in fault_rows),
+                     name+': distinct burst bytes were not delivered at boundary')
+            rig_need(all(' deny(1) sysctl-read kern.iossupportversion' in line for line in lines[::2]) and
+                     len(set(lines[1::2]))==1,name+': burst benign operation/attribution changed')
         if name=='COLLECTOR_DEATH':
             sent=next((r for r in fault_rows if r.get('type')=='terminate_real_collector'),{})
             rig_need(any(r.get('type')=='real_collector_exit' and r.get('pid')==sent.get('pid') and r.get('signal')=='SIGKILL' for r in fault_rows),name+': collector death not independently observed')
@@ -147,7 +165,9 @@ def validate_host_control(observed, case, mode):
             rig_need(len(sealed)==1 and len(silent)==1 and len(injected)==1 and
                      silent[0]['at']<sealed[0]['at']<injected[0]['boundary_ack']['written_at'],name+': origin was not sealed before later delivery')
         if name in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL'):
-            rig_need(len(injected)==1 and not silent,name+': exact expected-denial stimulus unavailable')
+            count=2 if name=='EXPECTED_DENIAL_UNRELATED_CONTROL' else 1
+            rig_need(len(injected)==count and len({r['frame_id'] for r in injected})==count and not silent,
+                     name+': exact expected-denial stimuli unavailable')
             stable=[r for r in audit if r.get('type')=='stable_payload_before_sampling']
             sampled=[r for r in audit if r.get('type')=='candidate_executable_observed']
             declaration=(json.loads((root/'operator.json').read_text()).get('expected_denials') or [{}])[0]
@@ -156,9 +176,16 @@ def validate_host_control(observed, case, mode):
             rig_need(sample.get('pid')==stable[0]['pid'] and sample.get('started') and any(
                      item.get('sha256')==declaration.get('executable_sha256') for item in sample.get('executables',[])),
                      name+': sampled executable is not the trusted declaration')
-            dispatched=[r for r in audit if r.get('type')=='frame_dispatch_begin' and r.get('frame_id')==injected[0]['frame_id']]
-            rig_need(len(dispatched)==1 and stable[0]['monotonic']<=sampled[0]['monotonic']<=dispatched[0]['monotonic'],
-                     name+': frame preceded stable parent sampling')
+            targets=[declaration.get('target')]
+            if count==2:targets.append(config.get('unexpected_extra_target'))
+            rig_need(all(targets) and len(set(targets))==count and
+                     sorted(r['frame']['line'].split(' deny(1) file-write-data ',1)[-1] for r in injected)==sorted(targets),
+                     name+': exact declared/unrelated target bindings unavailable')
+            for row in injected:
+                dispatched=[r for r in audit if r.get('type')=='frame_dispatch_begin' and r.get('frame_id')==row['frame_id']]
+                rig_need(row['frame'].get('frame_id')==row['frame_id'] and len(dispatched)==1 and
+                         stable[0]['monotonic']<=sampled[0]['monotonic']<=dispatched[0]['monotonic'],
+                         name+': frame preceded stable parent sampling')
         if name=='COLLECTOR_SEAM_NEGATIVE_CONTROL':
             sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
             output=observed['check'].get('output','')
@@ -426,6 +453,9 @@ baseline_failures = ["NEW"]
                     source = self.root/name
                     if source.is_file() and not source.is_symlink():
                         shutil.copy2(source, archive/name)
+                for source in self.root.glob('burst-input-*.txt'):
+                    if source.is_file() and not source.is_symlink():
+                        shutil.copy2(source,archive/source.name)
                 data = {'case_id':self.case['id'], 'mode':self.logging,
                         'fixture_root':str(self.root), 'exception':failure,
                         'result':result}
