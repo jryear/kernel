@@ -1,7 +1,7 @@
-# Sandbox v3 runtime bundle
+# Sandbox v5 runtime draft
 
 Sandbox execution is opt-in and remains development work until the complete
-frozen sandbox-v3 matrix and independent review pass. The runtime depends on
+reviewed sandbox-v5 freeze, qualification matrix and independent review pass. The runtime depends on
 Node v24.22.0, `@anthropic-ai/sandbox-runtime` 0.0.81, the exact transitive
 lock, the assembly patch `kernel-srt-0.0.81-exact-tcp-v1`, the trusted supervisor,
 and the read-only profile validator. Checks do not download, install, patch, or
@@ -121,3 +121,48 @@ complete OS log delivery, absence of invisible attempts, no transient write and
 restore, complete hostile-process containment, external-egress qualification,
 service identity, or production readiness. These limits remain even when the
 bounded frozen assertions pass.
+
+## Advisory diagnostics and nested receipt schema 3
+
+The November 9 amendment in `SANDBOX_DECISION.md` defines v5. The outer
+verification protocol stays schema 2. Nested sandbox receipts use schema 3 and
+`diagnostics.semantics="advisory-one-directional-v1"`. Requested mode stays
+immutable. Event absence proves nothing and does not gate a verdict; collector
+faults, known loss, invalid evidence, unresolved relevant attribution and
+cross-invocation contamination still make execution unverifiable. All received
+relevant unexpected denials contribute `observed_relevant_denial`, including
+mid-check and drain arrivals.
+
+The trusted operator request supplies `qualification_record` and
+`qualification_record_sha256`. Each receipt retains that authenticated record,
+actual OS/build/architecture, Python and Node versions, absolute executable
+identities and digests. The historical measurement record describes one host;
+it does not qualify a new bundle or a production installation.
+
+`diagnostics.canary` binds run/check/phase/repetition, unique probe ID, exact
+canonical target, command tag and session suffix, operation/result, actual
+payload PID/start identity and executable digest. Parent preflight and syscall
+intervals use Unix realtime, with a fixed one millisecond timestamp uncertainty;
+no tolerance is increased after a miss. Occurrence time comes from retained raw
+Sandbox-sender collector framing. Reception time and phase come from bounded
+raw-chunk offset records. The same third-party Python operation preflight gates
+launch in both modes. Enabled matches are `matched`, `absent` or `unmatched`;
+disabled collection is `not_collected` with null event receipt. A match is only
+a diagnostic observation. Process identities remain sampled evidence.
+
+For a reviewed assertion explicitly testing a synthetic denial, the trusted
+operator may supply `expected_denials`. Each declaration names a unique ID,
+check, phase, assertion ID, exact operation and canonical target, frozen contract
+SHA-256, source entry/path SHA-256, and actual executable SHA-256. The parent
+validates these against the frozen check before matching observed PID/start,
+executable and execution interval. Payload configuration, stdout/stderr and
+provisional result text cannot grant an exemption. A different target or
+unexpected denial remains unavailable evidence.
+
+Sealed per-check receipts remain immutable. A subsequently received event with
+a retained prior command/session identity is attributed to its original check.
+The parent appends a correction naming the original receipt digest and origin,
+marks the origin result and dependent aggregate unverifiable, and records
+`diagnostic_cross_invocation` on the receiver. Unknown origin stays ambiguous;
+no later check inherits an old denial. The test-only anonymous-pipe collector
+preloads are not part of production launch or its configuration surface.

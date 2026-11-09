@@ -5,12 +5,13 @@ reviewed or frozen. The historical wording below that describes the old freeze,
 old counts or schema is historical background; the 2026-11-09 amendment in
 `docs/SANDBOX_DECISION.md` is binding. The current draft declares 214 IDs / 401
 variants: effect-classifier 137/247, protocol 13/26, policy-dependency 57/114,
-isolation 7/14. Of the additions, only mid-check and drain pipeline scaffolding is
-implemented; all other new diagnostic cases explicitly return Unavailable until
-exercised through their required real path. Seven strengthened fault rows also
-return Unavailable after their classifier control pending pipeline reproduction.
-A successful classifier check alone never completes those cases. No prefreeze
-sweep has yet established a result.
+isolation 7/14. Each of the 13 new cases is represented by a controlled fixture;
+seven strengthened fault rows and the delayed benign row require both classifier
+and collector-pipeline checks. A successful classifier check alone never
+completes those cases. The six canary mismatch cases also each run a fresh
+full collector-path bound positive; those six auxiliary controls are separate
+from the 214 primary case IDs and 401 declared variants. Reproduction and complete prefreeze sweep evidence must
+bind the reviewed fixture and subject hashes; no draft observation is a freeze.
 
 Draft timeout ceilings are 3840/600/1860/600 seconds. The first is derived from
 the prior floor model, 247 variants, 616.67 projected seconds and the existing
@@ -38,7 +39,9 @@ fixture tree. Invocations and their raw collector/diagnostic streams, nested
 receipts, host evidence and errors are copied there before teardown. A host-only
 preload, `collector_adapter.mjs`, is inserted by the test adapter and uses a pipe
 passed only to the supervisor. It is not a production configuration or candidate
-input. Its negative reachability test and full event-path proof remain required.
+input. The auxiliary negative case attempts candidate env, argv, file, stdout,
+stderr, result and guessed FD channels, and compares a candidate FD inventory
+to the supervisor test pipe device/inode. Its result remains part of review.
 Production retains `NONNETWORK_GENERATOR_COMMON_MODE` and
 `ENTRYPOINT_EXTERNAL_AUTHENTICATION` as explicit release/red-team risks.
 

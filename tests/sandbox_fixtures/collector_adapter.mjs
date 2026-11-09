@@ -17,7 +17,7 @@ cp.spawn=function(file,args,options){
   const child=original.apply(this,arguments);
   if (String(file).split('/').pop() !== 'log' || !Array.isArray(args) || args[0] !== 'stream') return child;
   const predicate=String(args[args.indexOf('--predicate')+1]);
-  const suffix=/ENDSWITH "([^"]+)"/.exec(predicate)?.[1];
+  const suffix=/eventMessage ENDSWITH "([^"]+)"/.exec(predicate)?.[1];
   if (!suffix) throw Error('test adapter could not bind srt session suffix');
   const real=child.stdout, mux=new PassThrough();
   child.stdout=mux;
@@ -42,7 +42,7 @@ cp.spawn=function(file,args,options){
     while ((n=buffer.indexOf('\n'))>=0){
       const msg=JSON.parse(buffer.slice(0,n)); buffer=buffer.slice(n+1);
       if (msg.type!=='event' || typeof msg.line!=='string' || typeof msg.tag!=='string') throw Error('invalid host test frame');
-      mux.write(msg.line+'\nCMD64_'+msg.tag+'_END_'+suffix+'\n');
+      mux.write(msg.line+'\nCMD64_'+msg.tag+'_END_'+(msg.suffix ?? suffix)+'\n');
     }
   });
   child.on('close',()=>{control.destroy();fs.closeSync(live);});

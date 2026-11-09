@@ -291,7 +291,8 @@ baseline_failures = ["NEW"]
                         shutil.copytree(source, archive/name, symlinks=True)
                 for name in ('driver.json', 'operator.json', 'owned-checks.jsonl',
                              'fault-applied', 'fault-progress.json', 'bundle-launch-audit.jsonl',
-                             'collector-adapter-audit.jsonl', 'collector-live.raw', 'driver-stdout.txt', 'driver-stderr.txt'):
+                             'collector-adapter-audit.jsonl', 'collector-live.raw', 'fault-adapter-audit.jsonl',
+                             'postfinal-original-receipt.json', 'postfinal-second-receipt.json', 'driver-stdout.txt', 'driver-stderr.txt'):
                     source = self.root/name
                     if source.is_file() and not source.is_symlink():
                         shutil.copy2(source, archive/name)
@@ -309,15 +310,33 @@ baseline_failures = ["NEW"]
                   'scratch_root':str(self.out),
                   'qualification_record':str(Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sol5-runtime-qualification.json'),
                   'qualification_record_sha256':'05928d0af193342eaa503504b9576e64b2b443087bb4846305d48b70ba091712'}
+        if self.case['id'] in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL'):
+            # This declaration belongs to the trusted fixture host/operator,
+            # independently binding the reviewed check and exact operation.
+            import ctypes
+            lib=ctypes.CDLL('/usr/lib/libproc.dylib',use_errno=True)
+            lib.proc_pidpath.argtypes=[ctypes.c_int,ctypes.c_void_p,ctypes.c_uint32]
+            lib.proc_pidpath.restype=ctypes.c_int
+            buffer=ctypes.create_string_buffer(4096)
+            if lib.proc_pidpath(os.getpid(),buffer,len(buffer))<=0:
+                raise Unavailable('trusted fixture runtime executable identity unavailable')
+            executable=Path(os.fsdecode(buffer.value)).resolve(strict=True)
+            operator['expected_denials']=[{'id':'expected-synthetic-write',
+                'check':'probe','phase':'candidate','assertion_id':'NEW',
+                'operation':'file-write-data','target':str(self.target.resolve(strict=True)),
+                'source_path':'evidence/probe.py','source_sha256':digest(self.repo/'evidence/probe.py'),
+                'contract_sha256':digest(self.repo/'contracts/task.toml'),
+                'executable_sha256':digest(executable)}]
         op_path=self.root/'operator.json';op_path.write_text(json.dumps(operator))
         env={**os.environ,'VERIFY_RELEASE_SHA256':self.release_digest,'PYTHONDONTWRITEBYTECODE':'1',
              'VERIFY_SANDBOX':'1','VERIFY_SANDBOX_OPERATOR':str(op_path)}
         request={'fault':self.fault,'fault_marker':str(self.root/'fault-applied')}
-        if self.case['layer']=='diagnostic':
+        if self.case['layer']=='diagnostic' or (self.case['id'] in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL') and self.logging=='enabled'):
             request['collector_fixture']={'case_id':self.case['id'], 'target':str(self.target),
                 'scratch_root':str(self.out), 'root':str(self.root),
                 'nonce':self.config.get('diagnostic_barrier_nonce'),
-                'adapter':str(HERE/'collector_adapter.mjs')}
+                'adapter':str(getattr(self,'collector_adapter',HERE/'collector_adapter.mjs')),
+                'unexpected_target':self.config.get('unexpected_extra_target')}
 
         if self.fault in ('supervisor_death','kill','ps_or_identity_observation'):
             request.update(owned_check_log=str(self.root/'owned-checks.jsonl'), scratch_root=str(self.out),
@@ -566,7 +585,12 @@ def configure_file(probe, case):
     probe.config['target']=str(target)
     if params.get('defaults'):probe.config['report_path']='$TMP/report'
     if params.get('swallow_denial'):probe.config['swallow_denial']=True
-    if params.get('expected_denial'):probe.config['expected_denial']=True
+    if params.get('expected_denial'):
+        probe.config['expected_denial']=True
+        if case['id'] in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL') and probe.logging=='enabled':
+            probe.config.update(diagnostic_barrier_nonce=uuid.uuid4().hex,
+                                diagnostic_barrier_handshake='$TMP/diagnostic-handshake.json',
+                                diagnostic_barrier_release='$TMP/diagnostic-release.json')
     if op=='chmod':probe.config['mode']=0o700
     if op=='create':
         # A fresh file below the protected parent, not EEXIST on an old file.
@@ -623,7 +647,14 @@ def direct_control(probe):
         git(probe.repo,'worktree','add','--detach',str(cwd),'HEAD')
         env['VERIFY_ROOT']=str(cwd)
     (cwd/'out').mkdir()
-    result=run([sys.executable,'-B',str(cwd/'evidence/probe.py'),'evidence/config.json'],cwd=cwd,env=env)
+    try:
+        result=run([sys.executable,'-B',str(cwd/'evidence/probe.py'),'evidence/config.json'],cwd=cwd,env=env)
+    except BaseException as error:
+        (probe.root/'control-stdout.txt').write_text(getattr(error,'stdout','') or '')
+        (probe.root/'control-stderr.txt').write_text(getattr(error,'stderr','') or '')
+        raise
+    (probe.root/'control-stdout.txt').write_text(result.stdout)
+    (probe.root/'control-stderr.txt').write_text(result.stderr)
     observation=parse_line(result.stdout,'SANDBOX_OPERATION ')
     if result.returncode!=0 or not observation or observation.get('outcome')!='succeeded':
         raise Unavailable('unsandboxed operation control unavailable: '+result.stderr[-400:]+' '+str(observation))
@@ -650,7 +681,10 @@ def _effect_case(top, case, mode, bundle):
     # rename a disposable verifier or its parent. It never damages the subject.
     control_evidence=None
     if case['layer']=='effect' and case['operation'] not in ('clean','environment_probe'):
-        control=Probe(top/'control',case,mode,bundle);configure_file(control,case);control_evidence=direct_control(control)
+        control=Probe(top/'control',case,mode,bundle);configure_file(control,case)
+        for key in ('diagnostic_barrier_nonce','diagnostic_barrier_handshake','diagnostic_barrier_release'):
+            control.config.pop(key,None)
+        control_evidence=direct_control(control)
     probe=Probe(top/'subject',case,mode,bundle);configure_file(probe,case)
     probe.prepare(legacy_gate=case.get('params',{}).get('defaults',False));observed=probe.invoke()
     if case['expected']=='unverifiable' and (case['layer']=='effect' or case['id']=='FINAL_RECEIPT_FORGERY'):
@@ -663,6 +697,11 @@ def _effect_case(top, case, mode, bundle):
             need(op is not None and op.get('outcome')=='succeeded','allowed output did not succeed')
         need(not observed['changes'] and observed['prefix_unchanged'],'clean control changed protected state')
     receipt=receipt_check(observed,case,mode)
+    if case['id']=='EXPECTED_DENIAL_BEHAVIORAL_ASSERTION' and mode=='enabled':
+        matching=[event for event in receipt['diagnostics']['events']
+                  if event.get('exemption_id')=='expected-synthetic-write' and
+                     event.get('relevance')=='expected_denial']
+        need(bool(matching),'trusted bound expected-denial event/exemption missing')
     if case['operation']=='environment_probe':
         environment=observed['operation'].get('environment',{});scratch=Path(receipt['policy']['scratch_root']).resolve()
         for name in ('HOME','TMPDIR','XDG_CACHE_HOME'):
@@ -1036,7 +1075,150 @@ def isolation_case(top,case,mode,bundle):
     return {'id':case['id'],'mode':mode,'runs':rows}
 
 
+def collector_seam_negative_control(top,bundle):
+    """Host-preloaded collector receives no bytes from candidate carriers."""
+    top.mkdir()
+    case={'id':'COLLECTOR_SEAM_NEGATIVE_CONTROL','layer':'diagnostic','operation':'clean',
+          'logging':['enabled'],'expected':'supported'}
+    probe=Probe(top/'subject',case,'enabled',bundle)
+    probe.config['collector_seam_negative']=True
+    probe.prepare();observed=probe.invoke()
+    receipt=receipt_check(observed,case,'enabled')
+    sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
+    need(sentinel in observed['check'].get('output',''),'candidate did not attempt stdout/stderr forgery')
+    need(sentinel in json.dumps(receipt['assertions']['provisional']), 'candidate result forgery absent')
+    records=[json.loads(line) for line in (probe.root/'collector-adapter-audit.jsonl').read_text().splitlines()]
+    need(any(x.get('type')=='supervisor_preload' for x in records) and
+         not any(x.get('type')=='injected' for x in records),'host unexpectedly injected candidate-controlled data')
+    state=probe.out
+    raw=b''.join(path.read_bytes() for path in state.rglob('collector.raw'))
+    need(sentinel.encode() not in raw,'candidate input reached collector raw stream')
+    need(not any(sentinel in json.dumps(event) for event in receipt['diagnostics']['events']),
+         'candidate input reached diagnostic events')
+    inventory=parse_line(observed['check'].get('output',''),'CANDIDATE_FD_INVENTORY ')
+    need(isinstance(inventory,list),'candidate descriptor inventory missing')
+    preload=next(x for x in records if x.get('type')=='supervisor_preload')
+    pipe=preload['pipe_identity']
+    need(not any(row.get('device')==pipe['device'] and row.get('inode')==pipe['inode'] for row in inventory),
+         'candidate inherited the host collector test pipe')
+    return {'case_id':case['id'],'verdict':observed['record']['verdict'],
+            'sentinel':sentinel,'audit':records,'raw_sha256':hashlib.sha256(raw).hexdigest(),
+            'receipt_identity':receipt['identity']}
+
+
+def diagnostic_absence_case(top,case,mode,bundle):
+    probe=Probe(top/'subject',case,mode,bundle)
+    invisible=case['id']=='SWALLOWED_INVISIBLE_DENIAL_ENABLED'
+    if invisible:
+        control=Probe(top/'control',case,mode,bundle)
+        control.config.update(operation='write',target=str(control.target))
+        direct_control(control)
+        probe.config.update(operation='write',target=str(probe.target),swallow_denial=True,
+                            diagnostic_barrier_nonce=uuid.uuid4().hex,
+                            diagnostic_barrier_handshake='$TMP/diagnostic-handshake.json',
+                            diagnostic_barrier_release='$TMP/diagnostic-release.json')
+    else:
+        probe.config['operation']='clean'
+    probe.prepare();observed=probe.invoke()
+    receipt=receipt_check(observed,case,mode)
+    need(not observed['changes'] and observed['prefix_unchanged'],'absence case changed protected state')
+    canary=receipt['diagnostics']['canary']
+    need(canary.get('match_status')=='absent' and canary.get('event_received') is False,
+         'upstream-controlled absence did not produce absent bound event')
+    need(canary.get('write_denied') and canary.get('scratch_succeeded') and
+         canary.get('protected_before')==canary.get('protected_after'),
+         'independent preflight effects unavailable')
+    need(not receipt['diagnostics'].get('faults') and not receipt['diagnostics'].get('dropped'),
+         'collector was not healthy')
+    audit=[json.loads(line) for line in (probe.root/'collector-adapter-audit.jsonl').read_text().splitlines()]
+    need(any(item.get('type')=='supervisor_preload' for item in audit),'upstream control not present')
+    if invisible:
+        witness=[item for item in audit if item.get('type')=='upstream_non_delivery']
+        need(len(witness)==1 and witness[0]['witness']['errno'] in DENIED,'external invisible denial witness missing')
+        need(observed['operation'] is None,'invisible denial leaked into subject')
+    return {'id':case['id'],'mode':mode,'verdict':observed['record']['verdict'],
+            'canary':canary,'host_audit':audit,'receipt_identity':receipt['identity']}
+
+
+def diagnostic_delayed_canary_case(top,case,mode,bundle):
+    probe=Probe(top/'subject',case,mode,bundle)
+    probe.config.update(operation='clean',diagnostic_barrier_nonce=uuid.uuid4().hex,
+                        diagnostic_barrier_handshake='$TMP/diagnostic-handshake.json',
+                        diagnostic_barrier_release='$TMP/diagnostic-release.json')
+    probe.prepare();observed=probe.invoke();receipt=receipt_check(observed,case,mode)
+    canary=receipt['diagnostics']['canary']
+    need(canary.get('match_status')=='matched' and canary.get('event_received') is True,
+         'delayed bound probe event did not reach the real canary matcher')
+    audit=[json.loads(line) for line in (probe.root/'collector-adapter-audit.jsonl').read_text().splitlines()]
+    injected=[item for item in audit if item.get('type')=='injected']
+    need(len(injected)==1 and injected[0]['leader_exited'] is False,
+         'delayed diagnostic did not arrive during the candidate barrier')
+    binding=injected[0]['preflight_binding']
+    need(binding['preflight_end']<injected[0]['at'] and binding['subject_pid']==canary['subject_pid'],
+         'preflight occurrence and delayed reception not separately bound')
+    matched=[event for event in receipt['diagnostics']['events'] if event.get('exemption_id')=='bound-preflight-probe']
+    need(bool(matched),'bound probe exemption not retained')
+    return {'id':case['id'],'mode':mode,'verdict':observed['record']['verdict'],
+            'event':matched,'host_audit':audit,'canary':canary,'receipt_identity':receipt['identity']}
+
+
+def expected_denial_unrelated_control(top,bundle):
+    """The trusted expected-operation exception cannot exempt another denial."""
+    top.mkdir()
+    case={'id':'EXPECTED_DENIAL_UNRELATED_CONTROL','layer':'effect','operation':'write',
+          'expected':'unverifiable','logging':['enabled'],'params':{'expected_denial':True}}
+    probe=Probe(top/'subject',case,'enabled',bundle);configure_file(probe,case)
+    extra=probe.protected/'unrelated-target';extra.write_text('before')
+    probe.config['unexpected_extra_target']=str(extra)
+    probe.prepare();observed=probe.invoke()
+    receipt=receipt_check(observed,case,'enabled')
+    need('observed_relevant_denial' in receipt['decision']['unavailable_reasons'],
+         'unrelated denial did not invalidate the expected-denial check')
+    events=receipt['diagnostics']['events']
+    need(any(e.get('exemption_id')=='expected-synthetic-write' for e in events),
+         'bound expected denial missing')
+    need(any(e.get('resource')==str(extra) and e.get('relevance')=='relevant_denial' for e in events),
+         'unrelated exact-path denial was exempted or not retained')
+    need(not observed['changes'],'unrelated protected target changed')
+    return {'verdict':observed['record']['verdict'],'events':events,
+            'receipt_identity':receipt['identity']}
+
+
+def diagnostic_postfinal_case(top,case,mode,bundle):
+    probe=Probe(top/'subject',case,mode,bundle)
+    probe.config.update(operation='write',target=str(probe.target),swallow_denial=True,
+                        diagnostic_barrier_nonce=uuid.uuid4().hex,
+                        diagnostic_barrier_handshake='$TMP/diagnostic-handshake.json',
+                        diagnostic_barrier_release='$TMP/diagnostic-release.json')
+    probe.prepare();observed=probe.invoke()
+    need(observed['record'] and observed['record'].get('verdict')=='unverifiable',
+         'dependent aggregate was not invalidated')
+    first=json.loads((probe.root/'postfinal-original-receipt.json').read_text())
+    second=json.loads((probe.root/'postfinal-second-receipt.json').read_text())
+    original_hash=hashlib.sha256(json.dumps(first,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    corrections=observed['record'].get('sandbox_receipt_corrections',[])
+    match=[row for row in corrections if row.get('original_receipt_sha256')==original_hash and
+           row.get('code')=='observed_relevant_denial' and row.get('origin')==first['identity']]
+    need(first['decision']['verdict']=='supported' and bool(match),
+         'sealed origin and digest-bound relevant-denial correction not retained')
+    need('diagnostic_cross_invocation' in second['sandbox_receipt']['decision']['unavailable_reasons'],
+         'receiving invocation was not invalidated for cross-invocation delivery')
+    need(observed['check'].get('sandbox_receipt')==first,
+         'original sandbox receipt was silently rewritten')
+    need(not observed['changes'] and observed['prefix_unchanged'],'protected state changed')
+    return {'id':case['id'],'mode':mode,'original_receipt_sha256':original_hash,
+            'origin':first['identity'],'corrections':match,
+            'receiving_identity':second['sandbox_receipt']['identity'],
+            'aggregate_verdict':observed['record']['verdict']}
+
+
 def diagnostic_pipeline_case(top,case,mode,bundle):
+    if case['id']=='POSTFINAL_RELEVANT_DENIAL_INVALIDATES':
+        return diagnostic_postfinal_case(top,case,mode,bundle)
+    if case['id']=='CANARY_BOUND_DELAYED_DIAGNOSTIC':
+        return diagnostic_delayed_canary_case(top,case,mode,bundle)
+    if case['id'] in ('ABSENT_EVENT_PASSING_ENABLED','SWALLOWED_INVISIBLE_DENIAL_ENABLED','THIRD_PARTY_CANARY_MISS_NON_GATING'):
+        return diagnostic_absence_case(top,case,mode,bundle)
     if case['id'] not in ('MIDCHECK_RELEVANT_DENIAL_PASSING','DRAIN_RELEVANT_DENIAL_PASSING',
             'CANARY_LOOKALIKE_REJECTED','CANARY_CANDIDATE_PHASE_REJECTED','CANARY_WRONG_ID_REJECTED',
             'CANARY_WRONG_PID_REJECTED','CANARY_WRONG_PATH_REJECTED','CANARY_OUTSIDE_WINDOW_REJECTED'):
@@ -1068,7 +1250,7 @@ def diagnostic_pipeline_case(top,case,mode,bundle):
     if case['id'].startswith('CANARY_'):
         canary=receipt['diagnostics']['canary']
         need(canary.get('event_received') is False,'candidate event was incorrectly accepted as the preflight canary')
-        required=('run_id','check','phase','repetition','probe_id','command_tag','path','operation',
+        required=('run_id','check','phase','repetition','probe_id','command_tag','session_suffix','path','operation',
                   'denial_result','subject_pid','subject_start','executable','executable_sha256')
         binding={key:canary[key] for key in (*required,'preflight_start','preflight_end','syscall_start',
                                                'syscall_end','clock_uncertainty_seconds')}
@@ -1084,16 +1266,23 @@ def diagnostic_pipeline_case(top,case,mode,bundle):
             return match
         need(real_match(event,'bound-positive').get('matched') is True,'bound preflight positive control failed')
         rejected=dict(event)
-        field={'CANARY_LOOKALIKE_REJECTED':'operation','CANARY_CANDIDATE_PHASE_REJECTED':'phase',
+        field={'CANARY_LOOKALIKE_REJECTED':'operation','CANARY_CANDIDATE_PHASE_REJECTED':'occurrence_epoch',
                'CANARY_WRONG_ID_REJECTED':'probe_id','CANARY_WRONG_PID_REJECTED':'subject_pid',
                'CANARY_WRONG_PATH_REJECTED':'path','CANARY_OUTSIDE_WINDOW_REJECTED':'occurrence_epoch'}[case['id']]
         if field=='subject_pid':rejected[field]+=1
-        elif field=='occurrence_epoch':rejected[field]=binding['preflight_end']+1
-        elif field=='phase':rejected[field]='candidate' if binding['phase']!='candidate' else 'base'
+        elif field=='occurrence_epoch':
+            rejected[field]=(binding['preflight_end']+1 if case['id']=='CANARY_CANDIDATE_PHASE_REJECTED'
+                             else binding['preflight_start']-1)
         else:rejected[field]=str(rejected[field])+'-lookalike'
         negative=real_match(rejected,'rejected-single-field')
         need(negative.get('matched') is False and len(negative.get('reasons',[]))==1,
              'named single-field canary mismatch was not isolated')
+        # Each mismatch carries a fresh, independently bound full collector
+        # positive; this is an auxiliary control, not another matrix variant.
+        positive_top=top/'bound-pipeline-positive';positive_top.mkdir()
+        positive_case={'id':'CANARY_BOUND_DELAYED_DIAGNOSTIC','layer':'diagnostic',
+                       'operation':'diagnostic_pipeline','expected':'supported','logging':['enabled']}
+        bound_positive=diagnostic_delayed_canary_case(positive_top,positive_case,mode,bundle)
     events=receipt['diagnostics'].get('events',[])
     matching=[event for event in events if event.get('subject_pid')==witness['pid'] and
               event.get('resource')==str(probe.target) and event.get('relevance')=='relevant_denial']
@@ -1102,7 +1291,8 @@ def diagnostic_pipeline_case(top,case,mode,bundle):
          'passing assertion evidence missing')
     return {'id':case['id'],'mode':mode,'verdict':observed['record']['verdict'],
             'control':direct,'host_witness':witness,'injected':injected[0],
-            'events':matching,'receipt_identity':receipt['identity']}
+            'events':matching,'receipt_identity':receipt['identity'],
+            'bound_positive_control':bound_positive if case['id'].startswith('CANARY_') else None}
 
 
 def run_case(top,case,mode,bundle,classifier_package):
@@ -1139,8 +1329,11 @@ def _run_case(top,case,mode,bundle,classifier_package):
         result=classifier_case(top/'facts',case,mode,classifier_package)
         if case['id'] in {'SUBSCRIPTION_DROP','SPOOL_OVERFLOW','COLLECTOR_DEATH',
                           'AMBIGUOUS_EVENT_ID','CROSS_INVOCATION_EVENT','DRAIN_TIMEOUT',
-                          'LATE_RELEVANT_DENIAL'}:
-            raise Unavailable(case['id']+': controlled collector pipeline reproduction remains required')
+                          'LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT'}:
+            import pipeline_faults
+            import sys as _sys
+            pipeline=pipeline_faults.run_pipeline_fault(top,case,mode,bundle,_sys.modules[__name__])
+            return {'classifier':result,'pipeline':pipeline}
         return result
     if case['layer']=='dependency':return dependency_case(top,case,mode,bundle)
     if case['layer']=='isolation':return isolation_case(top,case,mode,bundle)

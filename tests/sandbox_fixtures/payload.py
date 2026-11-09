@@ -421,6 +421,14 @@ def main() -> int:
                           error_type=type(error).__name__,
                           failure_class='permission_denied' if denied else 'operation_unavailable')
             report['steps'].append({'step': report['step'], 'outcome': 'error', 'errno': error.errno})
+        if config.get('unexpected_extra_target'):
+            try:
+                fd=os.open(bounded_path(root,config['unexpected_extra_target']),os.O_WRONLY|os.O_TRUNC)
+                os.close(fd)
+                report['unexpected_extra']={'outcome':'succeeded','errno':None,'at':time.time()}
+            except OSError as error:
+                report['unexpected_extra']={'outcome':'denied' if error.errno in (1,13) else 'error',
+                                            'errno':error.errno,'at':time.time()}
         if config.get('diagnostic_barrier_nonce'):
             # Disposable reviewed test payload: witness the attempted operation
             # to the host, not to the subject assertion result.
@@ -428,7 +436,7 @@ def main() -> int:
             release=bounded_path(root,config['diagnostic_barrier_release'])
             witness={'nonce':config['diagnostic_barrier_nonce'],'pid':os.getpid(),
                      'pgid':os.getpgrp(),'errno':report['errno'],
-                     'outcome':report['outcome'],'at':time.time()}
+                     'outcome':report['outcome'],'extra':report.get('unexpected_extra'),'at':time.time()}
             with handshake.open('x',encoding='utf-8') as f: json.dump(witness,f)
             until=time.monotonic()+2.5
             while not release.exists() and time.monotonic()<until: time.sleep(.005)
@@ -448,7 +456,27 @@ def main() -> int:
     else:
         encoded = json.dumps(report, sort_keys=True, separators=(',', ':'))
         print('SANDBOX_OPERATION ' + encoded, flush=True)
-    if app == 'new' and config['operation'] == 'clean':
+    if app == 'new' and config.get('collector_seam_negative'):
+        # Attempt every candidate-facing carrier. These bytes remain provisional
+        # candidate output/scratch/result and must never reach host injection.
+        sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
+        visible_fds=[]
+        for fd in range(3,256):
+            try:
+                info=os.fstat(fd)
+                visible_fds.append({'fd':fd,'device':info.st_dev,'inode':info.st_ino})
+            except OSError: pass
+        print('CANDIDATE_FD_INVENTORY '+json.dumps(visible_fds),flush=True)
+        os.environ['KERNEL_TEST_COLLECTOR_FD']='199'
+        os.environ['KERNEL_TEST_COLLECTOR_SUPPRESS']='1'
+        sys.argv.append('--collector-inject='+sentinel)
+        bounded_path(root,'$TMP/collector-input.jsonl').write_text(sentinel)
+        try: os.write(199,(sentinel+'\n').encode())
+        except OSError: pass
+        print(sentinel,flush=True)
+        print(sentinel,file=sys.stderr,flush=True)
+        encoded=sentinel
+    elif app == 'new' and config['operation'] == 'clean':
         encoded = 'bounded observation only'
     passed = app == 'new'
     receipt = {'protocol': 1, 'check': 'probe', 'phase': os.environ['VERIFY_TREE'],

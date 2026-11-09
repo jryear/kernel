@@ -220,13 +220,28 @@ else:
         def log_audit(event):
             with audit.open('a',encoding='utf-8') as f:
                 f.write(json.dumps(event,sort_keys=True)+'\n');f.flush();os.fsync(f.fileno())
+        if fixture['case_id']=='CANARY_BOUND_DELAYED_DIAGNOSTIC':
+            def trace_binding(frame,event,arg):
+                if (event=='line' and frame.f_code.co_name=='run_check' and
+                    frame.f_code.co_filename.endswith('kernel_sandbox_runtime.py')):
+                    local=frame.f_locals
+                    if local.get('phase')=='candidate' and isinstance(local.get('canary_binding'),dict):
+                        collector['canary_binding']=dict(local['canary_binding'])
+                return trace_binding
+            sys.settrace(trace_binding)
+        def publish_release(path,nonce):
+            temporary=path.with_name(path.name+'.host-'+str(time.time_ns()))
+            with temporary.open('x',encoding='utf-8') as handle:
+                json.dump({'nonce':nonce},handle);handle.flush();os.fsync(handle.fileno())
+            os.replace(temporary,path)
         def inject_when_ready():
             deadline=time.monotonic()+15
             try:
                 while time.monotonic()<deadline:
                     check=collector.get('check');cfg=collector.get('config')
                     if check and cfg and collector.get('write_fd') is not None:
-                        handshakes=list(scratch_root.glob('kernel-*/child/diagnostic-handshake.json'))
+                        handshake_path=Path(cfg['prepared_path']).parent/'child'/'diagnostic-handshake.json'
+                        handshakes=[handshake_path] if handshake_path.exists() else []
                         if handshakes:
                             handshake=handshakes[-1]
                             try: witness=json.loads(handshake.read_text())
@@ -237,30 +252,53 @@ else:
                             ps=real_run(['/bin/ps','-p',str(witness.get('pid')),'-o','pgid=,stat=,lstart='],
                                         capture_output=True,text=True,timeout=2)
                             fields=ps.stdout.strip().split(None,2)
-                            if (witness.get('nonce')!=fixture.get('nonce') or witness.get('errno') not in (1,13) or
-                                witness.get('outcome')!='denied' or len(fields)!=3 or
-                                int(fields[0])!=check.pid or fields[1].startswith('Z')):
-                                raise RuntimeError('diagnostic payload witness identity/denial unavailable')
+                            delayed=fixture['case_id']=='CANARY_BOUND_DELAYED_DIAGNOSTIC'
+                            if (witness.get('nonce')!=fixture.get('nonce') or len(fields)!=3 or
+                                int(fields[0])!=check.pid or fields[1].startswith('Z') or
+                                (not delayed and (witness.get('errno') not in (1,13) or witness.get('outcome')!='denied'))):
+                                raise RuntimeError('diagnostic payload witness identity/operation unavailable')
                             prepared=json.loads(Path(cfg['prepared_path']).read_text())
-                            instant=datetime.fromtimestamp(witness['at']).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-                            line=f"{instant} E kernel[0:abcd] (Sandbox) Sandbox: Python({witness['pid']}) deny(1) file-write-data {fixture['target']}"
+                            binding=collector.get('canary_binding') if delayed else None
+                            if delayed and not binding: raise RuntimeError('host preflight binding unavailable')
+                            occurred=(binding['syscall_start']+binding['syscall_end'])/2 if delayed else witness['at']
+                            subject=binding['subject_pid'] if delayed else witness['pid']
+                            target=binding['path'] if delayed else fixture['target']
+                            instant=datetime.fromtimestamp(occurred).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                            line=f"{instant} E kernel[0:abcd] (Sandbox) Sandbox: Python({subject}) deny(1) file-write-data {target}"
                             frame={'type':'event','line':line,'tag':prepared['command_tag']}
                             release=handshake.with_name('diagnostic-release.json')
-                            is_drain=fixture['case_id'] in ('DRAIN_RELEVANT_DENIAL_PASSING','LATE_RELEVANT_DENIAL')
+                            is_drain=fixture['case_id'] in ('DRAIN_RELEVANT_DENIAL_PASSING','LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT')
                             if is_drain:
-                                release.write_text(json.dumps({'nonce':witness['nonce']}))
+                                publish_release(release,witness['nonce'])
                                 while check.poll() is None and time.monotonic()<deadline: time.sleep(.005)
                                 if check.poll() is None: raise RuntimeError('leader did not exit before drain event')
                                 time.sleep(.1)
-                            os.write(collector['write_fd'],(json.dumps(frame)+'\n').encode())
-                            log_audit({'type':'injected','case':fixture['case_id'],'frame':frame,
-                                       'witness':witness,'host_identity':fields,'at':time.time(),
+                            is_postfinal=fixture['case_id']=='POSTFINAL_RELEVANT_DENIAL_INVALIDATES'
+                            if is_postfinal and not collector.get('postfinal_frame'):
+                                collector['postfinal_frame']={**frame,'suffix':prepared['session_suffix']}
+                                silent=True
+                            elif is_postfinal:
+                                frame=collector['postfinal_frame'];silent=False
+                            else:
+                                silent=fixture['case_id']=='SWALLOWED_INVISIBLE_DENIAL_ENABLED'
+                            if not silent:
+                                os.write(collector['write_fd'],(json.dumps(frame)+'\n').encode())
+                                if fixture['case_id']=='EXPECTED_DENIAL_UNRELATED_CONTROL':
+                                    extra=witness.get('extra') or {}
+                                    if extra.get('errno') not in (1,13) or extra.get('outcome')!='denied':
+                                        raise RuntimeError('second independent denial unavailable')
+                                    at=datetime.fromtimestamp(extra['at']).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                                    other={'type':'event','line':f"{at} E kernel[0:abcd] (Sandbox) Sandbox: Python({witness['pid']}) deny(1) file-write-data {fixture['unexpected_target']}",'tag':prepared['command_tag']}
+                                    os.write(collector['write_fd'],(json.dumps(other)+'\n').encode())
+                            os.close(collector['write_fd']);collector['write_fd']=None
+                            log_audit({'type':'upstream_non_delivery' if silent else 'injected','case':fixture['case_id'],'frame':frame,
+                                       'witness':witness,'host_identity':fields,'preflight_binding':binding,'at':time.time(),
                                        'leader_exited':check.poll() is not None})
                             if not is_drain:
                                 # Let Node consume the event before the live
                                 # candidate is released from its progress barrier.
                                 time.sleep(.1)
-                                release.write_text(json.dumps({'nonce':witness['nonce']}))
+                                publish_release(release,witness['nonce'])
                             return
                     time.sleep(.01)
                 raise RuntimeError('diagnostic fixture barrier timed out')
@@ -271,18 +309,23 @@ else:
                 cfg=json.loads(Path(argv[2]).read_text())
                 if cfg.get('env',{}).get('VERIFY_TREE')=='candidate':
                     read_fd,write_fd=os.pipe()
+                    pipe_stat=os.fstat(read_fd)
+                    pipe_identity={'device':pipe_stat.st_dev,'inode':pipe_stat.st_ino}
                     env=dict(kwargs.get('env') or {})
                     env.update(KERNEL_TEST_COLLECTOR_FD=str(read_fd),
-                               KERNEL_TEST_COLLECTOR_LIVE=str(fixture_root/'collector-live.raw'),
+                               KERNEL_TEST_COLLECTOR_LIVE=str(fixture_root/('collector-live-'+str(time.time_ns())+'.raw')),
                                KERNEL_TEST_COLLECTOR_SUPPRESS='1')
                     kwargs['env']=env;kwargs['pass_fds']=(*kwargs.get('pass_fds',()),read_fd)
                     argv=[argv[0],'--import',fixture['adapter'],*argv[1:]]
                     try: proc=prior_popen(argv,*args,**kwargs)
                     finally: os.close(read_fd)
-                    collector.update(write_fd=write_fd,supervisor=proc,config=cfg)
-                    threading.Thread(target=inject_when_ready,daemon=True).start()
+                    collector.update(write_fd=write_fd,supervisor=proc,config=cfg,check=None)
+                    if fixture['case_id'] in ('COLLECTOR_SEAM_NEGATIVE_CONTROL','ABSENT_EVENT_PASSING_ENABLED','THIRD_PARTY_CANARY_MISS_NON_GATING'):
+                        os.close(write_fd);collector['write_fd']=None
+                    else:
+                        threading.Thread(target=inject_when_ready,daemon=True).start()
                     log_audit({'type':'supervisor_preload','pid':proc.pid,'fd':read_fd,
-                               'adapter':fixture['adapter'],'candidate_fd_inheritance':'closed by independent check subprocess'})
+                               'adapter':fixture['adapter'],'pipe_identity':pipe_identity})
                     return proc
             proc=prior_popen(argv,*args,**kwargs)
             if isinstance(kwargs.get('env'),dict) and kwargs['env'].get('VERIFY_PROCESS_TOKEN') and kwargs['env'].get('VERIFY_TREE')=='candidate':
@@ -290,5 +333,19 @@ else:
             return proc
         subprocess.Popen=instrumented_popen
     subject = importlib.import_module('verify')
+    if request.get('collector_fixture',{}).get('case_id')=='POSTFINAL_RELEVANT_DENIAL_INVALIDATES':
+        runtime=importlib.import_module('kernel_sandbox_runtime')
+        original_run_check=runtime.run_check
+        def postfinal_run_check(root,check,phase,context):
+            first=original_run_check(root,check,phase,context)
+            if phase!='candidate': return first
+            initial=json.loads(json.dumps(first['sandbox_receipt']))
+            if initial['decision']['verdict']!='supported':
+                raise RuntimeError('postfinal origin was not initially supported')
+            second=original_run_check(root,check,phase,context)
+            (fixture_root/'postfinal-second-receipt.json').write_text(json.dumps(second,sort_keys=True))
+            (fixture_root/'postfinal-original-receipt.json').write_text(json.dumps(initial,sort_keys=True))
+            return first
+        runtime.run_check=postfinal_run_check
     sys.argv = [str(package/'verify.py'), *sys.argv[4:]]
     sys.exit(subject.main())
