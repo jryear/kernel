@@ -114,9 +114,11 @@ def validate_host_control(observed, case, mode):
                 rig_need(bool(release),name+': release absent')
                 if not drain:
                     rig_need(ack.get('at',0)<=release[-1]['at'],name+': released before boundary acknowledgement')
+        if name=='DRAIN_RELEVANT_DENIAL_PASSING':
+            rig_need(any(r.get('type')=='drain_started' for r in writes) and all(r['boundary_ack'].get('deadline_mono') for r in injected),name+': actual drain entry not observed')
         fault_rows=records('fault-adapter-audit.jsonl')
         rig_need(not any(r.get('type')=='rig_error' for r in fault_rows),name+': fault adapter missed window')
-        required={'SUBSCRIPTION_DROP':'subscription_callbacks_held','SPOOL_OVERFLOW':'write_benign_burst',
+        required={'SUBSCRIPTION_DROP':'subscription_fault_armed','SPOOL_OVERFLOW':'write_benign_burst',
                   'COLLECTOR_DEATH':'terminate_real_collector','AMBIGUOUS_EVENT_ID':'write_unknown_command_tag',
                   'CROSS_INVOCATION_EVENT':'write_prior_benign_event','DRAIN_TIMEOUT':'write_after_drain_deadline',
                   'LATE_RELEVANT_DENIAL':'write_late_denial','DELAYED_AFTER_LEADER_EXIT':'write_benign_delayed_event'}
@@ -135,8 +137,8 @@ def validate_host_control(observed, case, mode):
             if name in ('LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT'):
                 finish=next((r for r in fault_rows if r.get('type')=='supervisor_finish_observed'),None)
                 rig_need(finish is not None,name+': finish latch absent')
-                delta=ack.get('written_at',0)-finish['finish_at']
-                rig_need((2<=delta<2.6) if name=='DRAIN_TIMEOUT' else (0<=delta<2),name+': incorrect finish-relative write')
+                delta=ack.get('written_mono',0)-ack.get('deadline_mono',0)
+                rig_need(ack.get('deadline_mono') and ((0<=delta) if name=='DRAIN_TIMEOUT' else (-2000<=delta<0)),name+': incorrect actual-drain-relative write')
         if name=='POSTFINAL_RELEVANT_DENIAL_INVALIDATES':
             sealed=[r for r in audit if r.get('type')=='postfinal_origin_sealed']
             rig_need(len(sealed)==1 and len(silent)==1 and len(injected)==1 and
@@ -1393,6 +1395,8 @@ def diagnostic_pipeline_case(top,case,mode,bundle):
                        'operation':'diagnostic_pipeline','expected':'supported','logging':['enabled']}
         bound_positive=diagnostic_delayed_canary_case(positive_top,positive_case,mode,bundle)
     events=receipt['diagnostics'].get('events',[])
+    if case['id']=='DRAIN_RELEVANT_DENIAL_PASSING':
+        need(any(event.get('arrival_phase')=='drain' and event.get('relevance')=='relevant_denial' for event in events),'denial did not arrive during actual drain')
     matching=[event for event in events if event.get('subject_pid')==witness['pid'] and
               event.get('resource')==str(probe.target) and event.get('relevance')=='relevant_denial']
     need(bool(matching),'attributed denial event not retained')

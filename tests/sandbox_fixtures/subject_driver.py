@@ -293,7 +293,7 @@ else:
                                 while check.poll() is None and time.monotonic()<deadline: time.sleep(.005)
                                 if check.poll() is None: raise RuntimeError('leader did not exit before drain event')
                                 if fixture['case_id']=='DRAIN_RELEVANT_DENIAL_PASSING':
-                                    wait_host_record('collector-write-ack.jsonl',lambda r:r.get('type')=='supervisor_finish_observed',deadline)
+                                    wait_host_record('collector-write-ack.jsonl',lambda r:r.get('type')=='drain_started',deadline)
                                 if fixture.get('force_finish_before_frame'):
                                     finish=wait_host_record('fault-adapter-audit.jsonl',lambda r:r.get('type')=='supervisor_finish_observed',deadline)
                                     log_audit({'type':'forced_finish_before_frame','finish':finish,'at':time.time()})

@@ -1,6 +1,7 @@
 // Host-only preload for disposable collector-path fault reproductions.
 // Nothing in the candidate environment references this module or its pipe.
 import fs from 'node:fs';
+import {observeDrain} from './collector_clock.mjs';
 import cp from 'node:child_process';
 import path from 'node:path';
 import {PassThrough} from 'node:stream';
@@ -26,34 +27,28 @@ const audit=(value)=>fs.appendFileSync(auditPath,JSON.stringify({...value,at:Dat
 const live=fs.openSync(livePath,'wx',0o600);
 // Arm before importing the supervisor or waiting for a host frame. Both orders
 // rendezvous through the same latch; no edge-triggered listener is added later.
-let finishAt=null;
-const finishWaiters=[];
-process.stdin.on('data',()=>{
-  if(finishAt!==null)return;
-  finishAt=Date.now()/1000;
-  audit({type:'supervisor_finish_observed',case:mode,finish_at:finishAt});
-  for(const resume of finishWaiters.splice(0))resume();
-});
+const clock=observeDrain(audit,mode==='DRAIN_TIMEOUT');
 const ackPath=path.join(root,'collector-write-ack.jsonl');
 function afterFinish(msg,delay,write){
-  audit({type:'hold_for_supervisor_finish',case:mode,frame_id:msg.frame_id,finish_already_observed:finishAt!==null});
+  audit({type:'hold_for_supervisor_finish',case:mode,frame_id:msg.frame_id,finish_already_observed:clock.finish_at!==null});
   const schedule=()=>{
-    const due=finishAt+delay/1000;
-    audit({type:'finish_relative_schedule',frame_id:msg.frame_id,finish_at:finishAt,due_at:due,delay_after_finish_ms:delay});
+    const dueMono=mode==='DRAIN_TIMEOUT'?clock.deadline_mono+100:Math.max(clock.drain_start_mono+1,(clock.finish_at+delay/1000-Date.now()/1000)*1000+clock.now());
+    audit({type:'finish_relative_schedule',frame_id:msg.frame_id,finish_at:clock.finish_at,due_mono:dueMono,deadline_mono:clock.deadline_mono,delay_after_finish_ms:delay});
     setTimeout(()=>{
       const at=Date.now()/1000;
-      const bound=mode==='DRAIN_TIMEOUT'?2.6:2;
-      if(at>=finishAt+bound){audit({type:'rig_error',frame_id:msg.frame_id,error:'frame missed unchanged drain window'});return;}
+      const bound=mode==='DRAIN_TIMEOUT'?Infinity:clock.deadline_mono;
+      if(clock.now()>=bound){audit({type:'rig_error',frame_id:msg.frame_id,error:'frame missed unchanged drain window'});return;}
       write();
-    },Math.max(0,(due-Date.now()/1000)*1000));
+    },Math.max(0,dueMono-clock.now()));
   };
-  if(finishAt===null)finishWaiters.push(schedule);else schedule();
+  if(clock.deadline_mono===null)clock.waiters.push(schedule);else schedule();
 }
 
 if (mode==='SUBSCRIPTION_DROP') {
   const modulePath=path.join(path.dirname(process.argv[1]),'node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-violation-store.js');
   const {SandboxViolationStore}=await import(pathToFileURL(modulePath).href);
   const original=SandboxViolationStore.prototype.subscribe;
+  audit({type:'subscription_fault_armed'});
   SandboxViolationStore.prototype.subscribe=function(listener) {
     let held=0;
     return original.call(this,(tail)=>{
@@ -63,14 +58,6 @@ if (mode==='SUBSCRIPTION_DROP') {
       if(held===150)audit({type:'subscription_callbacks_held',held,total:this.getTotalCount(),tail:tail.length});
       listener(tail);
     });
-  };
-}
-if (mode==='DRAIN_TIMEOUT') {
-  // A controlled collector scheduling fault holds the real drain callback open
-  // beyond its unchanged frozen deadline; it does not change the deadline.
-  const timer=globalThis.setTimeout;
-  globalThis.setTimeout=function(callback,ms,...args) {
-    return timer(callback,ms===2000 ? 2600 : ms,...args);
   };
 }
 const spawn=cp.spawn;
@@ -99,9 +86,9 @@ cp.spawn=function(file,args,options){
       const deliver=(bytes,kind)=>{
         if(!mux.readableFlowing || mux.listenerCount('data')===0){audit({type:'rig_error',frame_id:msg.frame_id,error:'collector boundary is not flowing'});return;}
         mux.write(bytes);
-        const writtenAt=Date.now()/1000;
-        audit({type:kind,frame_id:msg.frame_id,written_at:writtenAt,finish_at:finishAt});
-        setImmediate(()=>fs.appendFileSync(ackPath,JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,kind,written_at:writtenAt,finish_at:finishAt,at:Date.now()/1000})+'\n'));
+        const writtenAt=Date.now()/1000, writtenMono=clock.now();
+        audit({type:kind,frame_id:msg.frame_id,written_at:writtenAt,written_mono:writtenMono,finish_at:clock.finish_at,deadline_mono:clock.deadline_mono});
+        setImmediate(()=>{fs.appendFileSync(ackPath,JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,kind,written_at:writtenAt,written_mono:writtenMono,finish_at:clock.finish_at,deadline_mono:clock.deadline_mono,at:Date.now()/1000})+'\n');if(mode==='DRAIN_TIMEOUT')clock.acknowledgeLateWrite();});
       };
       const pid=/Sandbox: \w+\((\d+)\)/.exec(msg.line)?.[1];
       if (!pid) throw Error('host event subject pid missing');
