@@ -359,3 +359,124 @@ package/cache/directory inventories are retained at
 metadata for required branch/desk/snapshot operations is explicitly excluded).
 Hashes establish observed lasting integrity only. No sandbox, flake, mutants,
 BidZizi work, main merge/push, or release was undertaken.
+
+
+## Sandbox v5 — DEV incomplete
+
+Authority: Zack 2026-11-09 and Claude independent prefreeze approval. Sol-6
+claimed the sandbox lease after sol-5 expired, under binding plan v7. Terra and
+Luna performed bounded read-only verification of the freeze bytes, runtime
+recipe, inventories and guards. No Desk prove was performed.
+
+### Immutable source and baseline
+
+FROZEN_BASE: `222f3385543f6da6b4bbcd932cc4a260193021c1`. Its parent is exactly
+`f14a12270641723c81dba13ebb2df9f484d151d3`. The freeze commits only the 12
+approved files, with all SHA-256 values and modes verified before committing.
+External freeze receipt: `/Users/jryear/.local/state/kernel/sol6-setup/freeze-receipt.json`.
+The reviewed implementation was ported from `d472fb4fb53968e123275294a826ee2843156145`.
+The exact clean committed qualification HEAD is `a1532a527f705df87eefdd7343a96250d05d1609`. This delivery
+checkpoint is documentation added after qualification; runtime/package bytes,
+manifest and all frozen inputs remain identical to that qualified HEAD.
+
+Installed 3.1.0 baseline: **BASELINE_READY**, four genuine behavioral REDs.
+Each named boundary assertion independently observed a forbidden protected write
+succeed, lasting protected change, a complete nested supported result and clean
+execution evidence. No schema/setup error counted as RED. Evidence:
+`/Users/jryear/.local/state/kernel/sol6-setup/baseline/judge.jsonl` and
+`/Users/jryear/.local/state/kernel/sol6-setup/baseline/behavioral-red-receipt.json`. Before/after judge inventories
+are unchanged. Tests/tasks and all other protected inputs remain immutable.
+Some approved frozen descriptions retain their prefreeze draft label; the bytes
+were intentionally preserved rather than edited after freeze.
+
+### Full direct sweep on the committed candidate
+
+| Group | Cases | Variants | Completed | Mismatch | Unavailable |
+|---|---:|---:|---:|---:|---:|
+| effect-classifier | 137 | 247 | 247 | 0 | 0 |
+| isolation | 7 | 14 | 14 | 0 | 0 |
+| policy-dependency | 57 | 114 | 114 | 0 | 0 |
+| protocol | 13 | 26 | 26 | 0 | 0 |
+| Total | 214 | 401 | 401 | 0 | 0 |
+
+Exact coverage, unique job IDs, clean source/fixture identity, unchanged installed
+judge and suspension/lease/caffeinate cleanup all validated. No unavailable case
+was credited as a pass. Raw case roots, command streams and teardown-safe nested
+archives remain under `/Users/jryear/.local/state/kernel/sweep/sol6-v5-frozen-20261109`. Summary: `summary.json`; per-variant command
+hashes and artifact roots: `per-variant-index.json`; guard: `guard-validation.json`.
+
+### Regressions and installed-judge claim
+
+The manifest was regenerated from the final package contents before qualification.
+Caller-held external receipt: `/Users/jryear/.local/state/kernel/sol6-setup/candidate-release.json`.
+Manifest SHA-256: `2a488340de2054009bf25d5534bef3aded29ff4176cfbbbe9c0ae0c0907e80cd`.
+Manifest verification, all six self-tests, self_check and cleanup passed with
+that digest supplied. Logs and commands: `/Users/jryear/.local/state/kernel/sol6-setup/regressions`.
+
+Single four-check installed-judge result: **CONTRADICTED**, DEV-ONLY.
+Effect-classifier failed: `LATE_RELEVANT_DENIAL` / `enabled` expected
+`unverifiable` but returned `supported`. Its other 246 variants completed;
+protocol 26/26, policy-dependency 114/114 and isolation 14/14 passed. The
+effect-classifier check exited 1 with `harness_error=false`. This failed
+observation is preserved and was not retried. Root cause is not established;
+neither an implementation defect nor a frozen-fixture defect is assumed.
+Exact failure receipt: `/Users/jryear/.local/state/kernel/sol6-setup/claim/failure-receipt.json`.
+Raw failure: `/Users/jryear/.local/state/kernel/sol6-setup/claim/retained/LATE_RELEVANT_DENIAL-enabled-dedcc5ec5a8d4d4a9d871d254a2205fa/invocation.json`.
+Exact claim: DEV-ONLY sandbox-v5: all four frozen checks and 214 cases / 401 variants pass on the committed candidate and authenticated development bundle; no production, egress or default-on qualification
+Implementer model: `gpt-6.1-sol medium (+terra/luna)`.
+New external log: `/Users/jryear/.local/state/kernel/sol6-setup/claim/judge.jsonl`.
+Console: `/Users/jryear/.local/state/kernel/sol6-setup/claim/console-0.txt`; command/environment receipt:
+`/Users/jryear/.local/state/kernel/sol6-setup/claim/command-0.json`; before/after judge inventories and guard
+validation: `/Users/jryear/.local/state/kernel/sol6-setup/claim/summary.json`. No unchanged failure was retried.
+The claim runs on the clean committed qualification HEAD named above.
+
+Authenticated DEV bundle receipt: `/Users/jryear/.local/state/kernel/dev-bundle-v5-integrated-r1.receipt.json`,
+SHA-256 `79c6d22e99e317efcfdda3db9f858622d45d9919538b85a447e191966489398c`. Bundle digest
+`b17f5ec019f336b73816712b815667817015cfa49c90b269cdfa6a37e7e1bc40`;
+912 inventoried files. Supervisor/validator bytes match the reviewed source.
+Node v24.22.0 retains `UNQUALIFIED_LOCAL_EXECUTABLE` artifact provenance.
+No new installation, dependency fetch, patch application or provisioning was run.
+
+### Zack-only provisioning command and prerequisites
+
+Patch SHA-256: `9116e04677a6a058947b7e24d2b71372d86dfd6c756f25f126f512a73ac7beb2` (`kernel-srt-0.0.81-exact-tcp-v1`).
+Run from this reviewed branch only after authenticating the source and an official
+Node v24.22.0 archive. The exact command below requires Zack to supply the actual
+absolute archive path and independently authenticated official archive digest;
+this session has neither input and does not substitute a local executable hash.
+The receipt parent must already exist, be root-owned/non-writable and symlink-free
+through its ancestry. The receipt path must not already exist.
+
+```sh
+sudo /Users/jryear/orca/workspaces/_kernel/kernel-sandbox-v2/sandbox_runtime/provision.sh \
+  --node-archive "${KERNEL_NODE_ARCHIVE:?set absolute official node-v24.22.0-darwin-arm64.tar.gz path}" \
+  --node-archive-sha256 "${KERNEL_NODE_ARCHIVE_SHA256:?set authenticated official archive SHA-256}" \
+  --receipt "/Library/Application Support/KernelRuntime/receipts/sandbox-v5-bundle.json"
+```
+
+This host is macOS arm64; Intel requires the darwin-x64 archive and renewed exact
+runtime qualification. `lo0` must have the `127.0.0.2` alias for the controlled
+alternate-loopback listener. It was present before the freeze and full sweep.
+No sudo, alias configuration or provisioning was performed by Sol-6. Authenticate
+the new operator receipt digest externally before its qualifying run. DEV evidence
+does not qualify Zack's new bundle; no Desk prove before that separate run.
+
+### Known gaps and named residual risks
+
+- `NONNETWORK_GENERATOR_COMMON_MODE`: matching generated non-network templates
+  are not an independent semantic policy oracle. Separate red-team shared-generator
+  mutation/effect evidence and release-owner disposition remain required.
+- `ENTRYPOINT_EXTERNAL_AUTHENTICATION`: caller authentication of the entrypoint
+  and its launch/import environment is a prerequisite; self-check cannot establish it.
+- Swallowed denials whose events are never delivered may still be supported when
+  all required observable evidence passes. Logs are diagnostic; absence proves nothing.
+  The approved fixed 1ms timestamp uncertainty is unchanged and is never widened.
+- Hashes establish lasting boundary changes, not absence of attempts, transient
+  writes or reads. Process sampling and reviewed assertion reporters retain their limits.
+- Declared TCP ports grant address-wildcard bind/inbound authority; localhost alias
+  matching, allowed-service identity and relay exposure remain published limits.
+- Official operator bundle, per-host/runtime qualification, off-machine egress,
+  repetition/mutants/red-team, default-on, real-caller and release gates remain open.
+  V4 freeze and its UNVERIFIABLE claim are preserved. No main/next push or release.
+
+Stop for independent review after pushing `kernel/sandbox-v5` and setting in-review.
