@@ -1,6 +1,22 @@
-# Sandbox-v5 prefreeze draft — incomplete
+# Sandbox-v6 prefreeze draft — incomplete
 
-This fixture is a draft based on the preserved sandbox-v4 freeze. It has not been
+This fixture-only v6 draft starts from sandbox-v5 at c6f0ba3. Its implementation
+is byte-identical to a1532a5. V5's freeze and CONTRADICTED claim remain historical
+evidence. The v6 changes repair host ordering and rig-failure classification;
+no rule, expected verdict, case ID, count or production implementation changes.
+
+Finish is latched when the adapter starts, independent of frame arrival. Deferred
+frames rendezvous with that latch and are scheduled relative to the recorded
+finish, within the unchanged 2000ms drain (DRAIN_TIMEOUT deliberately crosses
+that deadline under the existing controlled delayed-close fault). UUID-bound
+boundary acknowledgements replace sleep-based assumptions. They attest host
+transport writes into the flowing collector input, not successful subject parsing.
+The driver waits for acknowledgement before active-payload release. Host audit,
+nonce, phase, leader and fault preconditions are validated before any verdict
+comparison. Missing/wrong host stimulus raises Unavailable; subject parsing,
+attribution, reason and verdict defects remain behavioral Mismatch.
+
+The retained v5 wording below is historical background. This v6 draft It has not been
 reviewed or frozen. The historical wording below that describes the old freeze,
 old counts or schema is historical background; the 2026-11-09 amendment in
 `docs/SANDBOX_DECISION.md` is binding. The current draft declares 214 IDs / 401
@@ -17,7 +33,7 @@ Draft timeout ceilings are 3840/600/1860/600 seconds. The first is derived from
 the prior floor model, 247 variants, 616.67 projected seconds and the existing
 fourfold plus per-variant headroom. Actual v5 runtime has not been measured;
 recalculate these values after complete controlled reproductions and before
-review or freeze. `measure_cost.py` writes a new v5 external receipt, never the
+review or freeze. `measure_cost.py` writes a new v6 external receipt, never the
 v4 receipt.
 
 Nested receipts use schema 3; the outer verification protocol remains schema 2.

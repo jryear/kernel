@@ -24,6 +24,31 @@ if (!cases.has(mode)) throw Error('unknown host fault fixture');
 const auditPath=path.join(root,'fault-adapter-audit.jsonl');
 const audit=(value)=>fs.appendFileSync(auditPath,JSON.stringify({...value,at:Date.now()/1000})+'\n');
 const live=fs.openSync(livePath,'wx',0o600);
+// Arm before importing the supervisor or waiting for a host frame. Both orders
+// rendezvous through the same latch; no edge-triggered listener is added later.
+let finishAt=null;
+const finishWaiters=[];
+process.stdin.on('data',()=>{
+  if(finishAt!==null)return;
+  finishAt=Date.now()/1000;
+  audit({type:'supervisor_finish_observed',case:mode,finish_at:finishAt});
+  for(const resume of finishWaiters.splice(0))resume();
+});
+const ackPath=path.join(root,'collector-write-ack.jsonl');
+function afterFinish(msg,delay,write){
+  audit({type:'hold_for_supervisor_finish',case:mode,frame_id:msg.frame_id,finish_already_observed:finishAt!==null});
+  const schedule=()=>{
+    const due=finishAt+delay/1000;
+    audit({type:'finish_relative_schedule',frame_id:msg.frame_id,finish_at:finishAt,due_at:due,delay_after_finish_ms:delay});
+    setTimeout(()=>{
+      const at=Date.now()/1000;
+      const bound=mode==='DRAIN_TIMEOUT'?2.6:2;
+      if(at>=finishAt+bound){audit({type:'rig_error',frame_id:msg.frame_id,error:'frame missed unchanged drain window'});return;}
+      write();
+    },Math.max(0,(due-Date.now()/1000)*1000));
+  };
+  if(finishAt===null)finishWaiters.push(schedule);else schedule();
+}
 
 if (mode==='SUBSCRIPTION_DROP') {
   const modulePath=path.join(path.dirname(process.argv[1]),'node_modules/@anthropic-ai/sandbox-runtime/dist/sandbox/sandbox-violation-store.js');
@@ -71,15 +96,22 @@ cp.spawn=function(file,args,options){
       if(msg.type!=='event'||typeof msg.line!=='string'||typeof msg.tag!=='string')throw Error('bad host event');
       const prefix=msg.line.replace(/Sandbox: .*$/, 'Sandbox: ');
       const benign=(pid,tag=msg.tag,suf=suffix)=>`${prefix}Python(${pid}) deny(1) sysctl-read kern.iossupportversion\nCMD64_${tag}_END_${suf}\n`;
+      const deliver=(bytes,kind)=>{
+        if(!mux.readableFlowing || mux.listenerCount('data')===0){audit({type:'rig_error',frame_id:msg.frame_id,error:'collector boundary is not flowing'});return;}
+        mux.write(bytes);
+        const writtenAt=Date.now()/1000;
+        audit({type:kind,frame_id:msg.frame_id,written_at:writtenAt,finish_at:finishAt});
+        setImmediate(()=>fs.appendFileSync(ackPath,JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,kind,written_at:writtenAt,finish_at:finishAt,at:Date.now()/1000})+'\n'));
+      };
       const pid=/Sandbox: \w+\((\d+)\)/.exec(msg.line)?.[1];
       if (!pid) throw Error('host event subject pid missing');
-      if(mode==='COLLECTOR_DEATH') {audit({type:'terminate_real_collector',pid:child.pid});child.kill('SIGKILL');continue;}
+      if(mode==='COLLECTOR_DEATH') {audit({type:'terminate_real_collector',pid:child.pid,frame_id:msg.frame_id});const killed=child.kill('SIGKILL');if(killed)fs.appendFileSync(ackPath,JSON.stringify({type:'collector_kill_sent',frame_id:msg.frame_id,pid:child.pid,at:Date.now()/1000})+'\n');continue;}
       if(mode==='SPOOL_OVERFLOW' || mode==='BURST_OVER_100_PERSISTED' || mode==='SUBSCRIPTION_DROP') {
         const count=mode==='SPOOL_OVERFLOW'?10001:150;
         const frame=benign(pid);audit({type:'write_benign_burst',count});
-        mux.write(frame.repeat(count));continue;
+        deliver(frame.repeat(count),'burst_boundary_written');continue;
       }
-      if(mode==='AMBIGUOUS_EVENT_ID') {audit({type:'write_unknown_command_tag'});mux.write(msg.line+'\nCMD64_dW5rbm93bi10YWc=_END_'+suffix+'\n');continue;}
+      if(mode==='AMBIGUOUS_EVENT_ID') {audit({type:'write_unknown_command_tag'});deliver(msg.line+'\nCMD64_dW5rbm93bi10YWc=_END_'+suffix+'\n','unknown_tag_boundary_written');continue;}
       if(mode==='CROSS_INVOCATION_EVENT') {
         const scratch=path.join(root,'operator-scratch');let prior;
         for(const name of fs.readdirSync(scratch)){
@@ -93,27 +125,21 @@ cp.spawn=function(file,args,options){
         const oldpid=prior.r.assertions.cleanup.observed?.[0]?.pid;
         if(!oldpid)throw Error('prior observed subject unavailable');
         audit({type:'write_prior_benign_event',prior_run:prior.r.identity.run_id,oldpid});
-        mux.write(benign(oldpid,prior.p.command_tag,prior.p.session_suffix));continue;
+        deliver(benign(oldpid,prior.p.command_tag,prior.p.session_suffix),'prior_boundary_written');continue;
       }
       if(mode==='DRAIN_TIMEOUT'){
-        process.stdin.once('data',()=>{
+        afterFinish(msg,2100,()=>{
           audit({type:'schedule_after_unchanged_drain_deadline',delay_after_finish_ms:2100});
-          setTimeout(()=>mux.write(benign(pid)),2100);
+          deliver(benign(pid),'write_after_drain_deadline');
         });
         continue;
       }
       if(mode==='LATE_RELEVANT_DENIAL' || mode==='DELAYED_AFTER_LEADER_EXIT') {
-        audit({type:'hold_for_supervisor_finish',case:mode});
-        process.stdin.once('data',()=>{
-          audit({type:'supervisor_finish_observed',case:mode});
-          setTimeout(()=>{
-            audit({type:mode==='DELAYED_AFTER_LEADER_EXIT'?'write_benign_delayed_event':'write_late_denial'});
-            mux.write(mode==='DELAYED_AFTER_LEADER_EXIT'?benign(pid):msg.line+'\nCMD64_'+msg.tag+'_END_'+suffix+'\n');
-          },10);
-        });
+        afterFinish(msg,10,()=>deliver(mode==='DELAYED_AFTER_LEADER_EXIT'?benign(pid):msg.line+'\nCMD64_'+msg.tag+'_END_'+suffix+'\n',
+          mode==='DELAYED_AFTER_LEADER_EXIT'?'write_benign_delayed_event':'write_late_denial'));
         continue;
       }
-      audit({type:'write_event',case:mode});mux.write(msg.line+'\nCMD64_'+msg.tag+'_END_'+suffix+'\n');
+      audit({type:'write_event',case:mode});deliver(msg.line+'\nCMD64_'+msg.tag+'_END_'+suffix+'\n','event_boundary_written');
     }
   });
   child.on('close',()=>{input.destroy();fs.closeSync(live);});return child;

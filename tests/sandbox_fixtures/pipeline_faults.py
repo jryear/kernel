@@ -1,4 +1,4 @@
-"""Host-owned reproductions through the actual v5 collector/decision path.
+"""Host-owned reproductions through the actual v6 collector/decision path.
 
 The adapter is a test-only Node preload applied by the trusted Python driver.
 It reads a host-owned anonymous descriptor; production supervisor and sandboxed

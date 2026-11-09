@@ -2,6 +2,7 @@
 // The descriptor is supplied by the harness before sandbox supervisor startup.
 import fs from 'node:fs';
 import cp from 'node:child_process';
+import path from 'node:path';
 import {PassThrough} from 'node:stream';
 import {syncBuiltinESMExports} from 'node:module';
 const fd=Number(process.env.KERNEL_TEST_COLLECTOR_FD);
@@ -12,6 +13,8 @@ delete process.env.KERNEL_TEST_COLLECTOR_LIVE;
 delete process.env.KERNEL_TEST_COLLECTOR_SUPPRESS;
 if (!Number.isInteger(fd) || fd < 3 || !livePath) throw Error('test collector host descriptor unavailable');
 const live=fs.openSync(livePath,'wx',0o600);
+const ackPath=path.join(path.dirname(livePath),'collector-write-ack.jsonl');
+process.stdin.once('data',()=>fs.appendFileSync(ackPath,JSON.stringify({type:'supervisor_finish_observed',at:Date.now()/1000})+'\n'));
 const original=cp.spawn;
 cp.spawn=function(file,args,options){
   const child=original.apply(this,arguments);
@@ -42,7 +45,10 @@ cp.spawn=function(file,args,options){
     while ((n=buffer.indexOf('\n'))>=0){
       const msg=JSON.parse(buffer.slice(0,n)); buffer=buffer.slice(n+1);
       if (msg.type!=='event' || typeof msg.line!=='string' || typeof msg.tag!=='string') throw Error('invalid host test frame');
+      if(!mux.readableFlowing || mux.listenerCount('data')===0)throw Error('host collector boundary not flowing');
+      const writtenAt=Date.now()/1000;
       mux.write(msg.line+'\nCMD64_'+msg.tag+'_END_'+(msg.suffix ?? suffix)+'\n');
+      setImmediate(()=>fs.appendFileSync(path.join(path.dirname(livePath),'collector-write-ack.jsonl'),JSON.stringify({type:'boundary_written',frame_id:msg.frame_id,written_at:writtenAt,at:Date.now()/1000})+'\n'));
     }
   });
   child.on('close',()=>{control.destroy();fs.closeSync(live);});

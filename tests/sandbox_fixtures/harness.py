@@ -42,6 +42,103 @@ def need(condition, message):
         raise Mismatch(message)
 
 
+def rig_need(condition, message):
+    if not condition:
+        raise Unavailable('host rig: '+message)
+
+
+def validate_host_control(observed, case, mode):
+    """Prove the host stimulus before asking the subject for the expected verdict.
+
+    Boundary acknowledgements describe host writes, never successful subject
+    parsing or classification. Those remain behavioral assertions below.
+    """
+    if observed.get('host_control_validated'):
+        return
+    root=Path(observed['fixture_root']);name=case['id'];fault=observed.get('host_fault')
+    config=observed.get('host_config',{})
+    proof={'case_id':name,'mode':mode,'validated_at':time.time(),'controls':[]}
+    def records(filename):
+        path=root/filename
+        if not path.exists(): return []
+        try: return [json.loads(line) for line in path.read_text().splitlines()]
+        except (OSError,ValueError) as error: raise Unavailable('host audit invalid: '+filename) from error
+    if fault:
+        rig_need(observed.get('fault_applied'),name+': fault was not applied')
+        proof['controls'].append({'fault':fault,'evidence':observed.get('fault_evidence')})
+        if fault.startswith('profile:'):
+            witness=json.loads(observed['fault_evidence'])
+            rig_need(witness.get('fault')==case['params']['profile_fault'],'wrong profile fault')
+        if fault in ('supervisor_death','kill','ps_or_identity_observation'):
+            try:
+                applied=json.loads(observed['fault_evidence'])
+                evidence=applied if fault=='supervisor_death' else json.loads(observed['progress_evidence'])
+            except (TypeError,ValueError) as error: raise Unavailable('host lifecycle barrier missing') from error
+            nonce=config.get('supervisor_barrier_nonce') or config.get('fault_barrier_nonce')
+            handshake=evidence.get('handshake',{});check=evidence.get('check',{});payload=evidence.get('payload_identity',{})
+            rig_need(evidence.get('nonce')==nonce==handshake.get('nonce') and
+                     handshake.get('operation')==case['operation'] and check.get('phase')=='candidate' and
+                     check.get('started') and payload.get('pid')==handshake.get('pid') and
+                     payload.get('pgid')==handshake.get('pgid')==check.get('pid') and
+                     handshake.get('at',0)<=evidence.get('observed_at',0)<=evidence.get('released_at',0),
+                     name+': live nonce barrier identity/order missing')
+            if fault=='supervisor_death':
+                child=evidence.get('child_identity',{})
+                rig_need(child.get('pid')==handshake.get('child_pid') and child.get('pgid')==check.get('pgid') and
+                         child.get('started') and not child.get('state','Z').startswith('Z') and
+                         evidence.get('observed_at',0)<=evidence.get('killed_at',0)<=evidence.get('released_at',0),
+                         name+': supervisor kill/live child prerequisite missing')
+            else:
+                rig_need(applied.get('fault')==fault and applied.get('pgid')==check.get('pid') and
+                         applied.get('at',0)>=evidence.get('observed_at',0),name+': targeted lifecycle fault missing')
+    audit=records('collector-adapter-audit.jsonl');writes=records('collector-write-ack.jsonl')
+    if case['layer']=='diagnostic' or (name in ('EXPECTED_DENIAL_BEHAVIORAL_ASSERTION','EXPECTED_DENIAL_UNRELATED_CONTROL') and mode=='enabled') or name=='COLLECTOR_SEAM_NEGATIVE_CONTROL' or bool(audit):
+        rig_need(any(r.get('type')=='supervisor_preload' for r in audit),name+': preload absent')
+        rig_need(not any(r.get('type')=='adapter_error' for r in audit),name+': host adapter error: '+str(audit))
+        injected=[r for r in audit if r.get('type')=='injected']
+        silent=[r for r in audit if r.get('type')=='upstream_non_delivery']
+        absence=name in ('ABSENT_EVENT_PASSING_ENABLED','THIRD_PARTY_CANARY_MISS_NON_GATING','COLLECTOR_SEAM_NEGATIVE_CONTROL')
+        rig_need((not injected and not silent) if absence else bool(injected or silent),name+': stimulus missing')
+        for row in injected+silent:
+            witness=row.get('witness',{})
+            rig_need(witness.get('nonce')==config.get('diagnostic_barrier_nonce'),name+': barrier nonce mismatch')
+            if name!='CANARY_BOUND_DELAYED_DIAGNOSTIC':
+                rig_need(witness.get('errno') in DENIED and witness.get('outcome')=='denied',name+': independent denial absent')
+            if row.get('type')=='injected':
+                ack=row.get('boundary_ack')
+                rig_need(ack and ack.get('frame_id')==row.get('frame_id') and
+                         any(r.get('frame_id')==row.get('frame_id') for r in writes),name+': boundary write not acknowledged')
+                drain=name in ('DRAIN_RELEVANT_DENIAL_PASSING','LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT')
+                rig_need(row.get('leader_exited') is drain,name+': wrong leader state at boundary')
+                release=[r for r in audit if r.get('type')=='release_published' and r.get('nonce')==witness.get('nonce')]
+                rig_need(bool(release),name+': release absent')
+                if not drain:
+                    rig_need(ack.get('at',0)<=release[-1]['at'],name+': released before boundary acknowledgement')
+        fault_rows=records('fault-adapter-audit.jsonl')
+        rig_need(not any(r.get('type')=='rig_error' for r in fault_rows),name+': fault adapter missed window')
+        required={'SUBSCRIPTION_DROP':'subscription_callbacks_held','SPOOL_OVERFLOW':'write_benign_burst',
+                  'COLLECTOR_DEATH':'terminate_real_collector','AMBIGUOUS_EVENT_ID':'write_unknown_command_tag',
+                  'CROSS_INVOCATION_EVENT':'write_prior_benign_event','DRAIN_TIMEOUT':'write_after_drain_deadline',
+                  'LATE_RELEVANT_DENIAL':'write_late_denial','DELAYED_AFTER_LEADER_EXIT':'write_benign_delayed_event'}
+        if name in required:
+            rig_need(any(r.get('type')==required[name] for r in fault_rows),name+': named injected fault missing')
+        for row in injected:
+            ack=row['boundary_ack']
+            if name in ('LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT'):
+                finish=next((r for r in fault_rows if r.get('type')=='supervisor_finish_observed'),None)
+                rig_need(finish is not None,name+': finish latch absent')
+                delta=ack.get('written_at',0)-finish['finish_at']
+                rig_need((2<=delta<2.6) if name=='DRAIN_TIMEOUT' else (0<=delta<2),name+': incorrect finish-relative write')
+        if name=='POSTFINAL_RELEVANT_DENIAL_INVALIDATES':
+            sealed=[r for r in audit if r.get('type')=='postfinal_origin_sealed']
+            rig_need(len(sealed)==1 and len(silent)==1 and len(injected)==1 and
+                     silent[0]['at']<sealed[0]['at']<injected[0]['boundary_ack']['written_at'],name+': origin was not sealed before later delivery')
+        proof['controls'].append({'collector_audit':audit,'boundary_writes':writes,'fault_audit':fault_rows})
+    observed['host_control_validated']=True
+    observed['host_control_proof']=proof
+    (root/'host-control-proof.json').write_text(json.dumps(proof,sort_keys=True,indent=2)+'\n')
+
+
 def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -269,7 +366,7 @@ baseline_failures = ["NEW"]
         failure, not a successful observation. Each invocation is unique.
         """
         archive_root = Path(os.environ.get('KERNEL_SANDBOX_EVIDENCE_DIR') or
-                            (Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sandbox-v5-fixture-evidence'))
+                            (Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sandbox-v6-fixture-evidence'))
         archive_root.mkdir(parents=True, exist_ok=True, mode=0o700)
         if archive_root.is_symlink() or not archive_root.is_dir():
             raise Unavailable('host evidence root is not a real directory')
@@ -279,6 +376,7 @@ baseline_failures = ["NEW"]
         failure = None
         try:
             result = self._invoke()
+            validate_host_control(result,self.case,self.logging)
             return result
         except BaseException:
             failure = traceback.format_exc()
@@ -291,7 +389,7 @@ baseline_failures = ["NEW"]
                         shutil.copytree(source, archive/name, symlinks=True)
                 for name in ('driver.json', 'operator.json', 'owned-checks.jsonl',
                              'fault-applied', 'fault-progress.json', 'bundle-launch-audit.jsonl',
-                             'collector-adapter-audit.jsonl', 'collector-live.raw', 'fault-adapter-audit.jsonl',
+                             'collector-adapter-audit.jsonl', 'collector-write-ack.jsonl', 'collector-live.raw', 'fault-adapter-audit.jsonl',
                              'postfinal-original-receipt.json', 'postfinal-second-receipt.json', 'driver-stdout.txt', 'driver-stderr.txt'):
                     source = self.root/name
                     if source.is_file() and not source.is_symlink():
@@ -336,6 +434,7 @@ baseline_failures = ["NEW"]
                 'scratch_root':str(self.out), 'root':str(self.root),
                 'nonce':self.config.get('diagnostic_barrier_nonce'),
                 'adapter':str(getattr(self,'collector_adapter',HERE/'collector_adapter.mjs')),
+                'force_finish_before_frame':os.environ.get('KERNEL_FIXTURE_FORCE_FINISH_FIRST')=='1',
                 'unexpected_target':self.config.get('unexpected_extra_target')}
 
         if self.fault in ('supervisor_death','kill','ps_or_identity_observation'):
@@ -387,7 +486,7 @@ baseline_failures = ["NEW"]
                 'fault_applied':(self.root/'fault-applied').exists(),
                 'fault_evidence':(self.root/'fault-applied').read_text() if (self.root/'fault-applied').exists() else None,
                 'progress_evidence':(self.root/'fault-progress.json').read_text() if (self.root/'fault-progress.json').exists() else None,
-                'owned_cleanup':owned_cleanup}
+                'owned_cleanup':owned_cleanup,'fixture_root':str(self.root),'host_fault':self.fault,'host_config':self.config}
 
 
 def denied_probe(observed, case):
@@ -400,6 +499,7 @@ def denied_probe(observed, case):
 
 
 def receipt_check(observed, case, logging, *, require_enforced=True):
+    validate_host_control(observed,case,logging)
     expected=case['expected']
     if expected=='refused':
         need(observed['exit']==3 and observed['record'] is None,case['id']+': must refuse before verdict')
@@ -1085,7 +1185,7 @@ def collector_seam_negative_control(top,bundle):
     probe.prepare();observed=probe.invoke()
     receipt=receipt_check(observed,case,'enabled')
     sentinel='CANDIDATE_SEAM_FORGERY_4fd6b314'
-    need(sentinel in observed['check'].get('output',''),'candidate did not attempt stdout/stderr forgery')
+    rig_need(sentinel in observed['check'].get('output',''),'candidate did not attempt stdout/stderr forgery')
     need(sentinel in json.dumps(receipt['assertions']['provisional']), 'candidate result forgery absent')
     records=[json.loads(line) for line in (probe.root/'collector-adapter-audit.jsonl').read_text().splitlines()]
     need(any(x.get('type')=='supervisor_preload' for x in records) and
@@ -1096,7 +1196,7 @@ def collector_seam_negative_control(top,bundle):
     need(not any(sentinel in json.dumps(event) for event in receipt['diagnostics']['events']),
          'candidate input reached diagnostic events')
     inventory=parse_line(observed['check'].get('output',''),'CANDIDATE_FD_INVENTORY ')
-    need(isinstance(inventory,list),'candidate descriptor inventory missing')
+    rig_need(isinstance(inventory,list),'candidate descriptor inventory missing')
     preload=next(x for x in records if x.get('type')=='supervisor_preload')
     pipe=preload['pipe_identity']
     need(not any(row.get('device')==pipe['device'] and row.get('inode')==pipe['inode'] for row in inventory),
@@ -1191,6 +1291,7 @@ def diagnostic_postfinal_case(top,case,mode,bundle):
                         diagnostic_barrier_handshake='$TMP/diagnostic-handshake.json',
                         diagnostic_barrier_release='$TMP/diagnostic-release.json')
     probe.prepare();observed=probe.invoke()
+    validate_host_control(observed,case,mode)
     need(observed['record'] and observed['record'].get('verdict')=='unverifiable',
          'dependent aggregate was not invalidated')
     first=json.loads((probe.root/'postfinal-original-receipt.json').read_text())
@@ -1239,10 +1340,10 @@ def diagnostic_pipeline_case(top,case,mode,bundle):
     if len(injected)!=1:
         raise Unavailable('exactly one host injection is required; audit='+json.dumps(rows))
     witness=injected[0]['witness']
-    need(witness.get('errno') in DENIED and witness.get('outcome')=='denied', 'external denied-operation witness absent')
+    rig_need(witness.get('errno') in DENIED and witness.get('outcome')=='denied', 'external denied-operation witness absent')
     need(not observed['changes'] and observed['prefix_unchanged'],'protected state changed')
     need(observed['operation'] is None,'swallowed denied operation leaked to the subject result')
-    need(injected[0]['leader_exited'] is (case['id']=='DRAIN_RELEVANT_DENIAL_PASSING'),
+    rig_need(injected[0]['leader_exited'] is (case['id']=='DRAIN_RELEVANT_DENIAL_PASSING'),
          'injection did not occur in the required lifecycle phase')
     receipt=receipt_check(observed,case,mode)
     reasons=receipt['decision'].get('unavailable_reasons',[])
@@ -1298,7 +1399,7 @@ def diagnostic_pipeline_case(top,case,mode,bundle):
 def run_case(top,case,mode,bundle,classifier_package):
     """Retain disposable variant artifacts even when the dispatcher raises."""
     archive_root = Path(os.environ.get('KERNEL_SANDBOX_EVIDENCE_DIR') or
-                        (Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sandbox-v5-fixture-evidence'))
+                        (Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sandbox-v6-fixture-evidence'))
     archive_root.mkdir(parents=True, exist_ok=True, mode=0o700)
     archive = archive_root / ('variant-' + case['id'] + '-' + mode + '-' + uuid.uuid4().hex)
     archive.mkdir(mode=0o700)
@@ -1359,7 +1460,7 @@ def exercise(group):
     matrix=json.loads((HERE/'matrix.json').read_text())
     cases=[case for case in matrix['cases'] if case['layer'] in GROUPS[group]];need(len({c['id'] for c in cases})==len(cases),'duplicate matrix cases')
     bundle=os.environ.get('KERNEL_SANDBOX_BUNDLE_RECEIPT')
-    detail={'protocol':'sandbox-v5-prefreeze-draft','group':group,'matrix_cases':len(cases),'observations':[],
+    detail={'protocol':'sandbox-v6-prefreeze-draft','group':group,'matrix_cases':len(cases),'observations':[],
             'scope':'observed effects and bounded receipts; no attempt/intent/semantic attestation'}
     with tempfile.TemporaryDirectory(prefix='kernel-sandbox-matrix-') as tmp:
         top=Path(tmp).resolve()

@@ -1,5 +1,5 @@
 spec_version = 2
-id = "sandbox-v5"
+id = "sandbox-v6"
 project = "kernel"
 goal = "Qualify the frozen on-machine sandbox matrix using independent effects, complete receipts and conservative classification in separately budgeted checks"
 bypass_policy = "fail"

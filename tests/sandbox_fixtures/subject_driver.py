@@ -241,7 +241,19 @@ else:
                 return trace_binding
             sys.settrace(trace_binding)
         def publish_release(path,nonce):
+            published_at=time.time()
             publish_host_json(path, {'nonce': nonce})
+            log_audit({'type':'release_published','nonce':nonce,'path':str(path),'at':published_at})
+        def wait_host_record(filename,predicate,deadline):
+            path=fixture_root/filename
+            while time.monotonic()<deadline:
+                if path.exists():
+                    try: rows=[json.loads(line) for line in path.read_text().splitlines()]
+                    except (OSError,ValueError): time.sleep(.005);continue
+                    found=next((row for row in rows if predicate(row)),None)
+                    if found:return found
+                time.sleep(.005)
+            raise RuntimeError('host boundary acknowledgement timed out: '+filename)
         def inject_when_ready():
             deadline=time.monotonic()+15
             try:
@@ -262,7 +274,7 @@ else:
                             fields=ps.stdout.strip().split(None,2)
                             delayed=fixture['case_id']=='CANARY_BOUND_DELAYED_DIAGNOSTIC'
                             if (witness.get('nonce')!=fixture.get('nonce') or len(fields)!=3 or
-                                int(fields[0])!=check.pid or fields[1].startswith('Z') or
+                                int(fields[0])!=check.pid or witness.get('pgid')!=check.pid or fields[1].startswith('Z') or
                                 (not delayed and (witness.get('errno') not in (1,13) or witness.get('outcome')!='denied'))):
                                 raise RuntimeError('diagnostic payload witness identity/operation unavailable')
                             prepared=json.loads(Path(cfg['prepared_path']).read_text())
@@ -275,12 +287,16 @@ else:
                             line=f"{instant} E kernel[0:abcd] (Sandbox) Sandbox: Python({subject}) deny(1) file-write-data {target}"
                             frame={'type':'event','line':line,'tag':prepared['command_tag']}
                             release=handshake.with_name('diagnostic-release.json')
-                            is_drain=fixture['case_id'] in ('DRAIN_RELEVANT_DENIAL_PASSING','LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT')
+                            is_drain=fixture['case_id'] in ('DRAIN_RELEVANT_DENIAL_PASSING','LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT')
                             if is_drain:
                                 publish_release(release,witness['nonce'])
                                 while check.poll() is None and time.monotonic()<deadline: time.sleep(.005)
                                 if check.poll() is None: raise RuntimeError('leader did not exit before drain event')
-                                time.sleep(.1)
+                                if fixture['case_id']=='DRAIN_RELEVANT_DENIAL_PASSING':
+                                    wait_host_record('collector-write-ack.jsonl',lambda r:r.get('type')=='supervisor_finish_observed',deadline)
+                                if fixture.get('force_finish_before_frame'):
+                                    finish=wait_host_record('fault-adapter-audit.jsonl',lambda r:r.get('type')=='supervisor_finish_observed',deadline)
+                                    log_audit({'type':'forced_finish_before_frame','finish':finish,'at':time.time()})
                             is_postfinal=fixture['case_id']=='POSTFINAL_RELEVANT_DENIAL_INVALIDATES'
                             if is_postfinal and not collector.get('postfinal_frame'):
                                 collector['postfinal_frame']={**frame,'suffix':prepared['session_suffix']}
@@ -289,6 +305,7 @@ else:
                                 frame=collector['postfinal_frame'];silent=False
                             else:
                                 silent=fixture['case_id']=='SWALLOWED_INVISIBLE_DENIAL_ENABLED'
+                            frame={**frame,'frame_id':uuid.uuid4().hex}
                             if not silent:
                                 os.write(collector['write_fd'],(json.dumps(frame)+'\n').encode())
                                 if fixture['case_id']=='EXPECTED_DENIAL_UNRELATED_CONTROL':
@@ -296,16 +313,17 @@ else:
                                     if extra.get('errno') not in (1,13) or extra.get('outcome')!='denied':
                                         raise RuntimeError('second independent denial unavailable')
                                     at=datetime.fromtimestamp(extra['at']).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-                                    other={'type':'event','line':f"{at} E kernel[0:abcd] (Sandbox) Sandbox: Python({witness['pid']}) deny(1) file-write-data {fixture['unexpected_target']}",'tag':prepared['command_tag']}
+                                    other={'type':'event','frame_id':uuid.uuid4().hex,'line':f"{at} E kernel[0:abcd] (Sandbox) Sandbox: Python({witness['pid']}) deny(1) file-write-data {fixture['unexpected_target']}",'tag':prepared['command_tag']}
                                     os.write(collector['write_fd'],(json.dumps(other)+'\n').encode())
+                                    wait_host_record('collector-write-ack.jsonl',lambda r:r.get('frame_id')==other['frame_id'],deadline)
+                            ack=None if silent else wait_host_record('collector-write-ack.jsonl',lambda r:r.get('frame_id')==frame['frame_id'],deadline)
                             os.close(collector['write_fd']);collector['write_fd']=None
                             log_audit({'type':'upstream_non_delivery' if silent else 'injected','case':fixture['case_id'],'frame':frame,
                                        'witness':witness,'host_identity':fields,'preflight_binding':binding,'at':time.time(),
-                                       'leader_exited':check.poll() is not None})
+                                       'leader_exited':check.poll() is not None,'boundary_ack':ack,'frame_id':frame['frame_id']})
                             if not is_drain:
                                 # Let Node consume the event before the live
                                 # candidate is released from its progress barrier.
-                                time.sleep(.1)
                                 publish_release(release,witness['nonce'])
                             return
                     time.sleep(.01)
@@ -348,6 +366,8 @@ else:
             first=original_run_check(root,check,phase,context)
             if phase!='candidate': return first
             initial=json.loads(json.dumps(first['sandbox_receipt']))
+            log_audit({'type':'postfinal_origin_sealed','identity':initial['identity'],
+                'sha256':hashlib.sha256(json.dumps(initial,sort_keys=True,separators=(',',':')).encode()).hexdigest(),'at':time.time()})
             if initial['decision']['verdict']!='supported':
                 raise RuntimeError('postfinal origin was not initially supported')
             second=original_run_check(root,check,phase,context)
