@@ -774,3 +774,434 @@ Only this dated amendment is delivered here. No agents, implementation, fixture
 edits, patch file, provisioning, installed-judge invocation or acceptance claim.
 Commit/push only `kernel/sandbox-decision-2`, mark that workspace in-review, and
 stop for review before implementation begins.
+## Amendment 2026-11-09: advisory one-directional logging and bound diagnostics
+
+Authority: Zack, 2026-11-09, **"go"**, visiting-architect decision only. Base:
+`origin/next` at `f9a0c82ebef62184208a3493be84df365f5c83a5`. Candidate inspected:
+`origin/kernel/sandbox-v4` at `c01cba3934e432b1cf176b03724850e020260f32`;
+its immutable FROZEN_BASE is `d626138b2e53a29e0cff9b6b5d4dc06503b67b0d`.
+Both remote heads were verified for this decision. This amendment supersedes
+only conflicting logging/canary rules and their acceptance evidence. The
+2026-11-06 pinned-srt exact-TCP decision, enforcement, authentication, integrity,
+cleanup, receipt, opt-in and separate egress requirements remain binding.
+
+**Decision: adopt advisory, one-directional logging and retain a bound,
+non-gating canary diagnostic.** An observed, attributed, relevant unexpected
+denial makes the affected check **unverifiable at any time**, including while
+assertions are running. Absence of a denial event, including the preflight
+canary event, is neither positive evidence nor by itself an evidence failure.
+It does not prevent supported when all required non-log evidence passes.
+Enabled collector faults remain failures; "advisory" does not permit discarding
+received evidence, hiding loss, or switching logging off after a fault.
+
+Verdicts continue to depend on directly measured operation outcomes, independent
+protected inventories, execution and cleanup observations, and the authenticated
+receipt protocol. Logs may add an unavailable reason; they cannot supply missing
+operation/inventory/protocol evidence, establish a contradiction by themselves,
+or certify that no attempt occurred. Preserve **unverifiable > contradicted >
+supported**, retaining reliable contradiction facts even when overridden.
+
+The installed 3.1.0 claim against v4 remains **UNVERIFIABLE**: three groups passed,
+isolation stopped at an enabled canary with `event_received=false`. This is not
+a retrospective v4 pass, permission to edit its freeze, or permission to erase
+its failed claim. No new runtime reproduction or implementation occurs here.
+
+### Evidence, provenance and what it establishes
+
+Evidence A is `~/.local/state/kernel/canary-rate/REPORT.md`, including its spacing
+and bisect addenda. The production-path measurements report roughly 1.5–6%
+misses at approximately three-second cadence, 14/40 at twenty seconds, and 30/30
+at seventy seconds. Moving/removing the foreground heartbeat did not eliminate
+the misses. The minimal-path bisect first flipped at Python instead of sh:
+Python 0/6 delivered, reversion to sh 6/6. Arms 2–7 were not run. That first arm
+also changed script/operation shape; it alone does not isolate executable identity.
+The report rejects a deterministic sixty-second renewal model and does not
+justify an IID production loss-rate forecast. Interrupted/invalid windows and
+all earlier failures remain evidence, not clean replacements.
+
+Evidence B is the independent reviewer's `reviewer-attach/` scripts and JSONL
+under the same external state directory. Fresh `log stream` instances and
+seventy-five-second trial spacing used `/usr/bin/sandbox-exec` with
+`(version 1)(allow default)(deny file-write* (subpath D))`. The attachment probe
+recorded ten trials, each with one sh denial and an event at about 0.09 seconds.
+The split probe recorded sh 12/12 delivered and Homebrew Python 0/12 delivered;
+new versus existing target did not change that split. The executable probe
+recorded Apple sh 5/5 and Perl 5/5 delivered, versus Homebrew Python, Homebrew
+Node and ad-hoc-signed C each 0/5. Across the split/executable arms, excluding
+the invalid copied-sh arm, that is Apple system binaries **22/22 delivered**,
+third-party binaries **0/27 delivered**, with **49/49 writes blocked**. The ten
+attachment trials are separate from those totals. The copied-sh arm is void:
+the reviewer reports SIGKILL/exit 137; its missing target is not denial evidence.
+`who.jsonl` itself records no return code, so it cannot independently establish
+that termination explanation. It is excluded regardless.
+
+This is strong evidence of a runtime-associated logging gap on **one Mac,
+macOS 27.0 arm64**, not a proven mechanism or a platform-wide rate. Apple signing,
+system-volume location and ad-hoc signing remain confounded. Rapid-cadence Python
+denials mostly arriving remains unexplained. Neither a negative live observation
+nor `log show` proves OS non-emission; the report includes live-positive events
+absent from store queries. These limits do not support making a third-party
+runtime's certification depend on a canary delivered for an Apple binary.
+**Do not switch the canary to sh, Perl or another Apple binary to obtain green.**
+
+Evidence C is source inspection at `c01cba3`, confirming the senior review:
+
+- `sandbox_supervisor.mjs:135` sets `lateEvent='relevant_denial'` only while
+  `finishing`; `kernel_sandbox.py:58` consumes that flag, not all relevant
+  received events. A swallowed EPERM with passing assertions can therefore
+  evade the denial rule even when its event arrived mid-check. Existing denial
+  fixtures also fail execution evidence, masking this route. This remains a
+  source-confirmed path, **not a runtime reproduction**.
+- `kernel_sandbox_runtime.py:280` accepts any spooled event containing
+  `canary-protected` and `deny`. It binds neither the exact target nor the probe
+  identity, PID or preflight interval. A candidate-phase/lookalike event can
+  satisfy it. The supervisor's canary exemption is likewise insufficiently
+  bound; repairing only the Python predicate is insufficient.
+- `sandbox_supervisor.mjs` generates actual and reference profiles with the same
+  generator; `kernel_profile.py` compares their non-network templates. This is
+  a separately generated reference, not an independent semantic oracle. The
+  externally authenticated entrypoint remains a prerequisite to self-check.
+
+The following SHA-256 values bind the evidence read for this decision. External
+paths below are relative to `~/.local/state/kernel/`; source paths are Git blobs
+at `c01cba3934e432b1cf176b03724850e020260f32`, not this decision checkout.
+
+| Evidence path | SHA-256 |
+| --- | --- |
+| `canary-rate/REPORT.md` | `d50ad86c7767589d6f42c0f625eca4d128bf0601353cfc3be4dba2f4e4549fba` |
+| `canary-rate/SEAL.json` | `56e6960e38eaf3ddb4ec69ca382116bfe347b11083fe928797f3993c8706e3dc` |
+| `canary-rate/spacing-addendum/SEAL.json` | `1c80845648b1dd7a7f7b7d3a9991250b10cf2c038d625ddda69f20959519964f` |
+| `canary-rate/bisect-addendum/SEAL.json` | `25e6ae91512974aab77056046f8228598b53ac187aa478de7f9b97405ca5bee2` |
+| `reviewer-attach/attach.py` | `9b44d1ae32ee3f08dc2b2dd807023b74429b70950f0797b42ed91687562fdf6e` |
+| `reviewer-attach/results.jsonl` | `80fb19e2f773fb9051ebd8e41bcf889f4a74de92e9e376a1e75f0dd5b4179ccf` |
+| `reviewer-attach/split.py` | `fe1d416c1930b2926503d957c575eb1ef8ac41302b9600dab817faa81a9d6e27` |
+| `reviewer-attach/split.jsonl` | `d9f0c08ce72a504eee755ca1d3261182d632749bbfdbda22d92488ee78dc6e43` |
+| `reviewer-attach/who.py` | `99489c022919007447d948074320518b24f3d9417b09c6a523e700c936c30027` |
+| `reviewer-attach/who.jsonl` | `0dc1ed5824534436f18e0cab5c22205d28a14c22e2d7fe6f7ea9e9b3d86e7f31` |
+| `CHECKPOINT-tranche-1.md` (binding section starts at line 1179) | `ea6af2ad3e2e40a382a84e8512d74816e02340e5150823663b44fdd4f0a12f43` |
+| `kernel_sandbox.py` | `b7d551d7070608d4c70983112b1614518094757d47b2860da665b7866b89f2e3` |
+| `kernel_sandbox_runtime.py` | `4774313e0b2c16e5e72b2eb97416834f094f0d274063833aeeb912a53d664505` |
+| `sandbox_supervisor.mjs` | `38d6da6b0e397adbcbfc81654465c03b0eae89bd6e2024591441c9cdd87ec93a` |
+| `kernel_profile.py` | `d8a376a1104388f9a86b0e6586aed8ec0b11f191f95a734bc96e6219d735f301` |
+| `tests/sandbox_fixtures/harness.py` | `135c9eb41142c2088dea0a838981282ee6c1daca8b88ec121c0e0d0beeed902c` |
+| `tests/sandbox_fixtures/matrix.json` | `4af285d24a85c04500ad6755434bf07859736bd338063c22378b93d14d30fb4d` |
+
+Seal checks in this run verified each manifest digest and its report digest,
+using `spacing-addendum/PRIOR-REPORT.md` for the original seal and
+`bisect-addendum/PRIOR-REPORT.md` for the spacing seal. Each successor report
+starts with the unchanged predecessor bytes. The respective report digests are
+`9a2a74ce9267f7532624294cecd82bebc3e97f9988b64ec677783e57af1c8059`,
+`ae70c6e9e84cbbe2f11a11dfb689fbcc3538779c5d9935358a3a65d05fdcb3e6`,
+and the final digest above. This verifies seal/report continuity; it is not a
+new exhaustive rehash of all multi-gigabyte trial archives or a rerun of probes.
+
+### Replacement logging and diagnostic verdict rows
+
+"Relevant denial" below means a received, parsed denial attributable to the
+check's execution that reports an unexpected denied operation affecting its
+contract/environment or protected boundary. It excludes a positively bound
+preflight probe, an exact reviewed benign-system exception, or a specifically
+frozen expected-denial assertion. Those exclusions must be explicit, narrow and
+recorded; candidate text, a path substring, the word `deny`, or merely passing
+assertions cannot declare an event benign. An unknown potentially relevant event
+is ambiguous evidence, not a new exemption. Trusted event provenance must be
+separate from candidate stdout/stderr or provisional result text.
+
+| Observation | Required treatment and verdict contribution |
+| --- | --- |
+| Attributed relevant denial during the check, with otherwise passing assertions, inventories and cleanup | **Unverifiable**, reason `observed_relevant_denial`; retain event, operation, target and attribution. Do not condition this on `finishing`, assertion failure, or a failed canary. |
+| Same denial after leader exit, during cleanup/drain, or later but before receipt finalization | **Unverifiable** for its originating check, same reason and explicit phase/arrival time. A benign event drained within bounds is not a denial failure. |
+| Event arrives after the drain deadline while the collector is still observed | A relevant denial still makes its origin **unverifiable**; data/pending work beyond the frozen drain bound also records `diagnostic_drain_incomplete`. A quiet, completed bounded drain is not a timeout and proves no completeness. |
+| Relevant event discovered after an originating receipt was finalized | Preserve the original receipt; append a bound invalidation/correction referring to its digest and mark the originating result and dependent aggregate **unverifiable**. Never silently rewrite history or let a later receipt stand as unaffected support. Events never delivered after closure remain unobserved; no perpetual collector or omniscience is claimed. |
+| Prior-invocation event appears in the current invocation's collector | Never reassign it. Retain its true origin if established; a relevant denial invalidates that origin. The receiving invocation is **unverifiable** with `diagnostic_cross_invocation` because its promised collection isolation failed, even if the old event is benign. Uncertain origin is `diagnostic_attribution_ambiguous`. |
+| No denial event, or no canary event, in an otherwise healthy enabled invocation | No adverse or favorable verdict contribution. With complete passing non-log evidence, **supported** is permitted; a complete behavioral failure/lasting protected change still gives contradicted. Record absence as diagnostic, never as a collector fault inferred solely from silence. |
+| Enabled collector fails startup, crashes/exits early, errors, cannot be supervised, or fails shutdown | **Unverifiable**, `diagnostic_collector_fault` (and cleanup reason where applicable). A banner/process start is only lifecycle evidence, not delivery readiness. No restart-to-green or silent disabled-mode fallback. |
+| Known subscription drop, count/sequence loss after receipt, raw/event spool overflow, write/read failure, digest/count mismatch, malformed trusted diagnostic protocol, or missing required collector lifecycle evidence | **Unverifiable**, `diagnostic_loss` or `diagnostic_evidence_invalid` as appropriate. Distinguish measured collector loss from an event never observed upstream. Persisted events beyond the 100-event store tail alone are not loss. |
+| Received potentially relevant denial cannot be parsed or attributed reliably | **Unverifiable**, `diagnostic_attribution_ambiguous`; preserve raw bytes and uncertainty. Do not classify arbitrary unrelated host traffic as a candidate denial. |
+| Bound canary event received; protected write independently denied, scratch independently succeeds, protected object unchanged | Record `matched`, diagnostic only. This proves receipt of this event, not other events or delivery health for candidate runtimes. The expected probe denial is not an unexpected check denial. |
+| Bound canary event absent; those same independent preflight effects pass | Record `absent`, diagnostic only; **supported** remains possible. A third-party runtime miss is not by itself unverifiable. |
+| Lookalike, wrong-ID/PID/path/window, or candidate-phase event offered as the canary | It cannot match or exempt a denial. Keep `event_received=false` unless a genuine bound event also exists. Evaluate the rejected event independently: a current relevant denial gives unverifiable; ambiguous relevant attribution or cross-invocation delivery gives the corresponding fault; demonstrably unrelated noise gives no verdict contribution. |
+| Preflight write not denied, scratch fails, protected contents change, probe crashes, or required operation evidence is missing/invalid | **Unverifiable before candidate launch**, `preflight_operation_unavailable`; retain any measured forbidden change. Event presence cannot repair enforcement/capability failure. |
+| Logging intentionally disabled before invocation | Record `disabled`; do not require a collector/event/canary-log match. Complete passing non-log evidence permits **supported**. Observed operation failure, incomplete cleanup/receipt, or integrity evidence retains its ordinary effect. A mode change or an unexpected active collector is an evidence/lifecycle fault, not intentional disabled mode. |
+
+These are the enabled-logging failure conditions: observed relevant denial,
+collector/lifecycle fault, measured collector loss, invalid diagnostic evidence,
+ambiguous relevant attribution, cross-invocation contamination, or incomplete
+bounded drain. **Mere absence is not on that list.** Other execution, inventory,
+cleanup and receipt failures still make a run unverifiable in either mode.
+Expected-denial tests retain the original two-level rule: the outer suite can
+pass by independently observing a nested unavailable check, and a reviewed
+assertion explicitly about a denied synthetic operation can pass. Neither is a
+blanket permission for ordinary candidates to swallow relevant denials.
+
+### Bound diagnostic and required receipt interface
+
+Keep the same-policy protected-write/scratch **operation preflight as a launch
+gate** in both modes. Keep its third-party Python probe; record the actual
+executable rather than assuming its signing class. Make only the event match
+non-gating. Do not substitute Apple binaries, retry for an event, warm up logging
+until it passes, or adapt cadence based on delivery.
+
+The trusted parent must create an unpredictable unique `probe_id` for each
+run/check/phase/repetition and a unique exact protected target incorporating that
+ID. The diagnostic matcher and expected-probe exemption must both require:
+
+1. Full invocation identity: `run_id`, `check`, base/candidate `phase`,
+   `repetition`, plus `probe_id` and the supervisor session/command tag.
+2. Exact canonical absolute protected path (including the unique ID), expected
+   denied operation and denial result. No prefix, basename or substring match.
+3. The **payload subject PID**, with trusted process start identity and absolute
+   executable identity/digest; not merely the wrapper PID or the log emitter's
+   `processID` (the kernel may emit as PID 0). Parse and bind the subject PID.
+4. A parent-recorded preflight start/end interval and probe syscall bracket,
+   clock domain/resolution and bounded conversion uncertainty. The event's
+   occurrence timestamp must fall within that preflight window; the candidate
+   launch must follow its close. Record reception time separately. A delayed
+   event can match only if its occurrence and subject bind to preflight and it
+   is received before collector closure; reception during the candidate phase
+   alone must never cause candidate activity to be labeled preflight.
+
+Freeze any timestamp tolerance before qualification, never widen it after a
+miss. Missing binding fields mean `unmatched`, never a positive match. A
+reliably bound delayed expected-probe event remains diagnostic, subject to the
+same collector deadline rules. A rejected match alone is not a fault; an
+ambiguous potentially relevant denial still is. Candidate access to the path
+later does not inherit the probe exemption. Run actual matcher/exemption tests,
+not just tests assigning a ready-made `event_received` boolean.
+
+Version the **nested sandbox receipt from schema 2 to schema 3** for sandbox-v5;
+leave the outer schema-2 verification protocol unchanged. The version prevents
+old consumers from silently interpreting advisory absence as the old gating
+canary. A classifier input interface, if retained separately, must explicitly
+bind the same diagnostic semantics. Required additions/clarifications are:
+
+- `diagnostics.semantics="advisory-one-directional-v1"`, immutable requested
+  `mode`, actual `state`, `upstream_completeness="unknown"`,
+  `absence_proves_nothing=true`, `absence_is_failure=false`, and
+  `canary.event_gates_verdict=false`. Keep received/persisted/dropped counts,
+  capacities, lifecycle/exit facts, deadlines, raw/event spool locations and
+  SHA-256 values. `collector_ready=false`, `complete=false` and
+  `assurance.complete_logs=false` remain honest; do not rename a banner as a
+  delivery guarantee.
+- `diagnostics.canary` carries the binding fields above, preflight operation
+  outcomes/errno, scratch result, protected before/after identity and digest,
+  probe exit/cleanup, `match_status` (`matched`, `absent`, `unmatched`, or
+  `not_collected`), `event_received` (true only for a bound match), matched event
+  reference, and rejected-match reasons. In disabled mode use `not_collected`
+  and null event receipt rather than suggesting an attempted collection miss.
+  Null diagnostic matches cannot erase failed operation evidence.
+- A retained `diagnostics.events` index binds each event digest/raw reference to
+  origin identity, subject PID/start identity, operation/resource, occurrence
+  and receive times, lifecycle phase, attribution result and relevance decision.
+  Store explicit exemption IDs and evidence. Classify **all** observed relevant
+  events, not only `late_event`. `diagnostics.faults` and decision reason codes
+  distinguish denial, absence, collector loss, ambiguity and lifecycle failure.
+  Finalization follows event processing, cleanup and spool sealing. Correction
+  records bind original receipt digest and origin when later evidence invalidates it.
+- `assurance.all_attempts_detected=false`,
+  `assurance.swallowed_undelivered_denial_may_be_supported=true`, and
+  `assurance.independent_nonnetwork_policy_oracle=false`. Preserve false
+  transient-write, semantic-attestation and exhaustive-descendant assertions.
+  Keep all existing release, policy/profile, bundle, platform, inventory and
+  cleanup bindings; logging changes cannot replace them.
+- Product/operator qualification receipts name this decision, the evidence
+  paths/digests above, one-host scope, measured executable paths/digests/signing
+  observations and cadence. Per-check receipts bind that qualification record
+  plus the actual OS build/architecture and Python/Node executable versions and
+  digests. Do not imply that the historical measurements qualify a new host,
+  runtime artifact or bundle. Retain raw nested receipts outside temporary-tree
+  teardown on every outcome, including harness errors.
+
+Required README and limits wording (also represented in operator/check receipts):
+
+> Logs are diagnostic, absence proves nothing. An observed, attributed, relevant
+> unexpected denial makes the affected check unverifiable, including during the
+> check or drain. A missing event alone does not. Enabled collector failure,
+> overflow, known loss or ambiguous relevant attribution still makes the check
+> unverifiable. On one macOS 27.0 arm64 host, cold, spaced probes logged Apple
+> system-binary denials 22/22 and third-party denials 0/27 while all 49 writes
+> were blocked. Signing, system-volume location and runtime identity are not
+> separated causes; rapid-cadence Python delivery remains unexplained. These
+> observations are not a universal delivery rate or a proven OS mechanism.
+> A candidate that swallows a denial whose event is never delivered can be
+> supported when all observable required evidence passes. Neither absent logs
+> nor unchanged hashes detects that attempt. Hashes establish lasting changes
+> at measured boundaries, not absence of attempts, transient writes or reads.
+
+This residual limit already exists under the current rule in practice: a
+received canary does not guarantee delivery of a later third-party denial.
+Requiring one canary event makes availability cadence/runtime-dependent without
+closing that limit. The new rule exposes the limit and fixes ignoring denials
+that actually arrive; it does not claim stronger invisible-attempt detection.
+
+### Exact sandbox-v4 to sandbox-v5 acceptance changes
+
+Keep v4's 201 IDs, 388 variants, freeze and historical evidence immutable. Make a
+new `sandbox-v5` contract/freeze; record its parent/base, manifest and fixture
+hashes. The following changes apply to its successor fixtures only. No changed
+oracle may be used to report the old v4 claim as green.
+
+| Existing exact case ID(s) | Old → new expected verdict/evidence |
+| --- | --- |
+| `CANARY_MISSING` (enabled) | **unverifiable → supported**, but only after separating absence from fault: replace `collector_fault="suppress_canary_event"`, `state="failed"`, `evidence_complete=false` with healthy enabled collection, complete other evidence, successful operation preflight and an absent bound event. Old evidence "missing event recorded as collector gap" → "absence diagnostic only; no known collector loss". The original combined fault input must still be unverifiable; removing only the canary check would not satisfy this revised case. |
+| `SUBSCRIPTION_DROP`, `SPOOL_OVERFLOW`, `COLLECTOR_DEATH`, `AMBIGUOUS_EVENT_ID`, `CROSS_INVOCATION_EVENT`, `DRAIN_TIMEOUT` | **unverifiable → unverifiable**. Evidence changes from generic classifier-failure sufficiency to the named fault with all unrelated evidence healthy; assert typed cause and origin/phase where applicable. Keep deterministic classifier coverage and add controlled collector/pipeline reproductions so one generic failure cannot mask a broken path. |
+| `LATE_RELEVANT_DENIAL` | **unverifiable → unverifiable**. Lone `late_event` flag → an attributed retained event reaching the real event-to-decision path after leader exit, otherwise passing evidence; assert `observed_relevant_denial`. |
+| `DELAYED_AFTER_LEADER_EXIT` | **supported → supported**. Preserve its **benign** event and original-invocation attribution; add explicit relevance/exemption evidence. It must not become a passing relevant-denial case. |
+| `BURST_OVER_100_PERSISTED` | **supported → supported**. Keep all 150 fixture events persisted and no loss; label them benign/non-denial synthetic events. Persisting 150 relevant denials cannot produce supported. This is not an OS completeness assertion. |
+| `CHANGE_PLUS_COLLECTOR_LOSS` | **unverifiable → unverifiable**. Preserve measured protected-change facts and require the known-loss reason; canary absence cannot stand in for that loss. |
+| `LOGGING_DISABLED_EXPLICIT`, `SWALLOWED_INVISIBLE_DENIAL_DISABLED` | **supported → supported**. Preserve disabled mode and its limited claim; add schema-3 assurance wording. Do not silently convert the latter into enabled coverage; add the enabled case below. |
+| `EXPECTED_DENIAL_BEHAVIORAL_ASSERTION` | **supported → supported**, both modes. Bind the expected event to the frozen synthetic operation/assertion, PID/path and interval. An unrelated unexpected denial must still invalidate the check. |
+| `PROFILE_NONNETWORK_TEMPLATE` | **unverifiable → unverifiable**, both modes. Preserve rejection of a mismatch between actual and reference, but replace any implication of an independent semantic oracle with the named residual risk below. This case does not exercise a shared generator defect. |
+
+The shared real-receipt canary gate at `harness.py:330–338` changes from
+"enabled absent preflight event makes expected-supported evidence Unavailable"
+to "record absence and assess all independent evidence/faults normally". This
+affects the enabled variants of these **15 exact real case IDs**, each remaining
+**supported → supported** at the matrix level:
+
+- `NETWORK_DECLARED_PORT_V4`, `NETWORK_DECLARED_PORT_V6`,
+  `CACHE_WRITE_REDIRECTED_SCRATCH`, `CLEAN_CONTROL`, `DECLARED_SCRATCH_WRITE`;
+- `GROUP_CHILD_CLEAN`, `SEQUENTIAL_RUN_ISOLATION`, `DECLARED_PORT_BIND_V4`,
+  `DECLARED_PORT_BIND_V6`, `DECLARED_PROXY_HTTP`, `DECLARED_PROXY_CONNECT`;
+- `VALID_LOOKING_FABRICATED_RESULT_LIMIT`, `CLEAN_DEFAULT_POLICY`,
+  `REDIRECT_HOME_TMP_CACHE`, `EXPECTED_DENIAL_BEHAVIORAL_ASSERTION`.
+
+For those cases an absent event alone changes the old runtime/harness outcome
+**unverifiable / Unavailable → supported / accepted evidence** when all other
+requirements pass. This is a v5 expectation, not a reclassification of retained
+v4 observations. The disabled variants retain their semantics. The other two
+v4 enabled expected-supported rows are the synthetic `BURST_OVER_100_PERSISTED`
+and `DELAYED_AFTER_LEADER_EXIT` cases already specified above.
+
+All applicable sandbox receipt checks change **schema 2 → schema 3**, including
+expected-unverifiable rows, and require the new semantic/assurance fields.
+Refusals remain exit 3 with no verdict. Other case IDs, operation outcomes,
+non-log assertions, logging modes and verdicts stay as frozen in v4. In
+particular observed denied-operation cases stay unverifiable even without logs;
+reliable lasting changes remain contradicted unless independently overridden.
+No broad loosening of `receipt_check` or deletion of operation controls is allowed.
+
+Add these exact v5 case IDs with complete, independently passing non-log evidence
+except for the single named condition. Each requires a disposable controlled
+run **before freeze**, retained inputs/raw evidence, and a specific reason check:
+
+| New case ID | Reproduction and required outcome |
+| --- | --- |
+| `MIDCHECK_RELEVANT_DENIAL_PASSING` | Real third-party payload catches a protected-write EPERM and returns passing assertions. Independently establish the denied operation and unchanged protected inventory. Deliver its correctly bound event through the production event ingestion path while the payload remains behind a progress barrier, before `finishing`. **Unverifiable**, `observed_relevant_denial`; collector and canary otherwise healthy. |
+| `DRAIN_RELEVANT_DENIAL_PASSING` | Same payload/evidence, but release the attributed event after leader exit during drain and before the deadline. **Unverifiable**, same denial reason, with no injected drain fault. |
+| `CANARY_LOOKALIKE_REJECTED`, `CANARY_CANDIDATE_PHASE_REJECTED`, `CANARY_WRONG_ID_REJECTED`, `CANARY_WRONG_PID_REJECTED`, `CANARY_WRONG_PATH_REJECTED`, `CANARY_OUTSIDE_WINDOW_REJECTED` | Exercise the real matcher and expected-probe exemption with the named binding mismatch isolated in matcher inputs and no genuine preflight event. `event_received=false`, no substituted match. For the full event path, retain independent attribution to a current relevant candidate denial (its real identity differs from the expected probe identity): **unverifiable**, `observed_relevant_denial`, never exempted as a canary. Also supply a correctly bound preflight positive control: `matched`, otherwise **supported**. Unresolvable attribution is separately covered by `AMBIGUOUS_EVENT_ID`; it must not substitute for these attributed-denial witnesses. |
+| `ABSENT_EVENT_PASSING_ENABLED` | Healthy enabled collector, no delivered denial event, complete passing execution/receipts/inventories/cleanup. **Supported**, absence diagnostic only, with the swallowed-undelivered-denial assurance limit explicit. |
+| `SWALLOWED_INVISIBLE_DENIAL_ENABLED` | Real third-party payload catches EPERM and supplies a valid neutral passing result; external fixture retains the operation witness, but neither candidate result nor delivered event exposes it to the subject judge. **Supported**, same explicit limit. Do not feed the external witness into the subject and then pretend it was invisible. |
+| `THIRD_PARTY_CANARY_MISS_NON_GATING` | Same-policy third-party Python probe independently reports denied write, successful scratch and unchanged protected target, but no bound event arrives. Clean candidate and healthy collector. **Supported**, `canary.match_status="absent"`, `event_received=false`, no absence-based unavailable reason. |
+| `CANARY_BOUND_DELAYED_DIAGNOSTIC` | Deliver a correctly bound preflight-occurrence event during candidate execution, inside the collection deadline. **Supported** with `matched`, explicit occurrence/reception distinction; a candidate-occurrence counterpart is covered above and must not match. |
+| `POSTFINAL_RELEVANT_DENIAL_INVALIDATES` | Controlled delayed delivery after sealing a supported receipt. Preserve that receipt, append its digest-bound correction, mark origin/dependent aggregate **unverifiable**, and prove no reassignment to a later check. |
+
+Use deterministic host-owned event injection at the real collector/parser input
+boundary when OS delivery cannot be scheduled reliably. Label injected versus
+live bytes; a classifier call with a preselected flag is insufficient for the
+mid-check, drain or binding reproductions. Keep a valid raw event format,
+provenance, event time, subject identity and phase barriers so the path actually
+runs. Production candidate input must not gain access to this fault seam.
+For absence tests, controlled upstream non-delivery is an explicit fixture input
+before the observed collector stream; it must not manufacture healthy counters
+after dropping an event already received. A measured collector drop is still
+`SUBSCRIPTION_DROP` and unverifiable. Retain a real cold third-party canary run
+as a labeled local observation; deterministic absence coverage must not depend
+on obtaining a natural miss, and a natural hit is not a failure of that coverage.
+
+**V5 freeze prerequisite:** reproduce every new case and strengthened path above
+in disposable fixtures, and run a **complete prefreeze sweep** of all retained
+and new cases/variants against the exact candidate under review. Retain exact
+coverage, effects, reasons, raw streams, nested receipts, source/bundle identities,
+cleanup and installed-judge inventories. Review/fix the draft before freezing;
+never freeze unexercised cases or use expected-unverifiable as a proxy for the
+named condition. Recalculate and freeze counts, budgets and timeout behavior
+before final qualification; 201/388 describes v4, not an invented v5 count.
+
+After review, freeze v5 once with immutable hashes and obtain fresh genuine
+installed-3.1.0 baseline RED from named behavioral boundary assertions, not a
+new-schema/setup error. Port the reviewed implementation above that base, rerun
+the full frozen sweep, regressions and four-check installed-judge claim. A
+prefreeze pass is not that claim. Preserve failed attempts, reject unavailable
+baselines, retain every required repetition, and do not retry unchanged evidence
+into green. Any postfreeze fixture defect requires review and a new version,
+not an in-place edit. This decision schedules those gates; none is executed here.
+
+### Finding 3 disposition: named residual risk for red-team and release
+
+**Do not require a new independent non-generator non-network reference in this
+logging tranche.** Record `NONNETWORK_GENERATOR_COMMON_MODE` as an unresolved
+trusted-computing-base risk. The current comparison catches divergence between
+two outputs and binds authenticated generator bytes, but a shared generator error
+can broaden both identically and survive. The November 6 decision already kept
+approved non-network rules bound to the pinned generator/template; it did not
+establish an independent non-network policy implementation. Adding one now would
+expand both the trusted policy surface and the qualification contract without
+being necessary to fix the demonstrated event-classification defects.
+
+This is deliberate risk retention, not proof that shared generation is safe.
+Keep independent operation/effect probes, exact network validation, generator
+pinning, release authentication and `PROFILE_NONNETWORK_TEMPLATE`. Red-team must
+exercise a **shared** non-network generator/template mutation in a disposable
+copy and record whether direct effect probes detect it; reject claims that
+matching outputs independently validate semantics. It must also review the
+bootstrap/entrypoint trust assumption. Name that separately as
+`ENTRYPOINT_EXTERNAL_AUTHENTICATION`: self-check cannot authenticate the code
+that must run before self-check; the caller must authenticate the entrypoint and
+its launch/import environment externally. This is a prerequisite, not permission
+to accept an untrusted entrypoint.
+
+Release must carry both risks, exact qualification evidence and a recorded
+owner disposition (mitigation or explicit residual acceptance). An unresolved
+claim of independent non-network validation cannot ship. These requirements fit
+the existing red-team/release gates; no provisioning, release approval, or new
+agent is authorized by this architectural run.
+
+### Final planner section — exact TOML changes
+
+Current base plan is instruction version 6 with `main="next"`. The planner,
+not this run, changes `project.instruction_version` to **7**, replaces the
+project verdict/logging comments and the matching `sandbox` and `red-team`
+blocks with the following. Preserve the existing project outcome, landing and
+release-rule comments and all other item blocks/dependencies/acceptance commands,
+including `egress`, `default-on`, `flake`, `mutants` and `release`. Do not append
+duplicate item IDs. The red-team mandate includes the release disposition so no
+new item or acceptance command is invented. This amendment's prefreeze draft
+exercise precedes the immutable acceptance freeze; it is not permission to
+mutate frozen tests during implementation. No `.desk/` file is edited here.
+
+```toml
+[project]
+name = "kernel"
+outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
+main = "next"
+instruction_version = 7
+# Preserve the current landing/release rules, including the read-only installed 3.1.0 judge.
+# Verdict boundary: docs/SANDBOX_DECISION.md, including amendments 2026-11-06 and 2026-11-09.
+# Unverifiable precedes contradicted, which precedes supported; retain measured contradiction facts.
+# Observed attributed relevant unexpected denial at any phase -> unverifiable.
+# Enabled collector fault/death/overflow/known loss, invalid evidence, ambiguous relevant attribution,
+# cross-invocation contamination or incomplete bounded drain -> unverifiable. No silent fallback.
+# Logs are diagnostic, absence proves nothing: missing events/canary alone never gate support.
+# Bound canary logging is diagnostic; independent same-policy operation preflight still gates launch.
+# Supported is bounded observable contract evidence; swallowed undelivered denials may be supported.
+# Hashes do not prove no attempts, no transient writes or read denial. Disabled mode stays explicit.
+
+[[item]]
+id = "sandbox"
+title = "Opt-in sandbox-v5: one-directional diagnostic logs, bound non-gating canary events and complete independent evidence"
+mandate = "Zack, 2026-11-09 go; docs/SANDBOX_DECISION.md amendments are binding. Preserve v4 freeze and UNVERIFIABLE claim. Before v5 freeze, reproduce every newly required case and strengthened event/fault path in disposable controlled runs and complete the full prefreeze sweep. Freeze reviewed v5 fixtures once, obtain genuine installed-3.1.0 behavioral baseline RED, then require full frozen sweep, regressions and four-check installed claim on exact candidate bytes. Observed relevant denials at any time and enabled collector faults remain unverifiable; absence alone does not. Keep same-policy operation preflight, third-party probe, pinned srt 0.0.81 exact-TCP patch, authenticated external bundle, independent inventories, cleanup and receipt protocol. Use nested sandbox receipt schema 3 and publish measured one-host logging and swallowed-denial limits. No Apple-binary substitution, retry-to-green, broadened policy or unconstrained fallback."
+depends = ["integrate-1", "sandbox-spike"]
+acceptance = [["python3", "-B", "tests/tamper_suite.py"]]
+# Off-machine egress remains in egress; retain every on-machine operation/effect control.
+# Canary absence is not collector loss. Collector crash/overflow/known drop remains unverifiable.
+# New oracle/receipt semantics belong only to sandbox-v5; never rewrite or relabel v4 evidence.
+# Preserve exact freeze/source/bundle/receipt bindings and all failed or unavailable observations.
+
+[[item]]
+id = "red-team"
+title = "Red-team new frozen contracts and named sandbox residual risks before release"
+mandate = "Zack, 2026-11-03 separate red-team agent, judged by the same frozen contract; extended by 2026-11-09 decision. Preserve new-version-only freeze procedure. Address NONNETWORK_GENERATOR_COMMON_MODE using a disposable shared-generator non-network mutation and independent operation/effect witnesses; matching generator outputs are not an independent semantic oracle. Review ENTRYPOINT_EXTERNAL_AUTHENTICATION as a caller prerequisite and the swallowed-undelivered-denial limit. Record source, observations and limits. Release must publish both named trust risks and an owner disposition of mitigation or explicit residual acceptance; no claim of independent non-network validation without new proof."
+depends = ["mutants"]
+acceptance = [["python3", "tests/red_team_freeze.py"]]
+```
