@@ -7,8 +7,11 @@ no rule, expected verdict, case ID, count or production implementation changes.
 
 Finish is latched when the adapter starts, independent of frame arrival. Deferred
 frames rendezvous with that latch and are scheduled relative to the recorded
-finish, within the unchanged 2000ms drain (DRAIN_TIMEOUT deliberately crosses
-that deadline under the existing controlled delayed-close fault). UUID-bound
+finish and the actual monotonic drain-deadline assignment, within the unchanged
+2000ms drain. The test-only clock observer returns performance.now values unchanged
+and binds its observation to the exact authenticated supervisor source location.
+DRAIN_TIMEOUT deliberately crosses that exact deadline; its host fault holds the
+drain completion callback until the late boundary write is acknowledged. UUID-bound
 boundary acknowledgements replace sleep-based assumptions. They attest host
 transport writes into the flowing collector input, not successful subject parsing.
 The driver waits for acknowledgement before active-payload release. Host audit,
@@ -31,7 +34,7 @@ bind the reviewed fixture and subject hashes; no draft observation is a freeze.
 
 Draft timeout ceilings are 3840/600/1860/600 seconds. The first is derived from
 the prior floor model, 247 variants, 616.67 projected seconds and the existing
-fourfold plus per-variant headroom. Actual v5 runtime has not been measured;
+fourfold plus per-variant headroom. V6 stress and complete-sweep runtime remain to be measured;
 recalculate these values after complete controlled reproductions and before
 review or freeze. `measure_cost.py` writes a new v6 external receipt, never the
 v4 receipt.
