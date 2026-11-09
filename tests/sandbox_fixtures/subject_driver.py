@@ -14,9 +14,20 @@ import subprocess
 import sys
 import threading
 import time
+import uuid
 from datetime import datetime
 
 sys.dont_write_bytecode = True
+
+def publish_host_json(path, value):
+    """Make a complete host barrier record visible in one rename."""
+    temporary = path.with_name(path.name + '.host-' + uuid.uuid4().hex)
+    with temporary.open('x', encoding='utf-8') as handle:
+        json.dump(value, handle)
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
+
 mode, package, request_path = sys.argv[1:4]
 package = Path(package).resolve()
 request = json.loads(Path(request_path).read_text())
@@ -128,7 +139,7 @@ else:
                         proc.wait(timeout=1)
                         killed_at = time.time()
                         released_at = time.time()
-                        release.write_text(json.dumps({'nonce': row['nonce'], 'at': released_at}))
+                        publish_host_json(release, {'nonce': row['nonce'], 'at': released_at})
                         marker.write_text(json.dumps({'nonce': row['nonce'], 'handshake': row,
                             'check': check, 'payload_identity': current, 'child_identity': child, 'supervisor_pid': proc.pid,
                             'observed_at': observed_at, 'killed_at': killed_at, 'released_at': released_at}))
@@ -155,7 +166,7 @@ else:
                         observed_at = time.time()
                         armed_check.update(row); armed.set()
                         released_at = time.time()
-                        release.write_text(json.dumps({'nonce':progress['nonce'],'at':released_at}))
+                        publish_host_json(release, {'nonce':progress['nonce'],'at':released_at})
                         Path(request['progress_marker']).write_text(json.dumps({'nonce':progress['nonce'],
                             'handshake':progress,'check':row,'payload_identity':current,
                             'observed_at':observed_at,'armed_at':observed_at,'released_at':released_at}))
@@ -230,10 +241,7 @@ else:
                 return trace_binding
             sys.settrace(trace_binding)
         def publish_release(path,nonce):
-            temporary=path.with_name(path.name+'.host-'+str(time.time_ns()))
-            with temporary.open('x',encoding='utf-8') as handle:
-                json.dump({'nonce':nonce},handle);handle.flush();os.fsync(handle.fileno())
-            os.replace(temporary,path)
+            publish_host_json(path, {'nonce': nonce})
         def inject_when_ready():
             deadline=time.monotonic()+15
             try:
