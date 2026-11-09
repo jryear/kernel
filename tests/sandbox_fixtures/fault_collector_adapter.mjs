@@ -124,7 +124,7 @@ cp.spawn=function(file,args,options){
         if(!prior)throw Error('sealed previous invocation unavailable');
         const oldpid=prior.r.assertions.cleanup.observed?.[0]?.pid;
         if(!oldpid)throw Error('prior observed subject unavailable');
-        audit({type:'write_prior_benign_event',prior_run:prior.r.identity.run_id,oldpid});
+        audit({type:'write_prior_benign_event',prior_run:prior.r.identity.run_id,prior_identity:prior.r.identity,prior_tag:prior.p.command_tag,prior_suffix:prior.p.session_suffix,receiver_tag:msg.tag,receiver_suffix:suffix,oldpid});
         deliver(benign(oldpid,prior.p.command_tag,prior.p.session_suffix),'prior_boundary_written');continue;
       }
       if(mode==='DRAIN_TIMEOUT'){
@@ -142,6 +142,6 @@ cp.spawn=function(file,args,options){
       audit({type:'write_event',case:mode});deliver(msg.line+'\nCMD64_'+msg.tag+'_END_'+suffix+'\n','event_boundary_written');
     }
   });
-  child.on('close',()=>{input.destroy();fs.closeSync(live);});return child;
+  child.on('close',(code,signal)=>{audit({type:'real_collector_exit',pid:child.pid,code,signal});input.destroy();fs.closeSync(live);});return child;
 };
 syncBuiltinESMExports();

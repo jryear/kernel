@@ -16,7 +16,7 @@ nonce, phase, leader and fault preconditions are validated before any verdict
 comparison. Missing/wrong host stimulus raises Unavailable; subject parsing,
 attribution, reason and verdict defects remain behavioral Mismatch.
 
-The retained v5 wording below is historical background. This v6 draft It has not been
+The retained v5 wording below is historical background. This v6 draft has not been
 reviewed or frozen. The historical wording below that describes the old freeze,
 old counts or schema is historical background; the 2026-11-09 amendment in
 `docs/SANDBOX_DECISION.md` is binding. The current draft declares 214 IDs / 401

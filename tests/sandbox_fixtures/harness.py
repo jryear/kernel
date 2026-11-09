@@ -122,6 +122,14 @@ def validate_host_control(observed, case, mode):
                   'LATE_RELEVANT_DENIAL':'write_late_denial','DELAYED_AFTER_LEADER_EXIT':'write_benign_delayed_event'}
         if name in required:
             rig_need(any(r.get('type')==required[name] for r in fault_rows),name+': named injected fault missing')
+        if name=='COLLECTOR_DEATH':
+            sent=next((r for r in fault_rows if r.get('type')=='terminate_real_collector'),{})
+            rig_need(any(r.get('type')=='real_collector_exit' and r.get('pid')==sent.get('pid') and r.get('signal')=='SIGKILL' for r in fault_rows),name+': collector death not independently observed')
+        if name=='CROSS_INVOCATION_EVENT':
+            prior=next((r for r in fault_rows if r.get('type')=='write_prior_benign_event'),{})
+            rig_need(prior.get('prior_identity',{}).get('phase')=='base' and prior.get('oldpid') and
+                     prior.get('prior_tag')!=prior.get('receiver_tag') and prior.get('prior_suffix')!=prior.get('receiver_suffix'),
+                     name+': sealed distinct prior origin unavailable')
         for row in injected:
             ack=row['boundary_ack']
             if name in ('LATE_RELEVANT_DENIAL','DELAYED_AFTER_LEADER_EXIT','DRAIN_TIMEOUT'):
