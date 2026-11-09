@@ -88,3 +88,40 @@ remediation subsequently kills them. Detection uses ps sampling plus an inherite
 invocation marker; hostile children can erase it and escape between observations.
 This is observed cleanup evidence, not exhaustive containment or sandboxing.
 Legacy schema1 services (as distinct from checks) remain outside this guarantee.
+
+## Sandbox v3 runtime boundary
+
+The opt-in macOS sandbox runtime is a separately assembled dependency bundle,
+not part of the Python-only install. It pins Node v24.22.0, srt 0.0.81, the
+frozen transitive npm lock, the reviewed exact-TCP patch, supervisor, and profile
+validator. See [docs/SANDBOX_RUNTIME.md](docs/SANDBOX_RUNTIME.md) for fresh
+external assembly, receipt authentication, and the Zack-only provisioning
+command. Verification itself never installs or patches dependencies.
+
+The sandbox-v3 receipt binds the complete regular-file bundle inventory and
+patch preimages/postimages. Development receipts state `dev_only: true` and
+`qualification: "development-only"`; they do not establish production trust or
+qualification. The exact-port profile permits wildcard-address TCP bind and
+inbound at declared ports, so a listener may expose data beyond localhost.
+The `localhost` predicate is an OS address class and does not guarantee literal
+address spelling. No service identity, external-egress restriction, complete
+logging, invisible-attempt detection, or exhaustive process containment is
+claimed. A passing bounded check is not a production release or authorization.
+
+Sandbox diagnostic logging is advisory: logs are diagnostic, and absence proves
+nothing. An observed, attributed, relevant unexpected denial makes the affected
+check unverifiable, including during the check or drain. A missing event alone
+does not. Enabled collector failure, overflow, known loss or ambiguous relevant
+attribution still makes the check unverifiable. On one macOS 27.0 arm64 host,
+cold, spaced probes logged Apple system-binary denials 22/22 and third-party
+denials 0/27 while all 49 writes were blocked. Signing, system-volume location
+and runtime identity were not separated causes; rapid-cadence Python delivery
+remains unexplained. These observations are not a universal delivery rate or a
+proven OS mechanism.
+
+A candidate that swallows a denial whose event is never delivered can be
+supported when all observable required evidence passes. Neither absent logs nor
+unchanged hashes detects that attempt. Hashes establish lasting changes at
+measured boundaries, not absence of attempts, transient writes or reads. The
+non-network profile comparison shares a generator and is not an independent
+semantic oracle. The caller must authenticate the verifier entrypoint externally.

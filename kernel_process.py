@@ -6,6 +6,9 @@ only sandbox/OS containment can close that boundary. ps failures fail closed.
 """
 from __future__ import annotations
 import os
+import ctypes
+import hashlib
+import sys
 from pathlib import Path
 import signal
 import subprocess
@@ -34,12 +37,46 @@ def process_table(marker):
     return table
 
 
+def executable_path(pid):
+    """Best-effort macOS process executable path, never argv/environment."""
+    if sys.platform != 'darwin':
+        return None
+    try:
+        lib = ctypes.CDLL('/usr/lib/libproc.dylib', use_errno=True)
+        lib.proc_pidpath.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_uint32]
+        lib.proc_pidpath.restype = ctypes.c_int
+        buffer = ctypes.create_string_buffer(4096)
+        count = lib.proc_pidpath(pid, buffer, len(buffer))
+        if count <= 0:
+            return None
+        path = Path(os.fsdecode(buffer.value)).resolve(strict=True)
+        return str(path) if path.is_absolute() else None
+    except (OSError, ValueError):
+        return None
+
+
+def executable_identity(pid, started, path=None):
+    """Record a sampled path/digest only when PID start identity still agrees."""
+    try:
+        path = path or executable_path(pid)
+        if not path:
+            return None
+        check = subprocess.run(['/bin/ps', '-p', str(pid), '-o', 'lstart='],
+                               capture_output=True, text=True, timeout=2)
+        if check.returncode or ' '.join(check.stdout.split()) != ' '.join(started.split()):
+            return None
+        return {'path': path, 'sha256': hashlib.sha256(Path(path).read_bytes()).hexdigest(),
+                'sampling': 'observed-process-not-execution-attestation'}
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
 def public(row):
     return {key:value for key,value in row.items() if not key.startswith('_')}
 
 
 def execute(argv, root, env, timeout):
-    errors, known = [], {}
+    errors, known, executable_cache = [], {}, {}
     timed_out = False
     marker = 'VERIFY_PROCESS_TOKEN=' + uuid.uuid4().hex
     env = {**env, 'VERIFY_PROCESS_TOKEN': marker.split('=',1)[1]}
@@ -56,7 +93,18 @@ def execute(argv, root, env, timeout):
             family.update(more)
         for pid,row in table.items():
             if pid in family or row['pgid'] == proc.pid or row['_marked']:
-                known[(pid,row['started'])] = row
+                key = (pid, row['started'])
+                prior = known.get(key)
+                identities = list(prior.get('executables', [])) if prior else []
+                path = executable_path(pid)
+                cache_key = (pid, row['started'], path)
+                if path and cache_key not in executable_cache:
+                    executable_cache[cache_key] = executable_identity(pid, row['started'], path)
+                identity = executable_cache.get(cache_key)
+                if identity and identity not in identities:
+                    identities.append(identity)
+                row['executables'] = identities
+                known[key] = row
         return table
 
     with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:

@@ -59,6 +59,9 @@ def validate_spec(spec, legacy_validate):
     # retain only structured schema2 fields; never execute translated commands.
     converted = dict(spec)
     converted['spec_version'] = 1
+    if 'sandbox' in converted:
+        from kernel_sandbox import validate_declaration
+        validate_declaration(converted.pop('sandbox'))
     raw_checks = spec.get('checks', [])
     if not isinstance(raw_checks, list):
         raise ValueError('checks must be an array')
@@ -230,14 +233,15 @@ def snapshot(repo, commit, links, objects):
         raise
 
 
-def run_tree(root, phase, checks, binding, rows, objects):
+def run_tree(root, phase, checks, binding, rows, objects, sandbox_context=None):
     from kernel_report import run_check
     results = []
     for check in checks:
         error = integrity(root, binding, rows, objects)
         if error:
             return results, error
-        result = run_check(root, check, phase)
+        active = check if sandbox_context is None else {**check, '_sandbox_context': {**sandbox_context, 'tracked': objects}}
+        result = run_check(root, active, phase)
         results.append(result)
         error = integrity(root, binding, rows, objects)
         if error:
@@ -279,6 +283,11 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
     log = args.log.resolve() if args.log else Path(tempfile.mkdtemp(prefix='verify-claims-')) / 'claims.jsonl'
     if api['repo_relative'](repo, log) is not None:
         raise ValueError('schema2 log must be outside caller repository')
+    sandbox_context = None
+    if os.environ.get('VERIFY_SANDBOX') == '1':
+        from kernel_sandbox_runtime import load_context
+        sandbox_context = load_context(spec, repo, log, candidate_objects, links)
+        sandbox_context['contract_sha256'] = hashlib.sha256(raw_spec).hexdigest()
     if not clean(repo):
         state = 'BASELINE_NOT_READY' if args.baseline else 'UNVERIFIABLE'
         print(f'{state}  {spec["id"]}  assurance={ASSURANCE}: candidate input must be clean committed source')
@@ -306,11 +315,11 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
     try:
         root = snapshot(repo, base, links, base_objects)
         roots.append((root, 'base', base_binding, base_rows, base_objects))
-        base_results, base_error = run_tree(root, 'base', checks, base_binding, base_rows, base_objects)
+        base_results, base_error = run_tree(root, 'base', checks, base_binding, base_rows, base_objects, sandbox_context)
         if not args.baseline:
             root = snapshot(repo, candidate, links, candidate_objects)
             roots.append((root, 'candidate', candidate_binding, candidate_rows, candidate_objects))
-            candidate_results, candidate_error = run_tree(root, 'candidate', checks, candidate_binding, candidate_rows, candidate_objects)
+            candidate_results, candidate_error = run_tree(root, 'candidate', checks, candidate_binding, candidate_rows, candidate_objects, sandbox_context)
         caller_error = integrity(repo, candidate_binding, candidate_rows, candidate_objects)
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         candidate_error = 'snapshot/check setup unavailable: ' + str(error)
@@ -361,6 +370,17 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
         # Incomplete evidence (including cleanup) cannot certify or contradict.
         # Deterministic source/scope violations remain recorded in reasons.
         verdict = 'unverifiable' if unavailable else 'contradicted' if contradicted else 'supported'
+        if sandbox_context is not None:
+            from kernel_sandbox import classify_sandbox_evidence
+            typed = [fact for row in candidate_results
+                     for fact in row.get('sandbox_receipt', {}).get('decision', {}).get('facts', [])]
+            decision = classify_sandbox_evidence({
+                'schema': 1, 'integrity': {'available': True, 'changes': typed},
+                'execution': {'complete': not unavailable},
+                'cleanup': {'complete': not unavailable, 'survivors': []},
+                'assertions': {'complete': not unavailable, 'failed': contradicted},
+                'diagnostics': {'mode': 'disabled', 'state': 'disabled', 'semantics': 'advisory-one-directional-v1'}})
+            verdict = decision['verdict']
         code = {'supported': 0, 'contradicted': 1, 'unverifiable': 2}[verdict]
     raw_claim = args.raw_claim_file.read_text(encoding='utf-8') if args.raw_claim_file else None
     record = {'schema': 2, 'at': api['now_utc'](), 'verifier_version': api['VERIFIER_VERSION'],
@@ -378,7 +398,8 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
               'runtime_inputs': [{'check': c['name'], 'declared': c['argv'][0], 'resolved': c.get('_runtime_executable')} for c in checks if c['_entry_position']],
               'changed_files': changed, 'protected_changes': protected_hits, 'out_of_scope': out_of_scope,
               'mutable_test_changes': mutable_tests, 'bypasses': bypasses, 'base_checks': base_results,
-              'candidate_checks': candidate_results, 'verdict': verdict, 'reasons': contradicted + unavailable, 'warnings': warnings}
+              'candidate_checks': candidate_results, 'verdict': verdict, 'reasons': contradicted + unavailable, 'warnings': warnings,
+              'sandbox_receipt_corrections': (sandbox_context or {}).get('diagnostic_corrections', [])}
     log.parent.mkdir(parents=True, exist_ok=True)
     with log.open('a', encoding='utf-8') as handle:
         handle.write(json.dumps(record, ensure_ascii=False) + '\n')
