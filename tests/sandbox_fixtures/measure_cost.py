@@ -52,5 +52,5 @@ for group,layers in GROUPS.items():
 report.update(cost_model='All variants charged the slowest measured nested invocation, including classifier/prelaunch rows (conservative surrogate); extra sequential runs, direct controls, and 6s per timeout variant added. Timeout=max(600,ceil_to_60(120+4*projection+5*variants)). Approved v2 calibration floors are retained; backend overhead not measured; projection is not a full matrix timing.',checks=costs)
 state=Path.home()/'.local/state/kernel'
 state.mkdir(parents=True,exist_ok=True)
-with (state/'sandbox-v4-costs.json').open('x', encoding='utf-8') as output:
+with (state/'sandbox-v5-costs.json').open('x', encoding='utf-8') as output:
  output.write(json.dumps(report,indent=2)+'\n')

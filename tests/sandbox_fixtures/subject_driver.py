@@ -14,6 +14,7 @@ import subprocess
 import sys
 import threading
 import time
+from datetime import datetime
 
 sys.dont_write_bytecode = True
 mode, package, request_path = sys.argv[1:4]
@@ -24,6 +25,10 @@ if mode == 'classify':
     subject = importlib.import_module('kernel_sandbox')
     result = subject.classify_sandbox_evidence(request)
     print('SANDBOX_CLASSIFICATION ' + json.dumps(result, sort_keys=True))
+elif mode == 'match_canary':
+    diagnostics = importlib.import_module('kernel_diagnostics')
+    result = diagnostics.match_canary_event(request['event'], request['binding'])
+    print('CANARY_MATCH ' + json.dumps(result, sort_keys=True))
 else:
     fault = request.get('fault')
     marker = Path(request['fault_marker'])
@@ -206,6 +211,84 @@ else:
                         handle.write(json.dumps({'executable': executable.name}) + '\n')
             return prior_popen(argv, *args, **kwargs)
         subprocess.Popen = audited_popen
+    if request.get('collector_fixture'):
+        fixture=request['collector_fixture']; prior_popen=subprocess.Popen
+        collector={'write_fd':None, 'supervisor':None, 'config':None, 'check':None}
+        fixture_root=Path(fixture['root']).resolve(strict=True)
+        scratch_root=Path(fixture['scratch_root']).resolve(strict=True)
+        audit=fixture_root/'collector-adapter-audit.jsonl'
+        def log_audit(event):
+            with audit.open('a',encoding='utf-8') as f:
+                f.write(json.dumps(event,sort_keys=True)+'\n');f.flush();os.fsync(f.fileno())
+        def inject_when_ready():
+            deadline=time.monotonic()+15
+            try:
+                while time.monotonic()<deadline:
+                    check=collector.get('check');cfg=collector.get('config')
+                    if check and cfg and collector.get('write_fd') is not None:
+                        handshakes=list(scratch_root.glob('kernel-*/child/diagnostic-handshake.json'))
+                        if handshakes:
+                            handshake=handshakes[-1]
+                            try: witness=json.loads(handshake.read_text())
+                            except (OSError,ValueError): time.sleep(.01);continue
+                            # Host observes that the claimed PID exists in the
+                            # actual owned check group; no candidate text supplies
+                            # event bytes, tag, target, or injection descriptor.
+                            ps=real_run(['/bin/ps','-p',str(witness.get('pid')),'-o','pgid=,stat=,lstart='],
+                                        capture_output=True,text=True,timeout=2)
+                            fields=ps.stdout.strip().split(None,2)
+                            if (witness.get('nonce')!=fixture.get('nonce') or witness.get('errno') not in (1,13) or
+                                witness.get('outcome')!='denied' or len(fields)!=3 or
+                                int(fields[0])!=check.pid or fields[1].startswith('Z')):
+                                raise RuntimeError('diagnostic payload witness identity/denial unavailable')
+                            prepared=json.loads(Path(cfg['prepared_path']).read_text())
+                            instant=datetime.fromtimestamp(witness['at']).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                            line=f"{instant} E kernel[0:abcd] (Sandbox) Sandbox: Python({witness['pid']}) deny(1) file-write-data {fixture['target']}"
+                            frame={'type':'event','line':line,'tag':prepared['command_tag']}
+                            release=handshake.with_name('diagnostic-release.json')
+                            is_drain=fixture['case_id'] in ('DRAIN_RELEVANT_DENIAL_PASSING','LATE_RELEVANT_DENIAL')
+                            if is_drain:
+                                release.write_text(json.dumps({'nonce':witness['nonce']}))
+                                while check.poll() is None and time.monotonic()<deadline: time.sleep(.005)
+                                if check.poll() is None: raise RuntimeError('leader did not exit before drain event')
+                                time.sleep(.1)
+                            os.write(collector['write_fd'],(json.dumps(frame)+'\n').encode())
+                            log_audit({'type':'injected','case':fixture['case_id'],'frame':frame,
+                                       'witness':witness,'host_identity':fields,'at':time.time(),
+                                       'leader_exited':check.poll() is not None})
+                            if not is_drain:
+                                # Let Node consume the event before the live
+                                # candidate is released from its progress barrier.
+                                time.sleep(.1)
+                                release.write_text(json.dumps({'nonce':witness['nonce']}))
+                            return
+                    time.sleep(.01)
+                raise RuntimeError('diagnostic fixture barrier timed out')
+            except Exception as error:
+                log_audit({'type':'adapter_error','error':repr(error)})
+        def instrumented_popen(argv,*args,**kwargs):
+            if isinstance(argv,list) and len(argv)>=3 and str(argv[1]).endswith('supervisor.mjs'):
+                cfg=json.loads(Path(argv[2]).read_text())
+                if cfg.get('env',{}).get('VERIFY_TREE')=='candidate':
+                    read_fd,write_fd=os.pipe()
+                    env=dict(kwargs.get('env') or {})
+                    env.update(KERNEL_TEST_COLLECTOR_FD=str(read_fd),
+                               KERNEL_TEST_COLLECTOR_LIVE=str(fixture_root/'collector-live.raw'),
+                               KERNEL_TEST_COLLECTOR_SUPPRESS='1')
+                    kwargs['env']=env;kwargs['pass_fds']=(*kwargs.get('pass_fds',()),read_fd)
+                    argv=[argv[0],'--import',fixture['adapter'],*argv[1:]]
+                    try: proc=prior_popen(argv,*args,**kwargs)
+                    finally: os.close(read_fd)
+                    collector.update(write_fd=write_fd,supervisor=proc,config=cfg)
+                    threading.Thread(target=inject_when_ready,daemon=True).start()
+                    log_audit({'type':'supervisor_preload','pid':proc.pid,'fd':read_fd,
+                               'adapter':fixture['adapter'],'candidate_fd_inheritance':'closed by independent check subprocess'})
+                    return proc
+            proc=prior_popen(argv,*args,**kwargs)
+            if isinstance(kwargs.get('env'),dict) and kwargs['env'].get('VERIFY_PROCESS_TOKEN') and kwargs['env'].get('VERIFY_TREE')=='candidate':
+                collector['check']=proc
+            return proc
+        subprocess.Popen=instrumented_popen
     subject = importlib.import_module('verify')
     sys.argv = [str(package/'verify.py'), *sys.argv[4:]]
     sys.exit(subject.main())

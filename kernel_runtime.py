@@ -378,7 +378,7 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
                 'execution': {'complete': not unavailable},
                 'cleanup': {'complete': not unavailable, 'survivors': []},
                 'assertions': {'complete': not unavailable, 'failed': contradicted},
-                'diagnostics': {'mode': 'disabled', 'state': 'disabled'}})
+                'diagnostics': {'mode': 'disabled', 'state': 'disabled', 'semantics': 'advisory-one-directional-v1'}})
             verdict = decision['verdict']
         code = {'supported': 0, 'contradicted': 1, 'unverifiable': 2}[verdict]
     raw_claim = args.raw_claim_file.read_text(encoding='utf-8') if args.raw_claim_file else None
@@ -397,7 +397,8 @@ def verify(args, repo, base, spec, raw_spec, spec_rel, api):
               'runtime_inputs': [{'check': c['name'], 'declared': c['argv'][0], 'resolved': c.get('_runtime_executable')} for c in checks if c['_entry_position']],
               'changed_files': changed, 'protected_changes': protected_hits, 'out_of_scope': out_of_scope,
               'mutable_test_changes': mutable_tests, 'bypasses': bypasses, 'base_checks': base_results,
-              'candidate_checks': candidate_results, 'verdict': verdict, 'reasons': contradicted + unavailable, 'warnings': warnings}
+              'candidate_checks': candidate_results, 'verdict': verdict, 'reasons': contradicted + unavailable, 'warnings': warnings,
+              'sandbox_receipt_corrections': (sandbox_context or {}).get('diagnostic_corrections', [])}
     log.parent.mkdir(parents=True, exist_ok=True)
     with log.open('a', encoding='utf-8') as handle:
         handle.write(json.dumps(record, ensure_ascii=False) + '\n')

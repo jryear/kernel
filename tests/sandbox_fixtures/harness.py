@@ -9,6 +9,8 @@ from contextlib import contextmanager
 import hashlib
 import json
 import os
+import pwd
+import traceback
 from pathlib import Path
 import shutil
 import signal
@@ -52,8 +54,10 @@ def run(argv, cwd=None, env=None, timeout=45):
     except subprocess.TimeoutExpired:
         try: os.killpg(proc.pid, signal.SIGKILL)
         except ProcessLookupError: pass
-        proc.communicate()
-        raise Unavailable('fixture command timed out: ' + Path(argv[0]).name)
+        stdout,stderr=proc.communicate()
+        error=Unavailable('fixture command timed out: ' + Path(argv[0]).name)
+        error.stdout=stdout;error.stderr=stderr
+        raise error
     return subprocess.CompletedProcess(argv, proc.returncode, stdout, stderr)
 
 
@@ -258,14 +262,63 @@ baseline_failures = ["NEW"]
         return '\n'.join(k+' = '+json.dumps(v) for k,v in self.policy.items())+'\n'
 
     def invoke(self):
+        """Archive owned evidence even on exceptions, before fixture teardown.
+
+        The directory is selected by the trusted test host and never enters the
+        nested candidate environment. A failure to retain evidence is a harness
+        failure, not a successful observation. Each invocation is unique.
+        """
+        archive_root = Path(os.environ.get('KERNEL_SANDBOX_EVIDENCE_DIR') or
+                            (Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sandbox-v5-fixture-evidence'))
+        archive_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if archive_root.is_symlink() or not archive_root.is_dir():
+            raise Unavailable('host evidence root is not a real directory')
+        archive = archive_root / (self.case['id'] + '-' + self.logging + '-' + uuid.uuid4().hex)
+        archive.mkdir(mode=0o700)
+        result = None
+        failure = None
+        try:
+            result = self._invoke()
+            return result
+        except BaseException:
+            failure = traceback.format_exc()
+            raise
+        finally:
+            try:
+                for name in ('operator-scratch', 'final-receipts'):
+                    source = self.root / name
+                    if source.exists():
+                        shutil.copytree(source, archive/name, symlinks=True)
+                for name in ('driver.json', 'operator.json', 'owned-checks.jsonl',
+                             'fault-applied', 'fault-progress.json', 'bundle-launch-audit.jsonl',
+                             'collector-adapter-audit.jsonl', 'collector-live.raw', 'driver-stdout.txt', 'driver-stderr.txt'):
+                    source = self.root/name
+                    if source.is_file() and not source.is_symlink():
+                        shutil.copy2(source, archive/name)
+                data = {'case_id':self.case['id'], 'mode':self.logging,
+                        'fixture_root':str(self.root), 'exception':failure,
+                        'result':result}
+                (archive/'invocation.json').write_text(json.dumps(data,sort_keys=True,indent=2)+'\n')
+            except (OSError, TypeError, ValueError) as error:
+                raise Unavailable('could not retain nested fixture evidence: '+str(error)) from error
+
+    def _invoke(self):
         operator={'schema':1,'bundle_receipt':self.bundle_receipt,'diagnostics':{'mode':self.logging},
                   'additional_protected_paths':[str(self.package),str(self.bundle),str(self.protected),str(self.logroot)],
                   'secret_read_paths':[str(self.secret),str(self.dotenv)],
-                  'scratch_root':str(self.out)}
+                  'scratch_root':str(self.out),
+                  'qualification_record':str(Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sol5-runtime-qualification.json'),
+                  'qualification_record_sha256':'05928d0af193342eaa503504b9576e64b2b443087bb4846305d48b70ba091712'}
         op_path=self.root/'operator.json';op_path.write_text(json.dumps(operator))
         env={**os.environ,'VERIFY_RELEASE_SHA256':self.release_digest,'PYTHONDONTWRITEBYTECODE':'1',
              'VERIFY_SANDBOX':'1','VERIFY_SANDBOX_OPERATOR':str(op_path)}
         request={'fault':self.fault,'fault_marker':str(self.root/'fault-applied')}
+        if self.case['layer']=='diagnostic':
+            request['collector_fixture']={'case_id':self.case['id'], 'target':str(self.target),
+                'scratch_root':str(self.out), 'root':str(self.root),
+                'nonce':self.config.get('diagnostic_barrier_nonce'),
+                'adapter':str(HERE/'collector_adapter.mjs')}
+
         if self.fault in ('supervisor_death','kill','ps_or_identity_observation'):
             request.update(owned_check_log=str(self.root/'owned-checks.jsonl'), scratch_root=str(self.out),
                            progress_marker=str(self.root/'fault-progress.json'),
@@ -281,7 +334,14 @@ baseline_failures = ["NEW"]
         log_mode=stat.S_IMODE(self.log.lstat().st_mode)
         owned_cleanup=None
         try:
-            result=run(argv,cwd=self.repo,env=env)
+            try:
+                result=run(argv,cwd=self.repo,env=env)
+            except BaseException as error:
+                (self.root/'driver-stdout.txt').write_text(getattr(error,'stdout','') or '')
+                (self.root/'driver-stderr.txt').write_text(getattr(error,'stderr','') or '')
+                raise
+            (self.root/'driver-stdout.txt').write_text(result.stdout)
+            (self.root/'driver-stderr.txt').write_text(result.stderr)
         finally:
             if self.fault in ('supervisor_death','kill','ps_or_identity_observation'):
                 owned_cleanup=cleanup_owned_checks(self.root/'owned-checks.jsonl')
@@ -327,22 +387,13 @@ def receipt_check(observed, case, logging, *, require_enforced=True):
         return
     record=observed['record']
     if not record or 'verdict' not in record: raise Unavailable('no complete nested verdict')
-    if expected == 'supported' and record.get('verdict') == 'unverifiable':
-        for check in record.get('base_checks', []) + record.get('candidate_checks', []):
-            diagnostics = check.get('sandbox_receipt', {}).get('diagnostics', {})
-            canary = diagnostics.get('canary', {})
-            if (diagnostics.get('mode') == 'enabled' and
-                    canary.get('write_denied') is True and
-                    canary.get('scratch_succeeded') is True and
-                    canary.get('event_received') is False):
-                raise Unavailable(case['id']+': enabled diagnostic canary positive control unavailable')
     need(record['verdict']==expected,case['id']+': expected '+expected+', got '+record['verdict'])
     need(record.get('merge_base')==observed['expected_base'] and record.get('head')==observed['expected_head'],'receipt not bound to committed fixture inputs')
     receipt=observed['check'].get('sandbox_receipt') or record.get('sandbox_receipt')
     if not isinstance(receipt,dict): raise Unavailable(case['id']+': sandbox receipt unavailable')
     for key in ['schema','identity','release','bundle','platform','policy','lifecycle','integrity','diagnostics','decision','assurance']:
         if key not in receipt: raise Unavailable(case['id']+': missing sandbox receipt '+key)
-    need(receipt['schema']==2,'unknown sandbox receipt schema')
+    need(receipt['schema']==3,'unknown sandbox receipt schema')
     identity=receipt['identity']
     for key in ['run_id','check','phase','repetition']:
         if key not in identity:raise Unavailable('incomplete invocation identity '+key)
@@ -358,7 +409,28 @@ def receipt_check(observed, case, logging, *, require_enforced=True):
         if key not in receipt['integrity']:raise Unavailable('incomplete integrity observation '+key)
     for key in ['mode','state','received','persisted','dropped','spool_capacity','drain_deadline','upstream_completeness','raw_events_sha256']:
         if key not in receipt['diagnostics']:raise Unavailable('incomplete diagnostic quality '+key)
-    need(receipt['diagnostics']['upstream_completeness']=='unknown','OS log completeness invented')
+    diag = receipt['diagnostics']
+    need(diag['upstream_completeness']=='unknown','OS log completeness invented')
+    need(diag.get('semantics')=='advisory-one-directional-v1','wrong diagnostic semantics')
+    need(diag.get('absence_proves_nothing') is True and diag.get('absence_is_failure') is False,
+         'diagnostic absence misrepresented')
+    need(diag.get('collector_ready') is False and diag.get('complete') is False,
+         'invented collector readiness/completeness')
+    need(isinstance(diag.get('events'),list) and isinstance(diag.get('faults'),list),
+         'diagnostic events and faults index required')
+    canary=diag.get('canary')
+    if lifecycle_required := receipt.get('lifecycle',{}).get('launched'):
+        need(isinstance(canary,dict),'missing canary operation evidence')
+        need(canary.get('event_gates_verdict') is False,'canary event improperly gates verdict')
+        need(canary.get('write_denied') is True and canary.get('scratch_succeeded') is True,
+             'required independent preflight operations missing')
+        if logging=='disabled':
+            need(canary.get('match_status')=='not_collected' and canary.get('event_received') is None,
+                 'disabled canary must not imply collection')
+        else:
+            need(canary.get('match_status') in ('matched','absent','unmatched'), 'invalid canary match state')
+            need(canary.get('event_received') is (canary.get('match_status')=='matched'),
+                 'canary event flag not bound to match')
     for key in ['facts','unavailable_reasons','contradictions','verdict']:
         if key not in receipt['decision']:raise Unavailable('incomplete decision evidence '+key)
     need(receipt['decision']['verdict']==record['verdict'],'inner sandbox decision disagrees with aggregate')
@@ -374,8 +446,10 @@ def receipt_check(observed, case, logging, *, require_enforced=True):
         for key in ['started_at','exited_at','cleanup_finished_at','finalized_at']:
             if key not in lifecycle:raise Unavailable('incomplete lifecycle timestamps')
         need(lifecycle['started_at']<=lifecycle['exited_at']<=lifecycle['cleanup_finished_at']<=lifecycle['finalized_at'],'receipt finalized before cleanup')
-    for prohibited in ['all_attempts_detected','transient_writes_detected','complete_logs','semantic_attestation','exhaustive_descendant_containment','loopback_only_binding','literal_address_only']:
+    for prohibited in ['all_attempts_detected','transient_writes_detected','complete_logs','semantic_attestation','exhaustive_descendant_containment','loopback_only_binding','literal_address_only','independent_nonnetwork_policy_oracle']:
         need(receipt['assurance'].get(prohibited) is False,'unsupported assurance claim: '+prohibited)
+    need(receipt['assurance'].get('swallowed_undelivered_denial_may_be_supported') is True,
+         'swallowed undelivered denial limitation missing')
     if require_enforced:
         need(receipt['bundle'].get('srt_version')=='0.0.81' and receipt['bundle'].get('node_version')=='v24.22.0','unqualified sandbox/Node version')
         need(receipt['bundle'].get('lock_sha256')==observed['expected_lock'],'transitive dependency lock not pinned')
@@ -624,7 +698,7 @@ def classifier_case(top,case,mode,package):
                         'unavailable_reason':unavailable},
            'cleanup':{'complete':unavailable not in ('survivor','timeout'),'survivors':[]},
            'assertions':{'complete':unavailable!='missing_result','failed':[]},
-           'diagnostics':{'mode':mode,'state':'disabled' if mode=='disabled' else 'active',
+           'diagnostics':{'semantics':'advisory-one-directional-v1','mode':mode,'state':'disabled' if mode=='disabled' else 'active',
                           'upstream_completeness':'unknown','emitted':0,'persisted':0,'dropped':0,
                           'collector_ready':False,'complete':False}}
     if source.get('judge_cache_created'):
@@ -637,7 +711,7 @@ def classifier_case(top,case,mode,package):
     if 'emitted' in source:
         # Actually generate and persist >100 distinct fixture events. This is a
         # deterministic classifier/spool-input fixture, NOT OS log completeness.
-        events=[{'run_id':'fixture-run','seq':i} for i in range(source['emitted'])]
+        events=[{'run_id':'fixture-run','seq':i,'type':'synthetic_non_denial','relevance':'benign'} for i in range(source['emitted'])]
         path=top/'events.jsonl';path.write_text(''.join(json.dumps(e)+'\n' for e in events))
         facts['diagnostics'].update(emitted=len(events),persisted=len(path.read_text().splitlines()),dropped=source['dropped'],store_tail_capacity=100)
     if source.get('collector_fault'):
@@ -650,6 +724,27 @@ def classifier_case(top,case,mode,package):
             facts['diagnostics'].update(emitted=len(events),persisted=len(spool.read_text().splitlines()),dropped=len(events)-len(retained),spool_overflow=fault=='overflow_spool')
     for key in ['collector_fault','drain_timed_out','pending_event','delayed_event','drained_before_deadline','attribution','late_event']:
         if key in source:facts['diagnostics'][key]=source[key]
+    if source.get('canary_absent'):
+        facts['diagnostics']['canary']={'write_denied':True,'scratch_succeeded':True,
+                                      'event_received':False,'match_status':'absent'}
+    if case['id']=='DELAYED_AFTER_LEADER_EXIT':
+        facts['diagnostics']['events']=[{'origin':'fixture-run','phase':'drain',
+             'relevance':'benign','exemption_id':'synthetic_non_denial'}]
+    # For these deterministic classifier checks each named fault is the only
+    # deficient dimension; the event pipeline reproduction is separate.
+    reason_by_case={'SUBSCRIPTION_DROP':'diagnostic_loss','SPOOL_OVERFLOW':'diagnostic_loss',
+                    'COLLECTOR_DEATH':'diagnostic_collector_fault',
+                    'AMBIGUOUS_EVENT_ID':'diagnostic_attribution_ambiguous',
+                    'CROSS_INVOCATION_EVENT':'diagnostic_cross_invocation',
+                    'DRAIN_TIMEOUT':'diagnostic_drain_incomplete',
+                    'LATE_RELEVANT_DENIAL':'observed_relevant_denial',
+                    'CHANGE_PLUS_COLLECTOR_LOSS':'diagnostic_loss'}
+    if case['id'] in reason_by_case:
+        reason=reason_by_case[case['id']]
+        facts['diagnostics'].update(state='active',collector_fault=None,dropped=0,spool_overflow=False,
+                                    drain_timed_out=False,attribution='original_invocation',
+                                    faults=[{'code':reason}])
+        facts['execution'].update(complete=True,unavailable_reason=None)
     # Invisible attempts are deliberately not supplied as facts: the classifier
     # sees exactly the same complete, clean observation as the clean control.
     req=top/'facts.json';req.write_text(json.dumps(facts))
@@ -659,6 +754,21 @@ def classifier_case(top,case,mode,package):
     classified=parse_line(result.stdout,'SANDBOX_CLASSIFICATION ')
     if not isinstance(classified,dict):raise Unavailable('classifier did not return a structured result')
     need(classified.get('verdict')==case['expected'],case['id']+': wrong evidence classification')
+    if case['id'] in reason_by_case:
+        need(reason_by_case[case['id']] in classified.get('unavailable_reasons', []),
+             case['id']+': named fault reason missing')
+    if case['id']=='CANARY_MISSING':
+        combined=json.loads(json.dumps(facts))
+        combined['diagnostics'].update(state='failed',collector_fault='suppress_canary_event')
+        combined['execution']['complete']=False
+        combined_path=top/'original-combined-fault.json';combined_path.write_text(json.dumps(combined))
+        combined_result=run([sys.executable,'-B',str(HERE/'subject_driver.py'),'classify',str(package),str(combined_path)],
+                            env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
+        combined_classification=parse_line(combined_result.stdout,'SANDBOX_CLASSIFICATION ')
+        need(combined_result.returncode==0 and isinstance(combined_classification,dict) and
+             combined_classification.get('verdict')=='unverifiable',
+             'original combined canary/collector/incomplete input must remain unverifiable')
+        (top/'original-combined-classification.json').write_text(json.dumps(combined_classification))
     if changes and facts['integrity']['available']:
         need(all(change in classified.get('facts',[]) for change in changes),'deterministic change facts discarded under precedence')
     if source.get('judge_cache_created'):
@@ -926,9 +1036,112 @@ def isolation_case(top,case,mode,bundle):
     return {'id':case['id'],'mode':mode,'runs':rows}
 
 
+def diagnostic_pipeline_case(top,case,mode,bundle):
+    if case['id'] not in ('MIDCHECK_RELEVANT_DENIAL_PASSING','DRAIN_RELEVANT_DENIAL_PASSING',
+            'CANARY_LOOKALIKE_REJECTED','CANARY_CANDIDATE_PHASE_REJECTED','CANARY_WRONG_ID_REJECTED',
+            'CANARY_WRONG_PID_REJECTED','CANARY_WRONG_PATH_REJECTED','CANARY_OUTSIDE_WINDOW_REJECTED'):
+        raise Unavailable(case['id']+': controlled collector-to-decision fixture is not yet implemented')
+    control=Probe(top/'control',case,mode,bundle)
+    control.config.update(operation='write',target=str(control.target))
+    direct=direct_control(control)
+    probe=Probe(top/'subject',case,mode,bundle)
+    probe.config.update(operation='write',target=str(probe.target),swallow_denial=True,
+                        diagnostic_barrier_nonce=uuid.uuid4().hex,
+                        diagnostic_barrier_handshake='$TMP/diagnostic-handshake.json',
+                        diagnostic_barrier_release='$TMP/diagnostic-release.json')
+    probe.prepare();observed=probe.invoke()
+    audit_path=probe.root/'collector-adapter-audit.jsonl'
+    if not audit_path.exists(): raise Unavailable('collector test adapter produced no audit')
+    rows=[json.loads(line) for line in audit_path.read_text().splitlines()]
+    injected=[row for row in rows if row.get('type')=='injected']
+    if len(injected)!=1:
+        raise Unavailable('exactly one host injection is required; audit='+json.dumps(rows))
+    witness=injected[0]['witness']
+    need(witness.get('errno') in DENIED and witness.get('outcome')=='denied', 'external denied-operation witness absent')
+    need(not observed['changes'] and observed['prefix_unchanged'],'protected state changed')
+    need(observed['operation'] is None,'swallowed denied operation leaked to the subject result')
+    need(injected[0]['leader_exited'] is (case['id']=='DRAIN_RELEVANT_DENIAL_PASSING'),
+         'injection did not occur in the required lifecycle phase')
+    receipt=receipt_check(observed,case,mode)
+    reasons=receipt['decision'].get('unavailable_reasons',[])
+    need('observed_relevant_denial' in reasons,'received denial did not reach subject decision')
+    if case['id'].startswith('CANARY_'):
+        canary=receipt['diagnostics']['canary']
+        need(canary.get('event_received') is False,'candidate event was incorrectly accepted as the preflight canary')
+        required=('run_id','check','phase','repetition','probe_id','command_tag','path','operation',
+                  'denial_result','subject_pid','subject_start','executable','executable_sha256')
+        binding={key:canary[key] for key in (*required,'preflight_start','preflight_end','syscall_start',
+                                               'syscall_end','clock_uncertainty_seconds')}
+        event={key:binding[key] for key in required}
+        event['occurrence_epoch']=(binding['syscall_start']+binding['syscall_end'])/2
+        def real_match(value,name):
+            request_path=top/(name+'.json');request_path.write_text(json.dumps({'binding':binding,'event':value}))
+            outcome=run([sys.executable,'-B',str(HERE/'subject_driver.py'),'match_canary',str(probe.package),str(request_path)],
+                        env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
+            match=parse_line(outcome.stdout,'CANARY_MATCH ')
+            if outcome.returncode or not isinstance(match,dict): raise Unavailable('production canary matcher unavailable')
+            (top/(name+'-match.json')).write_text(json.dumps(match))
+            return match
+        need(real_match(event,'bound-positive').get('matched') is True,'bound preflight positive control failed')
+        rejected=dict(event)
+        field={'CANARY_LOOKALIKE_REJECTED':'operation','CANARY_CANDIDATE_PHASE_REJECTED':'phase',
+               'CANARY_WRONG_ID_REJECTED':'probe_id','CANARY_WRONG_PID_REJECTED':'subject_pid',
+               'CANARY_WRONG_PATH_REJECTED':'path','CANARY_OUTSIDE_WINDOW_REJECTED':'occurrence_epoch'}[case['id']]
+        if field=='subject_pid':rejected[field]+=1
+        elif field=='occurrence_epoch':rejected[field]=binding['preflight_end']+1
+        elif field=='phase':rejected[field]='candidate' if binding['phase']!='candidate' else 'base'
+        else:rejected[field]=str(rejected[field])+'-lookalike'
+        negative=real_match(rejected,'rejected-single-field')
+        need(negative.get('matched') is False and len(negative.get('reasons',[]))==1,
+             'named single-field canary mismatch was not isolated')
+    events=receipt['diagnostics'].get('events',[])
+    matching=[event for event in events if event.get('subject_pid')==witness['pid'] and
+              event.get('resource')==str(probe.target) and event.get('relevance')=='relevant_denial']
+    need(bool(matching),'attributed denial event not retained')
+    need(receipt['assertions']['provisional'] is not None and not receipt['assertions']['provisional'].get('failed',[]),
+         'passing assertion evidence missing')
+    return {'id':case['id'],'mode':mode,'verdict':observed['record']['verdict'],
+            'control':direct,'host_witness':witness,'injected':injected[0],
+            'events':matching,'receipt_identity':receipt['identity']}
+
+
 def run_case(top,case,mode,bundle,classifier_package):
+    """Retain disposable variant artifacts even when the dispatcher raises."""
+    archive_root = Path(os.environ.get('KERNEL_SANDBOX_EVIDENCE_DIR') or
+                        (Path(pwd.getpwuid(os.getuid()).pw_dir)/'.local/state/kernel/sandbox-v5-fixture-evidence'))
+    archive_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    archive = archive_root / ('variant-' + case['id'] + '-' + mode + '-' + uuid.uuid4().hex)
+    archive.mkdir(mode=0o700)
+    failure = None
+    result = None
+    try:
+        result = _run_case(top,case,mode,bundle,classifier_package)
+        return result
+    except BaseException:
+        failure = traceback.format_exc()
+        raise
+    finally:
+        try:
+            if top.exists():
+                shutil.copytree(top,archive/'fixture',symlinks=True,
+                                ignore=shutil.ignore_patterns('.git','judge_copy','bundle_copy','qualified-bundle-copy'))
+            (archive/'outcome.json').write_text(json.dumps({'id':case['id'],'mode':mode,
+                'result':result,'exception':failure},sort_keys=True,indent=2)+'\n')
+        except (OSError, TypeError, ValueError) as error:
+            raise Unavailable('could not retain variant evidence: '+str(error)) from error
+
+
+def _run_case(top,case,mode,bundle,classifier_package):
     top.mkdir()
-    if case['layer']=='classifier':return classifier_case(top/'facts',case,mode,classifier_package)
+    if case['layer']=='diagnostic':
+        return diagnostic_pipeline_case(top,case,mode,bundle)
+    if case['layer']=='classifier':
+        result=classifier_case(top/'facts',case,mode,classifier_package)
+        if case['id'] in {'SUBSCRIPTION_DROP','SPOOL_OVERFLOW','COLLECTOR_DEATH',
+                          'AMBIGUOUS_EVENT_ID','CROSS_INVOCATION_EVENT','DRAIN_TIMEOUT',
+                          'LATE_RELEVANT_DENIAL'}:
+            raise Unavailable(case['id']+': controlled collector pipeline reproduction remains required')
+        return result
     if case['layer']=='dependency':return dependency_case(top,case,mode,bundle)
     if case['layer']=='isolation':return isolation_case(top,case,mode,bundle)
     if case['layer']=='policy':
@@ -942,7 +1155,7 @@ def run_case(top,case,mode,bundle,classifier_package):
 
 
 GROUPS = {
-    'effect-classifier': ('effect', 'classifier'),
+    'effect-classifier': ('effect', 'classifier', 'diagnostic'),
     'protocol': ('protocol',),
     'policy-dependency': ('policy', 'dependency'),
     'isolation': ('isolation',),
@@ -953,7 +1166,7 @@ def exercise(group):
     matrix=json.loads((HERE/'matrix.json').read_text())
     cases=[case for case in matrix['cases'] if case['layer'] in GROUPS[group]];need(len({c['id'] for c in cases})==len(cases),'duplicate matrix cases')
     bundle=os.environ.get('KERNEL_SANDBOX_BUNDLE_RECEIPT')
-    detail={'protocol':'sandbox-freeze-4','group':group,'matrix_cases':len(cases),'observations':[],
+    detail={'protocol':'sandbox-v5-prefreeze-draft','group':group,'matrix_cases':len(cases),'observations':[],
             'scope':'observed effects and bounded receipts; no attempt/intent/semantic attestation'}
     with tempfile.TemporaryDirectory(prefix='kernel-sandbox-matrix-') as tmp:
         top=Path(tmp).resolve()

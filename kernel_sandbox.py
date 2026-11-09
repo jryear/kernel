@@ -51,17 +51,35 @@ def classify_sandbox_evidence(evidence):
     elif assertions.get('failed'):
         contradictions.append('complete behavioral assertion failed')
     mode = diagnostics.get('mode')
+    if diagnostics.get('semantics') != 'advisory-one-directional-v1':
+        unavailable.append('diagnostic_evidence_invalid')
     if mode == 'enabled':
-        if (diagnostics.get('state') != 'active' or diagnostics.get('dropped', 0) or
-                diagnostics.get('collector_fault') or diagnostics.get('drain_timed_out') or
-                diagnostics.get('attribution') not in (None, 'original_invocation') or
-                diagnostics.get('late_event') == 'relevant_denial' or diagnostics.get('spool_overflow')):
-            unavailable.append('enabled diagnostics incomplete or ambiguous')
-        canary = diagnostics.get('canary')
-        if canary and canary.get('event_received') is False:
-            unavailable.append('enabled diagnostic canary absent')
+        # Absence is diagnostic only. Explicit loss and lifecycle failures are
+        # distinct from an event which was never delivered upstream.
+        if diagnostics.get('state') != 'active' or diagnostics.get('collector_fault'):
+            unavailable.append('diagnostic_collector_fault')
+        if diagnostics.get('dropped', 0) or diagnostics.get('spool_overflow'):
+            unavailable.append('diagnostic_loss')
+        if diagnostics.get('drain_timed_out'):
+            unavailable.append('diagnostic_drain_incomplete')
+        if diagnostics.get('attribution') not in (None, 'original_invocation'):
+            unavailable.append('diagnostic_attribution_ambiguous')
+        for fault in diagnostics.get('faults', []):
+            code = fault.get('code') if isinstance(fault, dict) else fault
+            if isinstance(code, str) and code not in unavailable:
+                unavailable.append(code)
+        for event in diagnostics.get('events', []):
+            if event.get('relevance') == 'relevant_denial' and 'observed_relevant_denial' not in unavailable:
+                unavailable.append('observed_relevant_denial')
+            elif event.get('relevance') == 'ambiguous' and 'diagnostic_attribution_ambiguous' not in unavailable:
+                unavailable.append('diagnostic_attribution_ambiguous')
+        # Legacy inputs remain conservative; production uses indexed events.
+        if diagnostics.get('late_event') == 'relevant_denial' and not diagnostics.get('events'):
+            unavailable.append('observed_relevant_denial')
     elif mode == 'disabled':
-        if diagnostics.get('state') != 'disabled':
+        if (diagnostics.get('state') != 'disabled' or diagnostics.get('received', 0) or
+                diagnostics.get('persisted', 0) or diagnostics.get('events') or
+                diagnostics.get('monitor', {}).get('started')):
             unavailable.append('diagnostic mode changed')
     else:
         unavailable.append('diagnostic mode unavailable')

@@ -13,8 +13,8 @@ It bounds partial lines at 65,536 characters and reports malformed, orphaned,
 oversized or truncated framing as ambiguous evidence. The supervisor persists
 subscription events through observed collector close and records arrivals after
 the drain deadline as unavailable evidence. These repairs do not establish
-complete OS delivery: an enabled invocation with a missing canary event, known
-loss, ambiguous attribution or incomplete shutdown remains unverifiable. Exact
+complete OS delivery. Missing canary events alone do not change a verdict;
+known loss, ambiguous attribution or incomplete shutdown remains unverifiable. Exact
 patch bytes and changed module postimages are authenticated in each new bundle;
 the TCP policy emission remains unchanged by the diagnostic framing repair.
 
@@ -23,8 +23,8 @@ with received/retained byte counts, hash, process identity, exact log predicate
 and lifecycle timestamps. The supervisor observes the log command's startup
 banner before publishing prepared launch data; that banner is startup progress,
 not a readiness or completeness guarantee. The one-shot protected/scratch
-canary uses isolated Python without site hooks and still requires its actual
-denial event. Missing events are never replaced by retries or quiet drains.
+canary uses isolated Python without site hooks. Its denied protected write and
+successful scratch write remain launch gates; the bound event is diagnostic only. Missing events are never replaced by retries or quiet drains.
 
 ## Development bundle
 

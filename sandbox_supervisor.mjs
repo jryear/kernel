@@ -75,10 +75,11 @@ const now=()=>Date.now()/1000;
 let bannerText='', bannerSeen=false, signalBanner;
 const bannerReady=new Promise(resolve=>{signalBanner=resolve;});
 let rawFd, rawBytes=0, rawReceived=0;
+const rawChunks=[];
 const rawCapacity=8*1024*1024, rawHash=createHash('sha256');
 const rawPath=cfg.collector_spool_path || path.join(path.dirname(cfg.result_path),'collector.raw');
 let dropped=0, drainTimedOut=false, finishing=false, attribution='original_invocation', drainDeadline=null;
-let commandId, expectedEncodedCommand, lateEvent=null;
+let commandId, expectedEncodedCommand, lateEvent=null, sessionSuffix=null;
 const failCollector = message => {if (!collectorFault) collectorFault=message;};
 function afterDrainDeadline() {
   if (drainDeadline!==null && performance.now()>=drainDeadline) {
@@ -87,7 +88,15 @@ function afterDrainDeadline() {
 }
 const originalSpawn=childProcess.spawn;
 childProcess.spawn=function(file,args,options) {
-  const child=originalSpawn.apply(this,arguments);
+  if (cfg.diagnostics==='enabled' && path.basename(String(file))==='log' && Array.isArray(args) && args[0]==='stream') {
+    const index=args.indexOf('--predicate');
+    const predicate=index>=0 && typeof args[index+1]==='string' ? args[index+1] : '';
+    const match=/^\(eventMessage ENDSWITH "(_[A-Za-z0-9]+_SBX)"\)$/.exec(predicate);
+    if (!match) throw Error('unexpected collector predicate');
+    sessionSuffix=match[1];
+    args=[...args]; args[index+1]=`(senderImagePath ENDSWITH "/Sandbox") AND ${predicate}`;
+  }
+  const child=originalSpawn.call(this,file,args,options);
   if (cfg.diagnostics==='enabled' && path.basename(String(file))==='log' && Array.isArray(args) && args[0]==='stream') {
     monitorCount++;
     if (monitorCount!==1) failCollector('multiple sandbox log collectors');
@@ -101,11 +110,14 @@ childProcess.spawn=function(file,args,options) {
       if(data.length) afterDrainDeadline();
       if(data.length && collectorTimestamps.stdout_first_at===null)collectorTimestamps.stdout_first_at=now();
       rawReceived+=data.length;
+      const rawStart=rawBytes, receivedEpoch=now();
       try {
         const available=Math.max(0,rawCapacity-rawBytes), writeData=data.subarray(0,available);
         let offset=0;
         while(offset<writeData.length){const written=fs.writeSync(rawFd,writeData,offset,writeData.length-offset);if(written<=0)throw Error('short raw collector write');rawHash.update(writeData.subarray(offset,offset+written));offset+=written;rawBytes+=written;}
         if(writeData.length!==data.length)failCollector('raw collector spool capacity exceeded');
+        if (rawChunks.length>=20000) failCollector('raw collector chunk ledger capacity exceeded');
+        else rawChunks.push({start:rawStart,end:rawBytes,received_epoch:receivedEpoch,arrival_phase:finishing?'drain':'active'});
       } catch(error) {failCollector('raw collector spool write failed: '+String(error));}
       if(!bannerSeen){
         bannerText=(bannerText+data.toString('utf8')).slice(-8192);
@@ -119,20 +131,22 @@ syncBuiltinESMExports();
 let manager, unsubscribe, events=[], spoolFd, persisted=0, received=0, supervisorError=null;
 const spoolPath=cfg.spool_path || path.join(path.dirname(cfg.result_path),'diagnostic-events.jsonl');
 const spoolHash=createHash('sha256');
-const canaryPath=path.join(path.dirname(cfg.result_path),'canary-protected');
+// Expected-probe exemptions are decided by the trusted parent after it has
+// bound the actual probe PID, process start, executable and time window.
 function knownBenignDenial(event) {
   const match=/^.*\(\d+\) deny\(\d+\) (\S+) (.+)$/.exec(String(event.line || ''));
   if(!match)return false;
   const [,operation,resource]=match;
   return (operation==='sysctl-read' && resource==='kern.iossupportversion') ||
     (operation==='system-info' && resource==='vfs.disk-space') ||
-    ((operation==='file-write-create' || operation==='file-write-data') && resource===canaryPath);
+    false;
 }
 function saveEvent(event) {
   afterDrainDeadline();
   if (events.length>=10000) {dropped++;failCollector('diagnostic spool capacity exceeded');return;}
   if (event.encodedCommand!==expectedEncodedCommand) attribution='ambiguous';
   if (finishing && !knownBenignDenial(event)) lateEvent='relevant_denial';
+  event = {...event, received_epoch: now(), arrival_phase: finishing ? 'drain' : 'active'};
   const bytes=Buffer.from(JSON.stringify(event)+'\n');
   try {
     let offset=0;
@@ -165,7 +179,7 @@ try {
   commandId=randomUUID(); expectedEncodedCommand=Buffer.from(commandId).toString('base64');
   const ref=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',{network:{kernelLocalhostPorts:[]}},undefined,cfg.cwd,{commandId}));
   const actual=unwrap(await manager.wrapWithSandboxArgv(cfg.command,'/bin/bash',undefined,undefined,cfg.cwd,{commandId}));
-  const prepared={profile:actual.profile,argv:actual.argv,env:cfg.env,command_index:actual.command_index,proxies,template_context:{reference_profile:ref.profile,localhost_ports:cfg.localhost_ports,proxies,generator_sha256:'9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400'}};
+  const prepared={profile:actual.profile,argv:actual.argv,env:cfg.env,command_index:actual.command_index,proxies,command_tag:expectedEncodedCommand,session_suffix:sessionSuffix,template_context:{reference_profile:ref.profile,localhost_ports:cfg.localhost_ports,proxies,generator_sha256:'9da44b6ea3c1bb3f90052118b237d328dd38c2d0ce2a70ef6160dd81a1d95400'}};
   fs.writeFileSync(cfg.prepared_path,JSON.stringify(prepared),{mode:0o600,flag:'wx'});
   collectorTimestamps.prepared_at=now();
   if(cfg.diagnostics==='enabled' && (!monitor.started || monitorCount!==1 || monitor.exit)) failCollector('sandbox log collector unavailable');
@@ -208,6 +222,6 @@ finally {
     collector_fault:collectorFault,drain_timed_out:drainTimedOut,attribution,late_event:lateEvent,
     spool_path:spoolPath,spool_sha256:spoolHash.digest('hex'),persisted,monitor,
     collector_persisted_bytes:rawBytes,collector_received_bytes:rawReceived,collector_spool_sha256:rawSha256,collector_capacity:rawCapacity,
-    collector_raw:{path:cfg.diagnostics==='enabled'?rawPath:null,sha256:rawSha256,bytes:rawBytes,received_bytes:rawReceived,capacity:rawCapacity,banner_seen:bannerSeen,timestamps:collectorTimestamps}};
+    collector_raw:{path:cfg.diagnostics==='enabled'?rawPath:null,sha256:rawSha256,bytes:rawBytes,received_bytes:rawReceived,capacity:rawCapacity,banner_seen:bannerSeen,timestamps:collectorTimestamps,chunks:rawChunks}};
   try {fs.writeFileSync(cfg.result_path,JSON.stringify(result),{mode:0o600,flag:'wx'});} catch {process.exitCode=1;}
 }

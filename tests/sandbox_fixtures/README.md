@@ -1,3 +1,51 @@
+# Sandbox-v5 prefreeze draft — incomplete
+
+This fixture is a draft based on the preserved sandbox-v4 freeze. It has not been
+reviewed or frozen. The historical wording below that describes the old freeze,
+old counts or schema is historical background; the 2026-11-09 amendment in
+`docs/SANDBOX_DECISION.md` is binding. The current draft declares 214 IDs / 401
+variants: effect-classifier 137/247, protocol 13/26, policy-dependency 57/114,
+isolation 7/14. Of the additions, only mid-check and drain pipeline scaffolding is
+implemented; all other new diagnostic cases explicitly return Unavailable until
+exercised through their required real path. Seven strengthened fault rows also
+return Unavailable after their classifier control pending pipeline reproduction.
+A successful classifier check alone never completes those cases. No prefreeze
+sweep has yet established a result.
+
+Draft timeout ceilings are 3840/600/1860/600 seconds. The first is derived from
+the prior floor model, 247 variants, 616.67 projected seconds and the existing
+fourfold plus per-variant headroom. Actual v5 runtime has not been measured;
+recalculate these values after complete controlled reproductions and before
+review or freeze. `measure_cost.py` writes a new v5 external receipt, never the
+v4 receipt.
+
+Nested receipts use schema 3; the outer verification protocol remains schema 2.
+Logs are diagnostic, absence proves nothing. An observed, attributed relevant
+unexpected denial makes the affected check unverifiable during checks or drain.
+A missing event alone does not. Enabled collector failure, overflow, known loss,
+or ambiguous relevant attribution remains unverifiable. On one macOS 27.0 arm64
+host, cold spaced probes logged Apple system-binary denials 22/22 and third-party
+denials 0/27 while all 49 writes were blocked. Signing, system-volume location and
+runtime identity were not separated; rapid-cadence Python delivery is unexplained.
+These are not a universal rate or proven OS mechanism. A candidate swallowing an
+undelivered denial may be supported with otherwise complete passing evidence.
+Neither absent logs nor unchanged hashes detects that attempt; hashes show lasting
+changes at measured boundaries, not absence of attempts, transient writes or reads.
+
+The host fixture archive is selected by `KERNEL_SANDBOX_EVIDENCE_DIR`; direct
+prefreeze runs must set it to a unique operator-owned path outside the disposable
+fixture tree. Invocations and their raw collector/diagnostic streams, nested
+receipts, host evidence and errors are copied there before teardown. A host-only
+preload, `collector_adapter.mjs`, is inserted by the test adapter and uses a pipe
+passed only to the supervisor. It is not a production configuration or candidate
+input. Its negative reachability test and full event-path proof remain required.
+Production retains `NONNETWORK_GENERATOR_COMMON_MODE` and
+`ENTRYPOINT_EXTERNAL_AUTHENTICATION` as explicit release/red-team risks.
+
+---
+
+## Historical v4 fixture notes (superseded where noted)
+
 # Sandbox v4 freeze interface and evidence ceiling
 
 Freeze only. Nothing in these fixtures enforces a sandbox, provisions a runtime,

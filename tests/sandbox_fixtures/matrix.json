@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 5,
   "cases": [
     {
       "id": "DENY_JUDGE_WRITE",
@@ -1892,7 +1892,8 @@
       ],
       "evidence": [
         "retain reliable protected-change fact",
-        "aggregate unverifiable takes precedence"
+        "aggregate unverifiable takes precedence",
+        "known-loss reason required independently of canary absence"
       ],
       "params": {
         "facts": {
@@ -2478,20 +2479,19 @@
       "id": "CANARY_MISSING",
       "layer": "classifier",
       "operation": "classify",
-      "expected": "unverifiable",
+      "expected": "supported",
       "logging": [
         "enabled"
       ],
       "evidence": [
-        "expected canary operation outcome recorded",
-        "missing event recorded as collector gap"
+        "same-policy preflight independently denied the protected write and completed scratch write",
+        "healthy enabled collector and no known loss",
+        "absent bound event is diagnostic only"
       ],
       "params": {
-        "fault": "suppress_canary_event",
         "facts": {
           "diagnostics": "enabled",
-          "collector_fault": "suppress_canary_event",
-          "evidence_complete": false
+          "canary_absent": true
         }
       },
       "evidence_source": "deterministic host-side classifier injection; not live OS event completeness"
@@ -2507,7 +2507,8 @@
       "evidence": [
         "all 150 emitted events persisted by the subscription outside the 100-event in-memory tail",
         "no injected drop or spool loss",
-        "store tail rollover alone is not failure"
+        "store tail rollover alone is not failure",
+        "all 150 synthetic persisted events are explicitly benign and non-denial"
       ],
       "params": {
         "facts": {
@@ -2529,7 +2530,8 @@
         "enabled"
       ],
       "evidence": [
-        "injected dropped event count/gap retained"
+        "injected dropped event count/gap retained",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "fault": "drop_subscription_event",
@@ -2550,7 +2552,8 @@
         "enabled"
       ],
       "evidence": [
-        "spool capacity and dropped/lost count recorded"
+        "spool capacity and dropped/lost count recorded",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "fault": "overflow_spool",
@@ -2571,7 +2574,8 @@
         "enabled"
       ],
       "evidence": [
-        "collector exit and incomplete evidence recorded"
+        "collector exit and incomplete evidence recorded",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "fault": "terminate_collector",
@@ -2592,7 +2596,8 @@
         "enabled"
       ],
       "evidence": [
-        "event attribution ambiguity retained"
+        "event attribution ambiguity retained",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "fault": "ambiguous_run_id",
@@ -2614,7 +2619,8 @@
       ],
       "evidence": [
         "known benign delayed event drained and assigned to original invocation before deadline",
-        "no claim that quiet drain proves upstream completeness"
+        "no claim that quiet drain proves upstream completeness",
+        "explicit original-invocation attribution and benign relevance/exemption"
       ],
       "params": {
         "facts": {
@@ -2636,7 +2642,8 @@
       ],
       "evidence": [
         "unique invocation IDs prevent reassignment",
-        "missing isolation evidence fails closed"
+        "missing isolation evidence fails closed",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "fault": "inject_prior_run_event",
@@ -2926,7 +2933,8 @@
       ],
       "evidence": [
         "drain deadline expires with pending diagnostic event",
-        "incomplete evidence retained"
+        "incomplete evidence retained",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "facts": {
@@ -2947,7 +2955,8 @@
       ],
       "evidence": [
         "relevant denied operation arrives after leader exit but before finalization",
-        "affected invocation remains unverifiable"
+        "affected invocation remains unverifiable",
+        "v5 requires named typed reason and controlled real collector pipeline reproduction; other evidence independently healthy"
       ],
       "params": {
         "facts": {
@@ -3722,7 +3731,8 @@
       "evidence": [
         "reviewed frozen assertion explicitly tests a denied synthetic write",
         "EPERM/EACCES independently observed, protected bytes unchanged",
-        "valid complete assertion receipt may be supported; no blanket rule turns all expected denials into failure"
+        "valid complete assertion receipt may be supported; no blanket rule turns all expected denials into failure",
+        "expected event bound to frozen synthetic operation and assertion, subject PID, exact path, and interval; unrelated unexpected denial remains fatal"
       ]
     },
     {
@@ -4097,7 +4107,8 @@
       "evidence": [
         "reviewed generated-profile input fault reaches the production read-only validator seam",
         "authenticated profile mismatch or unavailable inspection returns exit 2 with lifecycle.launched=false",
-        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair"
+        "inspected bytes/hash and precise validation failure are retained; no candidate operation, retry or profile repair",
+        "comparison is not an independent non-network semantic oracle; NONNETWORK_GENERATOR_COMMON_MODE remains"
       ],
       "params": {
         "profile_fault": "nonnetwork_template",
@@ -4124,6 +4135,227 @@
         "identity": "patch_sha256_mismatch"
       },
       "evidence_source": "disposable patch-file bytes, original authenticated receipt and host-owned bundle-launch audit"
+    },
+    {
+      "id": "MIDCHECK_RELEVANT_DENIAL_PASSING",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "real third-party payload catches EPERM, passing result; host delivers attributed event through collector while payload remains behind barrier; observed_relevant_denial",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "MIDCHECK_RELEVANT_DENIAL_PASSING"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "DRAIN_RELEVANT_DENIAL_PASSING",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "same denied write and passing result; deliver attributed event after exit and before drain deadline; observed_relevant_denial",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "DRAIN_RELEVANT_DENIAL_PASSING"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_LOOKALIKE_REJECTED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "lookalike fails real matcher and exemption; independently attributed candidate event yields observed_relevant_denial; include bound positive control",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_LOOKALIKE_REJECTED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_CANDIDATE_PHASE_REJECTED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "candidate-phase event fails real matcher and exemption; independently attributed candidate event yields observed_relevant_denial; include bound positive control",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_CANDIDATE_PHASE_REJECTED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_WRONG_ID_REJECTED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "wrong ID fails real matcher and exemption; independently attributed candidate event yields observed_relevant_denial; include bound positive control",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_WRONG_ID_REJECTED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_WRONG_PID_REJECTED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "wrong subject PID fails real matcher and exemption; independently attributed candidate event yields observed_relevant_denial; include bound positive control",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_WRONG_PID_REJECTED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_WRONG_PATH_REJECTED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "wrong exact path fails real matcher and exemption; independently attributed candidate event yields observed_relevant_denial; include bound positive control",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_WRONG_PATH_REJECTED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_OUTSIDE_WINDOW_REJECTED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "wrong occurrence window fails real matcher and exemption; independently attributed candidate event yields observed_relevant_denial; include bound positive control",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_OUTSIDE_WINDOW_REJECTED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "ABSENT_EVENT_PASSING_ENABLED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "supported",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "healthy enabled collector and passing independent evidence; no delivery contributes to verdict",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "ABSENT_EVENT_PASSING_ENABLED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "SWALLOWED_INVISIBLE_DENIAL_ENABLED",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "supported",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "third-party payload catches actual EPERM, emits neutral passing result; independent witness stays outside subject; no denial delivered",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "SWALLOWED_INVISIBLE_DENIAL_ENABLED"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "THIRD_PARTY_CANARY_MISS_NON_GATING",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "supported",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "third-party Python preflight denies protected write and writes scratch with unchanged protected target; healthy collector and absent canary",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "THIRD_PARTY_CANARY_MISS_NON_GATING"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "CANARY_BOUND_DELAYED_DIAGNOSTIC",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "supported",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "bound preflight occurrence delivered during candidate execution before deadline, with independent occurrence and receive times",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "CANARY_BOUND_DELAYED_DIAGNOSTIC"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
+    },
+    {
+      "id": "POSTFINAL_RELEVANT_DENIAL_INVALIDATES",
+      "layer": "diagnostic",
+      "operation": "diagnostic_pipeline",
+      "expected": "unverifiable",
+      "logging": [
+        "enabled"
+      ],
+      "evidence": [
+        "preserve sealed supported receipt; append digest-bound correction and invalidate origin and dependent aggregate without reassignment",
+        "retain raw injected versus live stream, nested receipt, operation and cleanup evidence outside temporary teardown"
+      ],
+      "params": {
+        "pipeline_case": "POSTFINAL_RELEVANT_DENIAL_INVALIDATES"
+      },
+      "evidence_source": "host-owned controlled real collector input; independent operation evidence and production decision"
     }
   ],
   "known_gaps": [

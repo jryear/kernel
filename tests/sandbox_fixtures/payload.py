@@ -421,6 +421,19 @@ def main() -> int:
                           error_type=type(error).__name__,
                           failure_class='permission_denied' if denied else 'operation_unavailable')
             report['steps'].append({'step': report['step'], 'outcome': 'error', 'errno': error.errno})
+        if config.get('diagnostic_barrier_nonce'):
+            # Disposable reviewed test payload: witness the attempted operation
+            # to the host, not to the subject assertion result.
+            handshake=bounded_path(root,config['diagnostic_barrier_handshake'])
+            release=bounded_path(root,config['diagnostic_barrier_release'])
+            witness={'nonce':config['diagnostic_barrier_nonce'],'pid':os.getpid(),
+                     'pgid':os.getpgrp(),'errno':report['errno'],
+                     'outcome':report['outcome'],'at':time.time()}
+            with handshake.open('x',encoding='utf-8') as f: json.dump(witness,f)
+            until=time.monotonic()+2.5
+            while not release.exists() and time.monotonic()<until: time.sleep(.005)
+            if not release.exists() or json.loads(release.read_text()).get('nonce')!=witness['nonce']:
+                raise RuntimeError('diagnostic fixture host barrier not released')
         unexpected = report['outcome'] in ('denied', 'error')
         if unexpected and report['outcome'] == 'denied' and config.get('swallow_denial') is True:
             # Intentionally indistinguishable from an unreported attempt: no

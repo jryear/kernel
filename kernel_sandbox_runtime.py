@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import platform
 import shlex
+import select
 import shutil
 import signal
 import stat
@@ -20,6 +21,7 @@ import tempfile
 import time
 import uuid
 from kernel_bundle import authenticate, AuthenticationError, DependencyUnavailable, canonical_digest
+from kernel_diagnostics import SEMANTICS, parse_raw_events, process_events
 
 
 def snapshot(paths, excluded=()):
@@ -58,10 +60,21 @@ def load_context(spec, repo, log, tracked, links):
         if operator.get('schema') != 1 or operator.get('diagnostics', {}).get('mode') not in ('enabled', 'disabled'):
             raise AuthenticationError('invalid sandbox operator request')
         context['operator'] = operator
+        qualification_path = Path(operator['qualification_record']).resolve(strict=True)
+        if qualification_path == repo or repo in qualification_path.parents:
+            raise AuthenticationError('qualification record inside candidate repository')
+        qualification_bytes = qualification_path.read_bytes()
+        qualification_digest = hashlib.sha256(qualification_bytes).hexdigest()
+        if qualification_digest != operator.get('qualification_record_sha256'):
+            raise AuthenticationError('qualification record digest mismatch')
+        context['qualification'] = {'path': str(qualification_path), 'sha256': qualification_digest,
+                                    'record': json.loads(qualification_bytes)}
         if not operator.get('bundle_receipt'):
             raise DependencyUnavailable('external sandbox bundle receipt absent')
         # Keep authenticated metadata available for a conservative ownership refusal.
         context['receipt'] = json.loads(Path(operator['bundle_receipt']).read_text())
+        context['diagnostic_origins'] = {}
+        context['diagnostic_corrections'] = []
         context['bundle'] = authenticate(operator, repo)
         local_validator = Path(context['package'])/'kernel_profile.py'
         bundled_validator = context['bundle']['root']/'kernel_profile.py'
@@ -80,7 +93,9 @@ def _platform():
             if result.returncode == 0: build = result.stdout.strip()
         except OSError: pass
     return {'system': platform.system(), 'release': platform.release(), 'machine': platform.machine(),
-            'python': sys.version, 'git': shutil.which('git'), 'ps': shutil.which('ps'),
+            'python': sys.version, 'python_executable': str(Path(sys.executable).resolve()),
+            'python_executable_sha256': hashlib.sha256(Path(sys.executable).resolve().read_bytes()).hexdigest(),
+            'git': shutil.which('git'), 'ps': shutil.which('ps'),
             'build': build}
 
 
@@ -134,7 +149,7 @@ def run_check(root, check, phase, context):
     declaration = context['declaration']; ports = declaration['localhost_ports']
     row = {'name': check['name'], 'kind': check['kind'], 'expected_exit': 0, 'passed': False, 'harness_error': True}
     lifecycle = {'launched': False}; prepared = {}; validation = {'validator_id': 'kernel-srt-profile-validator-v1', 'exact_match': False, 'inspected_profile': '', 'errors': ['not inspected']}
-    diagnostics = {'mode': mode, 'state': 'disabled' if mode == 'disabled' else 'unavailable',
+    diagnostics = {'semantics': SEMANTICS, 'absence_proves_nothing': True, 'absence_is_failure': False, 'mode': mode, 'state': 'disabled' if mode == 'disabled' else 'unavailable',
                    'received': 0, 'persisted': 0, 'dropped': 0, 'spool_capacity': 10000,
                    'drain_deadline': 2, 'upstream_completeness': 'unknown',
                    'raw_events_sha256': hashlib.sha256(b'').hexdigest(), 'collector_ready': False, 'complete': False}
@@ -153,7 +168,7 @@ def run_check(root, check, phase, context):
     protected_paths += git_metadata(root) + git_metadata(context['repo'])
     if bundle:
         protected_paths += [bundle['root'], Path(operator['bundle_receipt']).resolve()]
-    profile_hash = None; inspected = ''
+    profile_hash = None; inspected = ''; canary_binding = {}
     try:
         # The declaration names usable output directory roots. Materialize only
         # the already validated, ignored, disjoint roots before observing the
@@ -208,20 +223,66 @@ def run_check(root, check, phase, context):
                 wrapped[index-5:index] != ['/usr/bin/sandbox-exec', '-p', profile, '/bin/bash', '-c'] or
                 wrapped.count(profile) != 1 or prepared['env'] != env):
             raise DependencyUnavailable('prepared launch bytes/environment differ from inspected policy')
-        canary = state/'canary-protected'; canary.write_text('protected')
-        # Avoid site hooks and filesystem discovery in the trusted probe. The
-        # protected open still reports an actual EPERM/EACCES and must have its
-        # own diagnostic event; no retry can substitute for a missing canary.
-        script = "import os,sys,json; denied=False\ntry:\n fd=os.open(sys.argv[1],os.O_WRONLY|os.O_TRUNC); os.close(fd)\nexcept OSError as e:denied=e.errno in (1,13)\nfd=os.open(sys.argv[2],os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600); os.write(fd,b'scratch'); os.close(fd)\nfd=os.open(sys.argv[2],os.O_RDONLY); data=os.read(fd,16); os.close(fd)\nprint(json.dumps({'denied':denied,'scratch':data==b'scratch'}))"
+        probe_id = uuid.uuid4().hex
+        canary = state/('canary-protected-' + probe_id); canary.write_text('protected')
+        canary_before = snapshot([canary])
+        # Probe is the same third-party Python executable under the inspected
+        # policy. Its first record identifies the actual payload, which waits
+        # while the trusted parent records a process start identity.
+        script = """import os,sys,json,time
+print(json.dumps({'pid':os.getpid(),'executable':os.path.realpath(sys.executable)}),flush=True)
+sys.stdin.readline()
+a=time.time_ns(); denied=False; error=None
+try:
+ fd=os.open(sys.argv[1],os.O_WRONLY|os.O_TRUNC); os.close(fd)
+except OSError as e:
+ error=e.errno; denied=e.errno in (1,13)
+b=time.time_ns()
+fd=os.open(sys.argv[2],os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600); os.write(fd,b'scratch'); os.close(fd)
+fd=os.open(sys.argv[2],os.O_RDONLY); data=os.read(fd,16); os.close(fd)
+print(json.dumps({'denied':denied,'errno':error,'scratch':data==b'scratch','syscall_start':a/1e9,'syscall_end':b/1e9}),flush=True)
+"""
         probe_argv = list(wrapped); probe_argv[index] = shlex.join([sys.executable, '-I', '-S', '-B', '-c', script, str(canary), str(scratch/'canary-allowed')])
-        # This reviewed probe creates no descendants. Keep its lifecycle separate
-        # from the arbitrary check's observed process-group cleanup boundary.
-        probe = subprocess.run(probe_argv, cwd=root, env=env, timeout=5,
-                               capture_output=True, text=True, start_new_session=True)
-        pre = json.loads(probe.stdout.strip())
-        diagnostics['canary'] = {'write_denied': pre.get('denied') is True, 'scratch_succeeded': pre.get('scratch') is True, 'event_received': False}
-        if probe.returncode or not all(pre.values()) or canary.read_text() != 'protected':
-            raise DependencyUnavailable('reviewed same-policy write canary failed')
+        preflight_start = time.time()
+        probe = subprocess.Popen(probe_argv, cwd=root, env=env, stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+        try:
+            readable, _, _ = select.select([probe.stdout], [], [], 5)
+            if not readable: raise DependencyUnavailable('preflight payload identity unavailable')
+            subject = json.loads(probe.stdout.readline())
+            pid = subject['pid']
+            ps = subprocess.run(['/bin/ps', '-p', str(pid), '-o', 'lstart='], capture_output=True, text=True, timeout=2)
+            subject_start = ps.stdout.strip() if ps.returncode == 0 else ''
+            if not subject_start or not isinstance(pid, int) or pid <= 0:
+                raise DependencyUnavailable('preflight payload start identity unavailable')
+            executable = str(Path(sys.executable).resolve(strict=True))
+            if subject.get('executable') != executable:
+                raise DependencyUnavailable('preflight payload executable identity differs')
+            executable_sha = hashlib.sha256(Path(executable).read_bytes()).hexdigest()
+            stdout, stderr = probe.communicate('run\n', timeout=5)
+        finally:
+            if probe.poll() is None:
+                probe.kill(); probe.communicate()
+        preflight_end = time.time()
+        pre = json.loads(stdout.strip())
+        canary_binding = {'run_id': token, 'check': check['name'], 'phase': phase, 'repetition': 0,
+            'probe_id': probe_id, 'command_tag': prepared['command_tag'], 'session_suffix': prepared['session_suffix'], 'path': str(canary.resolve()),
+            'operation': 'file-write-data', 'denial_result': 1, 'subject_pid': pid,
+            'subject_start': subject_start, 'executable': executable, 'executable_sha256': executable_sha,
+            'preflight_start': preflight_start, 'preflight_end': preflight_end,
+            'syscall_start': pre.get('syscall_start'), 'syscall_end': pre.get('syscall_end'),
+            'clock_domain': 'unix-realtime', 'clock_resolution_seconds': .001,
+            'clock_uncertainty_seconds': .001}
+        canary_after = snapshot([canary])
+        diagnostics['canary'] = {**canary_binding, 'write_denied': pre.get('denied') is True,
+            'errno': pre.get('errno'), 'scratch_succeeded': pre.get('scratch') is True,
+            'protected_before': canary_before, 'protected_after': canary_after,
+            'probe_exit': probe.returncode, 'probe_cleanup_complete': probe.poll() is not None,
+            'event_gates_verdict': False, 'event_received': None if mode == 'disabled' else False,
+            'match_status': 'not_collected' if mode == 'disabled' else 'absent',
+            'matched_event_ref': None, 'rejected_match_reasons': []}
+        if probe.returncode or pre.get('denied') is not True or pre.get('scratch') is not True or canary_before != canary_after:
+            raise DependencyUnavailable('preflight_operation_unavailable')
         lifecycle.update(launched=True, started_at=time.time())
         code, output, cleanup = execute(wrapped, root, env, check['timeout'])
         lifecycle.update(exited_at=time.time(), cleanup_finished_at=time.time())
@@ -276,8 +337,36 @@ def run_check(root, check, phase, context):
                                        raw_collector_bytes=len(collector_bytes),
                                        raw_collector_received_bytes=collected.get('collector_received_bytes'),
                                        raw_collector_capacity=collected.get('collector_capacity'),
-                                       raw_events_path=str(spool), raw_events_sha256=hashlib.sha256(raw_events).hexdigest())
-                    diagnostics.setdefault('canary', {})['event_received'] = any('canary-protected' in str(event) and 'deny' in str(event) for event in events)
+                                       raw_events_path=str(spool), raw_events_sha256=hashlib.sha256(raw_events).hexdigest(),
+                                       collector_raw_chunks=collected.get('collector_raw', {}).get('chunks', []))
+                    raw_denials, raw_faults = parse_raw_events(collector_bytes, events, prepared.get('session_suffix'), collected.get('collector_raw', {}).get('chunks', []))
+                    interpreted = process_events(raw_denials, canary_binding, collector_bytes, {**lifecycle, 'observed': cleanup.get('observed', [])}, context.get('diagnostic_origins'))
+                    diagnostics.update(events=interpreted['events'], raw_denial_count=len(raw_denials),
+                                       faults=list(dict.fromkeys(raw_faults + interpreted['faults'])))
+                    canary_record = diagnostics.setdefault('canary', {})
+                    canary_record['event_received'] = bool(interpreted['matched'])
+                    canary_record['match_status'] = ('matched' if interpreted['matched'] else
+                                                      'unmatched' if interpreted['rejected'] else 'absent')
+                    canary_record['matched_event_ref'] = interpreted['matched'][0] if interpreted['matched'] else None
+                    canary_record['rejected_match_reasons'] = interpreted['rejected']
+                    for correction in interpreted['corrections']:
+                        # The sealed original receipt is immutable. Append the
+                        # correction under this trusted invocation's state and
+                        # invalidate the dependent in-memory aggregate row.
+                        correction = {'schema': 1, 'kind': 'diagnostic_receipt_correction',
+                                      'receiving_run_id': token, 'at': time.time(), **correction,
+                                      'origin_verdict': 'unverifiable', 'aggregate_verdict': 'unverifiable'}
+                        correction_path = state/'corrections.jsonl'
+                        with correction_path.open('a', encoding='utf-8') as handle:
+                            handle.write(json.dumps(correction, sort_keys=True) + '\n')
+                            handle.flush(); os.fsync(handle.fileno())
+                        correction['path'] = str(correction_path)
+                        context.setdefault('diagnostic_corrections', []).append(correction)
+                        for origin in context.get('diagnostic_origins', {}).values():
+                            if origin['receipt_sha256'] == correction['original_receipt_sha256']:
+                                origin['row']['passed'] = False
+                                origin['row']['harness_error'] = True
+                                origin['row'].setdefault('receipt_corrections', []).append(correction)
                 lifecycle['supervisor'] = {'pid': supervisor.pid, 'exit': supervisor.returncode,
                                            'cleanup_finished_at': time.time()}
             except (OSError, ValueError, TypeError) as error:
@@ -316,12 +405,12 @@ def run_check(root, check, phase, context):
                   {'id': 'localhost_address_class_aliases', 'literal_spelling_enforced': False, 'detail': 'Seatbelt localhost is an OS address class, not a spelling or server identity filter.'},
                   {'id': 'mapped_outbound_qualification', 'status': 'unavailable', 'universal_compatibility': False, 'platform': {k: host[k] for k in ('system','release','machine')}, 'os_build': host['build'], 'node_version': raw_bundle.get('node', {}).get('version'), 'node_artifact_sha256': raw_bundle.get('node', {}).get('artifact_sha256'), 'detail': 'Mapped outbound behavior has not been qualified on this exact bundle/platform.'}]}
     metadata = {k: raw_bundle.get(k) for k in ('srt_version','lock_sha256','bundle_digest','patch_id','patch_sha256','patch_preimages','patch_postimages')}
-    metadata.update(node_version=raw_bundle.get('node', {}).get('version'), node_artifact_sha256=raw_bundle.get('node', {}).get('artifact_sha256'))
+    metadata.update(node_version=raw_bundle.get('node', {}).get('version'), node_artifact_sha256=raw_bundle.get('node', {}).get('artifact_sha256'), node_executable=(bundle or {}).get('node'), node_executable_sha256=raw_bundle.get('node', {}).get('executable_sha256'))
     lifecycle['finalized_at'] = time.time()
     enforced = (validation.get('exact_match') is True and
                 diagnostics.get('canary', {}).get('write_denied') is True and
                 diagnostics.get('canary', {}).get('scratch_succeeded') is True)
-    receipt = {'schema': 2, 'requested': True, 'enforced': enforced, 'identity': {'run_id': token, 'check': check['name'], 'phase': phase, 'repetition': 0},
+    receipt = {'schema': 3, 'qualification': context.get('qualification'), 'requested': True, 'enforced': enforced, 'identity': {'run_id': token, 'check': check['name'], 'phase': phase, 'repetition': 0},
                'release': {'manifest_sha256': os.environ.get('VERIFY_RELEASE_SHA256')}, 'bundle': metadata, 'platform': host,
                'policy': policy, 'lifecycle': lifecycle, 'integrity': {**evidence['integrity'], 'judge_before': before, 'judge_after': after, 'receipt_prefix_sha256': before.get(context['log'], {}).get('sha256')},
                'diagnostics': diagnostics, 'decision': decision, 'assertions': {'provisional': assertion, 'cleanup': cleanup,
@@ -329,6 +418,23 @@ def run_check(root, check, phase, context):
                    'provisional_sha256': hashlib.sha256(provisional_bytes).hexdigest() if provisional_bytes is not None else None},
                'assurance': {k: False for k in ('all_attempts_detected','transient_writes_detected','complete_logs','semantic_attestation','exhaustive_descendant_containment','loopback_only_binding','literal_address_only')},
                'dev_only': (bundle or {}).get('dev_only', False)}
+    receipt['assurance'].update(swallowed_undelivered_denial_may_be_supported=True, independent_nonnetwork_policy_oracle=False)
+    sealed_bytes = json.dumps(receipt, sort_keys=True, separators=(',', ':')).encode('utf-8')
+    receipt_path = state/'sandbox-receipt.json'
+    try:
+        with receipt_path.open('xb') as handle:
+            handle.write(sealed_bytes); handle.flush(); os.fsync(handle.fileno())
+        receipt_sha = hashlib.sha256(sealed_bytes).hexdigest()
+        row['sandbox_receipt_path'] = str(receipt_path)
+        row['sandbox_receipt_sha256'] = receipt_sha
+        if canary_binding.get('command_tag'):
+            context.setdefault('diagnostic_origins', {})[canary_binding['command_tag']] = {
+                'identity': receipt['identity'], 'receipt_sha256': receipt_sha,
+                'binding': canary_binding, 'row': row}
+    except OSError as error:
+        row.update(passed=False, harness_error=True, result_protocol_error='receipt persistence unavailable: ' + str(error))
+        decision['verdict'] = 'unverifiable'
+        decision.setdefault('unavailable_reasons', []).append('receipt_persistence_unavailable')
     row.update(exit=code, seconds=round(time.time()-start, 2), output=output, output_tail=output[-1500:], cleanup=cleanup,
                sandbox_receipt=receipt, failed_assertions=failed, assertion_result=assertion,
                passed=decision['verdict']=='supported', harness_error=decision['verdict']=='unverifiable')
