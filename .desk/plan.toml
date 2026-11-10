@@ -1,17 +1,19 @@
 [project]
 name = "kernel"
-outcome = "verify.py becomes a production gate: checks run sandboxed, the verifier refuses to run when tampered with, flaky checks can lower confidence but never certify, and a contract must reject known-wrong implementations before it can be frozen."
+outcome = "verify.py becomes a lean production gate: it refuses to run when tampered with, cleans up every process a check starts, and catches checks that change protected files, with no added dependencies and negligible per-run cost."
 main = "next"
-instruction_version = 7
+instruction_version = 8
 # Landing rule: 3.2.0 work lands on `next`, never `main`. main stays byte-equal to the installed 3.1.0 judge until the release item switches it.
 # - Plan edits are committed on main (the plan the installed checkout reads) and merged into next.
 # Release rule: the installed release judges the next one.
 # - 3.2.0 is built in a separate worktree. ~/code/_kernel stays on installed 3.1.0, read-only until release gates pass.
 # - Freeze each item's complete tests/fixtures first; named new assertions must FAIL against 3.1.0 and PASS on the candidate.
 # - The six existing self-tests are regressions, not evidence for new guarantees. Setup/CLI errors are not RED.
-# - Judge, frozen contracts/fixtures, final logs, expected digest and pinned sandbox bundle stay outside candidate write authority.
+# - Judge, frozen contracts/fixtures, final logs and expected digest stay outside candidate write authority.
 # - Judge invocations use python3 -B and nested Python uses PYTHONDONTWRITEBYTECODE=1; inventory the judge directory before/after.
-# Verdict rule (amendments 2026-11-06 and 2026-11-09):
+# Zack, 2026-11-10: "fuck the sandbox". 3.2.0 ships WITHOUT a sandbox: self-check + cleanup + protected-path integrity, stdlib only, fast on every run.
+# Sandbox branches (kernel/sandbox*, v1-v6) and docs/SANDBOX_DECISION.md are retained as history only; nothing below depends on them.
+# Historical verdict rule (sandbox era, amendments 2026-11-06 and 2026-11-09):
 # Verdict boundary: docs/SANDBOX_DECISION.md, including amendments 2026-11-06 and 2026-11-09.
 # Unverifiable precedes contradicted, which precedes supported; retain measured contradiction facts.
 # Observed attributed relevant unexpected denial at any phase -> unverifiable.
@@ -52,63 +54,31 @@ mandate = "Zack, 2026-11-03 review: neither branch's verdict proves the combinat
 acceptance = [["python3", "tests/self_check.py"], ["python3", "tests/cleanup.py"], ["python3", "-B", "selftest.py"]]
 
 [[item]]
-id = "sandbox"
-title = "Opt-in sandbox-v5: one-directional diagnostic logs, bound non-gating canary events and complete independent evidence"
-mandate = "Zack, 2026-11-09 go; docs/SANDBOX_DECISION.md amendments are binding. Preserve v4 freeze and UNVERIFIABLE claim. Before v5 freeze, reproduce every newly required case and strengthened event/fault path in disposable controlled runs and complete the full prefreeze sweep. Freeze reviewed v5 fixtures once, obtain genuine installed-3.1.0 behavioral baseline RED, then require full frozen sweep, regressions and four-check installed claim on exact candidate bytes. Observed relevant denials at any time and enabled collector faults remain unverifiable; absence alone does not. Keep same-policy operation preflight, third-party probe, pinned srt 0.0.81 exact-TCP patch, authenticated external bundle, independent inventories, cleanup and receipt protocol. Use nested sandbox receipt schema 3 and publish measured one-host logging and swallowed-denial limits. No Apple-binary substitution, retry-to-green, broadened policy or unconstrained fallback."
-depends = ["integrate-1", "sandbox-spike"]
-acceptance = [["python3", "-B", "tests/tamper_suite.py"]]
-# Off-machine egress remains in egress; retain every on-machine operation/effect control.
-# Canary absence is not collector loss. Collector crash/overflow/known drop remains unverifiable.
-# New oracle/receipt semantics belong only to sandbox-v5; never rewrite or relabel v4 evidence.
-# Preserve exact freeze/source/bundle/receipt bindings and all failed or unavailable observations.
-
-[[item]]
-id = "flake"
-title = "Frozen repetition schedule over fresh sandbox invocations; all required repetitions must pass to certify"
-mandate = "Zack, 2026-11-03. Freeze seeds, count and timeout handling before measurement. Record every repetition and fresh-state/cleanup evidence. Unavailable or quarantined repetitions and mixed pass/fail outcomes are unverifiable; a later green never erases prior evidence."
-depends = ["sandbox"]
-acceptance = [["python3", "-B", "tests/flake_policy.py"]]
-
-[[item]]
-id = "mutants"
-title = "Known-wrong implementations run under the same sandbox and repeat policy; only the named assertion failure counts as a kill"
-mandate = "Zack, 2026-11-03. Bind mutant source/identity, expected and observed failed assertions, policy and every repetition. Cache/network denial, setup failure, crash, timeout, missing receipt, collector failure and process survivors never count as kills. Kills do not prove contract completeness."
-depends = ["sandbox", "flake"]
-acceptance = [["python3", "-B", "tests/mutants.py"]]
+id = "integrity"
+title = "Hash protected paths before and after every check; any lasting change makes the claim contradicted (stdlib, milliseconds)"
+mandate = "Zack, 2026-11-10: no sandbox; the kernel must be lean, fast and reliable on every task. Closes the headline gap (a check edits tests/contract/judge files and still gets supported) by deterministic detection. Detects lasting changes only; write-then-restore during a check is a documented limit."
+depends = ["integrate-1"]
+acceptance = [["python3", "-B", "tests/integrity.py"]]
 
 [[item]]
 id = "red-team"
-title = "Red-team new frozen contracts and named sandbox residual risks before release"
-mandate = "Zack, 2026-11-03 separate red-team agent, judged by the same frozen contract; extended by 2026-11-09 decision. Preserve new-version-only freeze procedure. Address NONNETWORK_GENERATOR_COMMON_MODE using a disposable shared-generator non-network mutation and independent operation/effect witnesses; matching generator outputs are not an independent semantic oracle. Review ENTRYPOINT_EXTERNAL_AUTHENTICATION as a caller prerequisite and the swallowed-undelivered-denial limit. Record source, observations and limits. Release must publish both named trust risks and an owner disposition of mitigation or explicit residual acceptance; no claim of independent non-network validation without new proof."
-depends = ["mutants"]
-acceptance = [["python3", "tests/red_team_freeze.py"]]
-
-[[item]]
-id = "egress"
-title = "Qualify that undeclared off-machine egress is blocked, against a separately authorized isolated endpoint with an independent journal"
-mandate = "Zack, 2026-11-06: split from sandbox-v1 so on-machine sandbox work is not blocked on external provisioning. The endpoint (LAN host or provider server) needs Zack's explicit go. Unsandboxed positive control must reach the endpoint and be journaled; the sandboxed probe must be denied and absent from the journal. Missing qualification is unverifiable, never borrowed from loopback."
-depends = ["sandbox"]
-acceptance = [["python3", "-B", "tests/egress_qualification.py"]]
-
-[[item]]
-id = "default-on"
-title = "Enable sandbox by default only after preview-001 and photos-001 are supported on the exact combined candidate with declared outputs/ports"
-mandate = "Zack, 2026-11-03. Preserve real assertions and narrow authority. Version and refreeze any required contract migration; no in-place edits. Require complete repetitions and cleanup, record backend/policy/bundle identity, and leave opt-in until both real contracts pass. Unsupported backends never run unsandboxed implicitly."
-depends = ["sandbox", "flake", "egress"]
-acceptance = [["python3", "-B", "tests/tamper_suite.py"], ["python3", "-B", "tests/flake_policy.py"], ["python3", "-B", "tests/egress_qualification.py"], ["python3", "-B", "tests/real_contracts_sandboxed.py"]]
+title = "Short adversarial review of integrity + self-check + cleanup before release"
+mandate = "Zack, 2026-11-10: lean. One short adversarial review (not a new suite) of integrity, self-check and cleanup: try to get a false supported by changing protected files, escaping cleanup, or bypassing the digest. Record findings; fix or document as limits."
+depends = ["integrity"]
+acceptance = [["python3", "-B", "selftest.py"]]
 
 [[item]]
 id = "bidzizi-gate"
-title = "Exercise BidZizi's actual invocation against authenticated final 3.2.0 package and caller-held digest before installation switches"
-mandate = "Zack, 2026-11-03. Prove actual successful calls plus missing/wrong digest refusal and missing sandbox dependency failure. Use python3 -B; bind exact package/bundle/policy/contract identities. No locally derived untrusted expected digest or implicit fallback. Any later package change invalidates this proof until rerun."
-depends = ["default-on"]
+title = "Run BidZizi's actual invocation against final 3.2.0 with the caller-held digest before the installed judge switches"
+mandate = "Zack, 2026-11-03; simplified 2026-11-10. 3.2.0 requires --release-sha256, so every current BidZizi call breaks. Prove a real call succeeds with the digest and refuses without it or with a wrong one; update the caller."
+depends = ["integrity"]
 acceptance = [["python3", "-B", "tests/bidzizi_invocation.py"]]
 
 [[item]]
 id = "release"
-title = "Release 3.2.0 only from final combined evidence: external judge, real caller proof, manifest/bundle digest, tag and install receipt"
-mandate = "Zack, 2026-11-03. Rejudge all frozen new-feature contracts with installed 3.1.0 using python3 -B; retain exact RED/GREEN and regression evidence. Recheck real caller proof against final bytes. Publish external dependency and platform qualification, accurate log/hash/cleanup limits, release digest and SWE-bench comparison before the authorized installation switch."
+title = "Release 3.2.0: rejudge integrity/self-check/cleanup contracts with installed 3.1.0, tag, switch the installed judge"
+mandate = "Zack, 2026-11-03; simplified 2026-11-10 (no sandbox). Rejudge frozen contracts with installed 3.1.0 using python3 -B, regenerate the manifest, publish the release digest, tag, and switch the installed judge only with Zack's go."
 depends = ["bidzizi-gate", "red-team"]
-acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "-B", "tests/self_check.py"], ["python3", "-B", "tests/cleanup.py"], ["python3", "-B", "tests/tamper_suite.py"], ["python3", "-B", "tests/egress_qualification.py"], ["python3", "-B", "tests/flake_policy.py"], ["python3", "-B", "tests/mutants.py"], ["python3", "-B", "tests/red_team_freeze.py"], ["python3", "-B", "tests/real_contracts_sandboxed.py"], ["python3", "-B", "tests/bidzizi_invocation.py"], ["python3", "-B", "selftest.py"]]
+acceptance = [["shasum", "-a", "256", "-c", "MANIFEST.sha256"], ["python3", "-B", "tests/self_check.py"], ["python3", "-B", "tests/cleanup.py"], ["python3", "-B", "tests/integrity.py"], ["python3", "-B", "tests/bidzizi_invocation.py"], ["python3", "-B", "selftest.py"]]
 # Acceptance commands supplement, never replace, the external 3.1.0 frozen-contract receipts.
-# Release/bundle authentication uses caller-held trusted digests; regenerate manifest from final contents before final proof.
+# Release authentication uses caller-held trusted digests; regenerate manifest from final contents before final proof.
